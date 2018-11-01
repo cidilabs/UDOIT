@@ -37,6 +37,9 @@ if ('sqlite' === $db_type || 'test' === $db_type) {
                 consumer_key varchar(255),
                 shared_secret varchar(255),
                 date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+                developer_id varchar(255) NOT NULL,
+                developer_key varchar(255) NOT NULL,
+                data text NOT NULL,
             );
         ';
     }
@@ -73,6 +76,9 @@ if ('pgsql' === $db_type) {
                 domain varchar(255),
                 consumer_key varchar(255),
                 shared_secret varchar(255),
+                developer_id varchar(255) NOT NULL,
+                developer_key varchar(255) NOT NULL,
+                data text NOT NULL,
                 date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP
             );
         ';
@@ -113,9 +119,11 @@ if ('mysql' === $db_type) {
                 `domain` varchar(255) NOT NULL,
                 `consumer_key` varchar(255) NOT NULL,
                 `shared_secret` varchar(255) NOT NULL,
+                `developer_id` varchar(255) NOT NULL,
+                `developer_key` varchar(255) NOT NULL,
                 `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (`domain`),
-                UNIQUE KEY `domain` (`domain`)
+                `data` text NOT NULL,
+                UNIQUE KEY `domain_key` (`domain`, `consumer_key`)
             ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
         ';
     }

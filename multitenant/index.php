@@ -6,7 +6,7 @@
  * UDOIT can be configured to work with multiple Canvas accounts. We call this multitenancy.
  */
 
-require_once('form_handler.php');
+require_once('actionHandler.php');
 
 $page_secure = multitenant_check_security();
 

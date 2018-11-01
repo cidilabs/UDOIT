@@ -42,21 +42,44 @@ function multitenant_handle_request()
     }
 }
 
+/**
+ * Returns a list of institutes.
+ *
+ * @return mixed
+ */
 function multitenant_get_institutes()
 {
-    return UdoitDB::query('SELECT * FROM institutes')->fetchAll(PDO::FETCH_CLASS);
+    try {
+        $query = UdoitDB::prepare('SELECT * FROM institutes');
+        $query->execute();
+
+        return $query->fetchAll(PDO::FETCH_CLASS);
+    }
+    catch (\Exception $e) {
+        return [];
+    }
 }
 
+/**
+ * Deletes an institute from the DB.
+ *
+ * @param $domain
+ */
 function multitenant_institute_delete($domain)
 {
-    return UdoitDB::query('DELETE FROM institutes WHERE domain = "'.$domain.'"');
+    $query = UdoitDB::prepare('DELETE FROM institutes WHERE domain = :domain');
+    $query->bindParam(':domain', $domain, PDO::PARAM_STR);
+    $query->execute();
 }
 
+/**
+ * Inserts an institute into the DB.
+ *
+ * @param $domain
+ */
 function multitenant_institute_insert($domain)
 {
-    $exists = UdoitDB::query('SELECT domain FROM institutes WHERE domain = "'.$domain.'"')->fetchObject();
-
-    if (!$exists) {
+    if (!multitenant_institute_exists($domain)) {
         $data = [
             'domain' => $domain,
             'consumer_key' => multitenant_generate_consumer_key($domain),
@@ -68,6 +91,21 @@ function multitenant_institute_insert($domain)
     } else {
         $_SESSION['messages'][] = 'Domain already exists.';
     }
+}
+
+/**
+ * Checks to see if domain exists in the db currently.
+ *
+ * @param $domain
+ *
+ * @return mixed
+ */
+function multitenant_institute_exists($domain) {
+    $exists_query = UdoitDB::prepare('SELECT domain FROM institutes WHERE domain = :domain');
+    $exists_query->bindValue(':domain', $domain, PDO::PARAM_STR);
+    $exists_query->execute();
+
+    return $exists_query->fetchObject();
 }
 
 function multitenant_generate_consumer_key($domain)
