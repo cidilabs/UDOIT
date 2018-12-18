@@ -57,7 +57,7 @@ $debug = false;
  *  - Returns "test-token" when getting refresh token for Canvas
  *  - Course Scanner doesn't scan, simply contains already loaded test reports
  */
-$UDOIT_ENV = ENV_DEV; // default
+$UDOIT_ENV = ENV_PROD; // default
 
 
 /*********************
