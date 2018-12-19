@@ -1,7 +1,7 @@
 .phpsetup: &phpsetup
   cache:
-      paths:
-      - vendor/
+    paths:
+    - vendor/
   before_script:
   - bash ci/docker_install.sh > /dev/null
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
