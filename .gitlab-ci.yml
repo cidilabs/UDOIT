@@ -12,7 +12,7 @@ test:5.6:
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
   - php composer.phar install
   script:
-  - composer run sniff-errors-only
+  - php composer.phar run sniff-errors-only
   #- phpunit --configuration phpunit_myapp.xml
 
 test:7.0:
@@ -29,7 +29,7 @@ test:7.0:
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
   - php composer.phar install
   script:
-  - composer run sniff-errors-only
+  - php composer.phar run sniff-errors-only
   #- phpunit --configuration phpunit_myapp.xml
 
 test:7.1:
@@ -46,7 +46,7 @@ test:7.1:
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
   - php composer.phar install
   script:
-  - composer run sniff-errors-only
+  - php composer.phar run sniff-errors-only
   #- phpunit --configuration phpunit_myapp.xml
 
 test:7.2:
@@ -63,7 +63,7 @@ test:7.2:
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
   - php composer.phar install
   script:
-  - composer run sniff-errors-only
+  - php composer.phar run sniff-errors-only
   #- phpunit --configuration phpunit_myapp.xml
 
 sast:
