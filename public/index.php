@@ -19,6 +19,24 @@
 */
 
 require_once(__DIR__.'/../config/settings.php');
+global $logger;
+
+// Log the absence of video API keys
+function isEmpty($teststr)
+{
+    $trimstr = trim($teststr);
+
+    return empty($trimstr);
+}
+
+if (isEmpty(constant('GOOGLE_API_KEY'))) {
+    $logger->addWarning('Google API Key empty. Videos will be marked for manual inspection.');
+}
+
+if (isEmpty(constant('VIMEO_API_KEY'))) {
+    $logger->addWarning('Vimeo API Key empty. Videos will be marked for manual inspection.');
+}
+
 
 // Sanitize post parameters
 $post_input = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -32,12 +50,6 @@ foreach ($expect as $key) {
         UdoitUtils::instance()->exitWithPageError("Missing LTI launch information. Please ensure that your instance of UDOIT is installed to Canvas correctly. Missing: {$key}");
     }
 }
-
-// Get LTI consumer key and secret from DB if instance is multitenant.
-if (null === $consumer_key && null === $shared_secret) {
-    UdoitUtils::instance()->checkMultitenant($post_input['custom_canvas_api_domain']);
-}
-
 
 // verify LTI launch
 if (!UdoitUtils::instance()->verifyBasicLTILaunch()) {
