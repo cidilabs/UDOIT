@@ -16,6 +16,3 @@ fi
 
 # change localconfig owner
 chown ec2-user:apache /var/www/html/config/localConfig.php
-
-# run database setup scripts
-#composer run migrate
