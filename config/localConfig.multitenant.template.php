@@ -30,7 +30,7 @@ define('GA_TRACKING_CODE', '');
 
 /* Database Config */
 $db_type          = 'mysql'; // 'mysql' or 'pgsql'
-$db_host          = ''; // localhost or some other domain/ip
+$db_host          = 'localhost'; // localhost or some other domain/ip
 $db_port          = '3306';
 $db_user          = '';
 $db_password      = '';

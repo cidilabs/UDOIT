@@ -1,4 +1,6 @@
 config/localConfig.php
+config/localConfig.prod.php
+config/localConfig.stage.php
 
 ### OSX ###
 .DS_Store
