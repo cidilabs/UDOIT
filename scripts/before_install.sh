@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # change permissions to /var/www
 sudo chown -R apache:apache /var/www
 sudo chmod -R 775 /var/www
