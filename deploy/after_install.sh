@@ -14,5 +14,5 @@ else
     cp /var/www/deploy/udoit/localConfig.stage.php /var/www/html/config/localConfig.php
 fi
 
-# change localconfig owner
+# change localConfig owner
 chown ec2-user:apache /var/www/html/config/localConfig.php
