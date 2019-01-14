@@ -16,3 +16,7 @@ fi
 
 # change localConfig owner
 chown ec2-user:apache /var/www/html/config/localConfig.php
+chmod 440 /var/www/html/config/localConfig.php
+
+# Cleanup: delete global config folder
+rm -rf /var/www/deploy
