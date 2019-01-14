@@ -4,7 +4,7 @@
 cd /var/www/html
 
 # run composer install
-composer install
+composer install --no-dev --no-interaction --no-progress --optimize-autoloader
 
 # copy localConfig
 if [ "$DEPLOYMENT_GROUP_NAME" == "UdoitProd" ]
