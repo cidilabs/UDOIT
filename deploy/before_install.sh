@@ -5,4 +5,4 @@
 #chmod -R 775 /var/www
 
 # remove all files in /var/www/html
-rm -rf /var/www/html/*
+#rm -rf /var/www/html/*
