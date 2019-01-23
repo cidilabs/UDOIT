@@ -286,6 +286,8 @@ class UdoitUtils
         if (!empty($result)) {
             self::$canvas_consumer_key = $result->consumer_key;
             self::$canvas_secret_key = $result->shared_secret;
+            self::$canvas_oauth_id = $result->developer_id;
+            self::$canvas_oauth_key = $result->developer_key;
         }
     }
 

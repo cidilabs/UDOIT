@@ -43,6 +43,11 @@ if (isset($background_worker_enabled)) {
     UdoitJob::$background_worker_enabled = $background_worker_enabled;
 }
 
+// Get LTI consumer key and secret from DB if instance is multitenant.
+if (null === $consumer_key && null === $shared_secret) {
+    UdoitUtils::instance()->checkMultitenant($post_input['custom_canvas_api_domain']);
+}
+
 // Prevent Caching on the client
 header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
 header("Pragma: no-cache"); // HTTP 1.0.
