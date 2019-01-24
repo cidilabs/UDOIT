@@ -282,7 +282,7 @@ class UdoitUtils
 
         if (!empty($post['custom_canvas_api_domain'])) {
             $domain = $post['custom_canvas_api_domain'];
-            
+
             $sth = UdoitDB::prepare("SELECT * FROM {$db_institutes_table} WHERE domain = :domain");
             $sth->bindValue(':domain', $domain, PDO::PARAM_STR);
             $sth->execute();
