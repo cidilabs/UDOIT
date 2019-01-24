@@ -45,7 +45,7 @@ if (isset($background_worker_enabled)) {
 
 // Get LTI and Oauth credentials from DB if instance is multitenant.
 if (null === $consumer_key && null === $shared_secret) {
-    UdoitUtils::instance()->checkMultitenant($post_input['custom_canvas_api_domain']);
+    UdoitUtils::instance()->checkMultitenant();
 }
 
 // Prevent Caching on the client
