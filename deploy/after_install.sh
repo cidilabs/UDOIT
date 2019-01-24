@@ -16,4 +16,5 @@ fi
 
 # change localConfig owner
 chown webchuck:apache /var/www/html/config/localConfig.php
+
 chmod 440 /var/www/html/config/localConfig.php
