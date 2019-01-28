@@ -37,6 +37,7 @@ if (isEmpty(constant('VIMEO_API_KEY'))) {
     $logger->addWarning('Vimeo API Key empty. Videos will be marked for manual inspection.');
 }
 
+
 // Sanitize post parameters
 $post_input = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 $post_input['custom_canvas_user_id'] = filter_input(INPUT_POST, 'custom_canvas_user_id', FILTER_SANITIZE_NUMBER_INT);

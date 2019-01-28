@@ -1,6 +1,4 @@
 config/localConfig.php
-config/localConfig.prod.php
-config/localConfig.stage.php
 
 ### OSX ###
 .DS_Store
@@ -16,6 +14,6 @@ assets/js/vendor/
 
 config/log.log
 
-docker/nginx.conf
-docker/nginx.crt
-docker/nginx.key
+docker/etc/nginx/nginx.conf
+docker/var/ssl/nginx.crt
+docker/var/ssl/nginx.key
