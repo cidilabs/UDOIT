@@ -38,6 +38,9 @@ UdoitUtils::setupOauth($oauth2_id, $oauth2_key, $oauth2_uri, $consumer_key, $sha
 // SET UP DATABASE
 UdoitDB::setup($db_type, $dsn, $db_user, $db_password);
 
+// SET UP MULTITENANT OAUTH
+UdoitMultiTenant::setupOauth();
+
 // BACKGROUND WORKER
 if (isset($background_worker_enabled)) {
     UdoitJob::$background_worker_enabled = $background_worker_enabled;
