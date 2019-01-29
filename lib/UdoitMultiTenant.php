@@ -19,7 +19,8 @@
  */
 class UdoitMultiTenant
 {
-    public static function setupOauth() {
+    public static function setupOauth()
+    {
         global $db_institutes_table;
         $utils = UdoitUtils::instance();
 
