@@ -5,6 +5,8 @@ define('ENV_DEV', 'dev');
 
 define('UDOIT_VERSION', '2.4.1');
 
+$_SERVER['HTTPS'] = 'on';
+
 // SET UP AUTOLOADER (uses autoload rules from composer)
 require_once(__DIR__.'/../vendor/autoload.php');
 
