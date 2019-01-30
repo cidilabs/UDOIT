@@ -33,11 +33,19 @@ class UdoitMultiTenant
             return;
         }
 
+        session_start();
+
         $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
 
         if (!empty($post['custom_canvas_api_domain'])) {
             $domain = $post['custom_canvas_api_domain'];
+        }
+        elseif (!empty($_SESSION['base_url'])) {
+            $domain = parse_url($_SESSION['base_url'], PHP_URL_HOST);
+        }
 
+        if (!empty($domain)) {
             $sth = UdoitDB::prepare("SELECT * FROM {$db_institutes_table} WHERE domain = :domain");
             $sth->bindValue(':domain', $domain, PDO::PARAM_STR);
             $sth->execute();
