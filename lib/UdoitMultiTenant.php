@@ -40,8 +40,7 @@ class UdoitMultiTenant
 
         if (!empty($post['custom_canvas_api_domain'])) {
             $domain = $post['custom_canvas_api_domain'];
-        }
-        elseif (!empty($_SESSION['base_url'])) {
+        } elseif (!empty($_SESSION['base_url'])) {
             $domain = parse_url($_SESSION['base_url'], PHP_URL_HOST);
         }
 
