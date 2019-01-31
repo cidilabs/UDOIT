@@ -37,7 +37,6 @@ class UdoitMultiTenant
 
         $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-
         if (!empty($post['custom_canvas_api_domain'])) {
             $domain = $post['custom_canvas_api_domain'];
         } elseif (!empty($_SESSION['base_url'])) {
@@ -45,8 +44,9 @@ class UdoitMultiTenant
         }
 
         if (!empty($domain)) {
-            $sth = UdoitDB::prepare("SELECT * FROM {$db_institutes_table} WHERE domain = :domain");
+            $sth = UdoitDB::prepare("SELECT * FROM {$db_institutes_table} WHERE domain = :domain OR vanity_url = :vanity");
             $sth->bindValue(':domain', $domain, PDO::PARAM_STR);
+            $sth->bindValue(':vanity', $domain, PDO::PARAM_STR);
             $sth->execute();
             $result = $sth->fetchObject();
 
