@@ -33,16 +33,14 @@ try {
     // Write the pdf
     $pdf = new mPDF();
     $html = zz\Html\HTMLMinify::minify($result_html);
-    $pdf->SetHeader("Scanned on " . date("m/d/Y") . " at " . date("g:i a"));
+    $pdf->SetHeader("Scanned on ".date("m/d/Y")." at ".date("g:i a"));
     $pdf->SetFooter("Page {PAGENO} / {nb}");
     $pdf->WriteHTML('<link rel="stylesheet" href="assets/css/pdf.css" type="text/css">', 1);
     @$pdf->WriteHTML($html, 2);
-
-    $pdf->Output($title . '_' . date("Y-m-d_g:i-a") . '.pdf', 'D');
+    $pdf->Output($title.'_'.date("Y-m-d_g:i-a").'.pdf', 'D');
 
     // mark pdf generation as complete
     $_SESSION['pdf_generated'] = true;
-}
-catch (\Exception $e) {
+} catch (\Exception $e) {
     echo $e->getMessage();
 }
