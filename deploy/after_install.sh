@@ -14,7 +14,6 @@ else
     cp /var/www/deploy/udoit/localConfig.stage.php /var/www/html/config/localConfig.php
 fi
 
-# change localConfig owner
+# change localConfig owner and perms
 chown webchuck:apache /var/www/html/config/localConfig.php
-
 chmod 440 /var/www/html/config/localConfig.php
