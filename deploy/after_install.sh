@@ -15,8 +15,8 @@ else
 fi
 
 # change all file and directory permissions to give apache sufficient access
-find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
+sudo find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 
 # change localConfig owner and perms
-chown -R webchuck:apache /var/www/html/config/localConfig.php
-chmod 440 /var/www/html/config/localConfig.php
+sudo chown -R webchuck:apache /var/www/html/config/localConfig.php
+sudo chmod 440 /var/www/html/config/localConfig.php
