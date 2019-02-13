@@ -59,8 +59,8 @@ class UdoitMultiTenant
                 $utils::$canvas_oauth_key = $oauth2_key = $result->developer_key;
 
                 if (isset($result->slug)) {
-                    $db_user_table = $result->slug . '_' . $db_user_table;
-                    $db_reports_table = $result->slug . '_' . $db_reports_table;
+                    $db_user_table = $result->slug.'_'.$db_user_table;
+                    $db_reports_table = $result->slug.'_'.$db_reports_table;
                 }
             }
         }
