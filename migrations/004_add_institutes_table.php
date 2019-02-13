@@ -13,6 +13,7 @@ if ('sqlite' === $db_type || 'test' === $db_type) {
             developer_id varchar(255) NOT NULL,
             developer_key varchar(255) NOT NULL,
             vanity_url varchar(255),
+            slug varchar(16),
             data text NOT NULL,
         );
     ';
@@ -30,6 +31,7 @@ if ('pgsql' === $db_type) {
             developer_key varchar(255) NOT NULL,
             data text NOT NULL,
             vanity_url varchar(255),
+            slug varchar(16),
             date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP
         );
     ';
@@ -48,6 +50,7 @@ if ('mysql' === $db_type) {
             `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `data` text NOT NULL,
             `vanity_url` varchar(255),
+            `slug` varchar(16),
             UNIQUE KEY `domain_key` (`domain`, `consumer_key`)
         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
     ';
