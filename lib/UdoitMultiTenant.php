@@ -21,11 +21,13 @@ class UdoitMultiTenant
 {
     public static function setupOauth()
     {
-        global $db_institutes_table;
         global $oauth2_id;
         global $oauth2_key;
         global $consumer_key;
         global $shared_secret;
+        global $db_institutes_table;
+        global $db_user_table;
+        global $db_reports_table;
 
         $utils = UdoitUtils::instance();
 
@@ -55,6 +57,11 @@ class UdoitMultiTenant
                 $utils::$canvas_secret_key = $shared_secret = $result->shared_secret;
                 $utils::$canvas_oauth_id = $oauth2_id = $result->developer_id;
                 $utils::$canvas_oauth_key = $oauth2_key = $result->developer_key;
+
+                if (isset($result->slug)) {
+                    $db_user_table = $result->slug.'_'.$db_user_table;
+                    $db_reports_table = $result->slug.'_'.$db_reports_table;
+                }
             }
         }
     }
