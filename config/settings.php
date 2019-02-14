@@ -3,7 +3,7 @@ define('ENV_TEST', 'test');
 define('ENV_PROD', 'prod');
 define('ENV_DEV', 'dev');
 
-define('UDOIT_VERSION', '2.4.1');
+define('UDOIT_VERSION', '2.4.2');
 
 $_SERVER['HTTPS'] = 'on';
 
