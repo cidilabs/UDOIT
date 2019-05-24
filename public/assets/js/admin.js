@@ -318,7 +318,7 @@ function populateTable(button_offset, target, formvals=null) {
 					$(table).addClass('table table-striped');
 					$('#' + target + '-results > div:nth-child(1)').after(table);
 					csv.removeClass('hidden');
-					csv.unbind.('click').click(function(){
+					csv.unbind('click').click(function(){
 						tableToCSV('#' + target + '-results', "UDOIT_" + filename + ".csv");
 					});
 
