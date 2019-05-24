@@ -126,7 +126,7 @@ class UdoitStats
         }
 
         //$query .= "OFFSET $offset ROWS FETCH NEXT $number_items ROWS ONLY\n";
-        $query .= "LIMIT $number_items, $offset\n";
+        $query .= "LIMIT $offset, $number_items\n";
 
         $sth = UdoitDB::prepare($query);
         if (isset($get_data['start_date'])) {
@@ -271,7 +271,7 @@ class UdoitStats
                 ."GROUP BY $db_user_table.id\n"
                 ."ORDER BY $db_user_table.id\n"
                 //."OFFSET $offset ROWS FETCH NEXT $number_items ROWS ONLY\n";
-                ."LIMIT $number_items, $offset\n";
+                ."LIMIT $offset, $number_items\n";
 
         $sth = UdoitDB::prepare($query);
 
@@ -372,7 +372,7 @@ class UdoitStats
         }
 
         //$query .= "GROUP BY {$date_format} ORDER BY {$date_format} OFFSET $offset ROWS FETCH NEXT $number_items ROWS ONLY";
-        $query .= "GROUP BY {$date_format} ORDER BY {$date_format} LIMIT $number_items, $offset";
+        $query .= "GROUP BY {$date_format} ORDER BY {$date_format} LIMIT $offset, $number_items";
 
         $sth = UdoitDB::prepare($query);
         if (isset($startDate)) {
