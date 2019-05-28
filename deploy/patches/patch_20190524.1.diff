@@ -17,7 +17,7 @@ index e2dd787..5700eb8 100644
  					$('#' + target + '-results > div:nth-child(1)').after(table);
  					csv.removeClass('hidden');
 -					csv.click(function(){
-+					csv.unbind.('click').click(function(){
++					csv.unbind('click').click(function(){
  						tableToCSV('#' + target + '-results', "UDOIT_" + filename + ".csv");
  					});
  
