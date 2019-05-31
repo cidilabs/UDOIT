@@ -1,4 +1,4 @@
-@codingStandardsChangeSetting Generic.WhiteSpace.ScopeIndent tabIndent false
+phpcs:set Generic.WhiteSpace.ScopeIndent tabIndent false
 <meta name="twitter:site" content="<?php echo $metaTagsData['twitter:site']; ?>">
 <?php
 class Test {
@@ -1180,6 +1180,127 @@ function test()
             echo $method . $var2;
         }
     }
+}
+
+switch ($a) {
+    case 0:
+        function () {
+        };
+    case 1:
+        break;
+}
+
+class Test
+{
+    public function __construct()
+    {
+if (false) {
+echo 0;
+        }
+    }
+}
+
+return [
+    'veryLongKeySoIWantToMakeALineBreak'
+        => 'veryLonValueSoIWantToMakeALineBreak',
+
+    'someOtherKey' => [
+        'someValue'
+    ],
+
+    'arrayWithArraysInThere' => [
+        ['Value1', 'Value1']
+    ],
+];
+
+switch ($sContext) {
+    case 'SOMETHING':
+    case 'CONSTANT':
+        do_something();
+        break;
+    case 'GLOBAL':
+    case 'GLOBAL1':
+        do_something();
+        // Fall through
+    default:
+    {
+        do_something();
+    }
+}
+
+array_map(
+    static function ( $item ) {
+        echo $item;
+    },
+    $some_array
+);
+
+/**
+ * Comment.
+ */
+(function () use ($app) {
+    echo 'hi';
+})();
+
+$app->run();
+
+public function foo()
+{
+    $foo('some
+    long description', function () {
+    });
+
+    $foo('some
+    long
+    description', function () {
+    });
+
+    $foo(
+'some long description', function () {
+    });
+}
+
+switch ( $a ) {
+case 'a':
+    $b = 2;
+    /**
+     * A comment.
+     */
+    apply_filter( 'something', $b );
+    break;
+
+case 'aa':
+    $b = 2;
+    /*
+     * A comment.
+     */
+    apply_filter( 'something', $b );
+    break;
+
+case 'b':
+    $b = 3;
+?>
+    <input name="something" value="<?php echo $b; ?>">
+<?php
+    $b = 4;
+    break;
+
+default:
+    $b = 3;
+    ?>
+    <input name="something" value="<?php echo $b; ?>">
+    <?php
+    $b = 4;
+    break;
+}
+
+if ($foo) {
+if ($oo) {
+    /*
+     *
+     *
+   */
+}
 }
 
     function foo()
