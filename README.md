@@ -47,7 +47,7 @@ UDOIT can be installed on your own existing servers, but we've also configured a
 
 To start the Heroku deployment process, you can click the button below, please note, that although this button eliminates much of the installation complexity, there are still some configuration steps that need to be followed, those steps are outlined in the [HEROKU.md Readme](HEROKU.md).
 
-<a href="https://heroku.com/deploy" title="Deploy to Heroku"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy to Heroku" title="Deploy to Heroku Button"></a>
+<a href="https://heroku.com/deploy" title="Deploy to Heroku"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy to Heroku" title="Deploy to Heroku Example"></a>
 
 ## System Requirements
 * Apache or Nginx webserver
@@ -170,7 +170,7 @@ If you do not provide a Google API key, a warning log will be recorded in `confi
 ### Vimeo API Key
 In order for UDOIT to scan Vimeo videos for closed captioning, you will need to create a Vimeo API key. Follow the instructions below:
 
-1. [Create a new App on Vimeo Developer API](https://developer.vimeo.com/apps/new?source=getting-started), please note you must have a Vimeo Developer account.
+1. [Create a new Edit on Vimeo Developer API](https://developer.vimeo.com/apps/new?source=getting-started), please note you must have a Vimeo Developer account.
 2. On your applications "Authentication" page, Generate a new Access Token.  (Select the `Public` and `Private` checkboxes for Scopes.)
 3. Add the key to `config/localConfig.php` in the `define('VIMEO_API_KEY', '');` statement.  For example, if your API key is `heythisisanapikey`, that line should look like `define('VIMEO_API_KEY', 'heythisisanapikey');` when you're done.
 
@@ -187,8 +187,8 @@ Log into Canvas to add UDOIT:
 
 1. You can install UDOIT at the sub-account level or the course level.  Either way, start by going to the **settings** area.
 2. Click the **Apps** tab.
-3. Click the **View App Configurations** button.
-4. Click the **Add App** button.
+3. Click the **View Edit Configurations** button.
+4. Click the **Add Edit** button.
 5. Under **Configuration Type**, choose **By URL**.
 6. In the **Name** field, enter `UDOIT`.
 7. In the **Consumer Key** field, copy the value from `$consumer_key` from `config/localConfig.php`

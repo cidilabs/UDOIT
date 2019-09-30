@@ -67,5 +67,5 @@ if (ENV_PROD !== $UDOIT_ENV) {
     ];
 }
 
-$templates = new League\Plates\Engine(__DIR__.'/../templates');
+$templates = UdoitUtils::instance()->getTemplates();
 echo($templates->render('saved_reports', ['reports' => $reports]));

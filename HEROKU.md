@@ -1,4 +1,4 @@
-# Heroku Button
+# Heroku Example
 If you wish to install Heroku using the one-click deployment process, please click the purple "Deploy to Heroku" button in the [repository home page](https://github.com/ucfopen/UDOIT#installing-udoit).
 
 ## Installation Instructions
@@ -34,7 +34,7 @@ UDOIT uses Oauth2 to take actions on behalf of the user, so you'll need to ask y
 * ***Icon URL:*** The URL of the UDOIT icon.  This is `https://yourapp.herokuapp.com/assets/img/udoit_icon.png`.  (Replace ***yourapp*** with the name of your UDOIT instance on Heroku.)
 
 ### Step 4:  Add your Developer Key to UDOIT
-1. In Heroku, click the 'Manage App' button for your install of UDOIT.
+1. In Heroku, click the 'Manage Edit' button for your install of UDOIT.
 2. Go to the 'Settings' tab.
 3. Copy and paste the following values from the Developer Key:
  * ID into ***OAUTH2_ID***
@@ -47,8 +47,8 @@ In Canvas, you can install UDOIT at the course or sub-account levels.
 
 1. Click the **Settings** menu item from any course in Canvas.
 2. Click the **Apps** tab.
-3. Click the **View App Configurations** button.
-4. Click the **Add App** button.
+3. Click the **View Edit Configurations** button.
+4. Click the **Add Edit** button.
 5. Under **Configuration Type**, choose **By URL**.
 6. In the **Name** field, enter `UDOIT`.
 7. In the **Consumer Key** field, copy the value from CONSUMER_KEY
@@ -65,7 +65,7 @@ You can use our configuration to launch a new Heroku app using [Heroku's app-set
 You'll have to set some env settings. Peek at [app.json](app.json) for any env vars that don't have `"required": false` set. Our config vars are covered in [Configure section](#configure)
 
 
-Create The App: **MAKE SURE you modify the env values**
+Create The Edit: **MAKE SURE you modify the env values**
 
 ```
 curl -n -X POST https://api.heroku.com/app-setups \
@@ -103,7 +103,7 @@ git clone git@github.com:ucfopen/UDOIT.git
 cd UDOIT
 ```
 
-Link the git repository to your Heroku App
+Link the git repository to your Heroku Edit
 ```
 heroku git:remote --app <YOUR_HEROKU_APP_NAME>
 ```

@@ -17,6 +17,7 @@
 *
 *	Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
 */
+$theme_path = UdoitUtils::getActiveTheme();
 
 $settings = [
 	'footer_scripts' => [
@@ -24,8 +25,8 @@ $settings = [
 		"//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js",
 		"assets/js/vendor/jscolor/jscolor.js",
 		"assets/js/resize.js?v=".UDOIT_VERSION,
-		"assets/js/default.js?v=".UDOIT_VERSION,
-		"assets/js/contrast.js",
+        "assets/js/contrast.js",
+        "themes/" . $theme_path . "/js/default.js?v=".UDOIT_VERSION,
 	]
 ];
 

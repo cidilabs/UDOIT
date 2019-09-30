@@ -51,5 +51,5 @@ $template_data = [
     'launch_params'      => $_SESSION['launch_params'],
 ];
 
-$templates = new League\Plates\Engine(__DIR__.'/../templates');
+$templates = UdoitUtils::instance()->getTemplates();
 echo($templates->render('admin', $template_data));

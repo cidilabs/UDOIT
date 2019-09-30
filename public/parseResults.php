@@ -67,5 +67,5 @@ $results = [
 
 ];
 
-$templates  = new League\Plates\Engine('../templates');
+$templates = UdoitUtils::instance()->getTemplates();
 echo($templates->render('partials/results', $results));

@@ -36,6 +36,7 @@ class UdoitUtils
         '@youtu\.be/watch\?v=([^"\& ]+)@i',
         '@youtu\.be/\?v=([^"\& ]+)@i',
     ];
+    public static $default_theme = 'ucf';
 
     private static $instance;
 
@@ -72,7 +73,7 @@ class UdoitUtils
 
     public function exitWithPageError($error)
     {
-        $templates = new League\Plates\Engine(__DIR__.'/../templates');
+        $templates = UdoitUtils::instance()->getTemplates();
         echo($templates->render('error', ['error' => $error]));
         error_log($error);
         exit();
@@ -80,7 +81,7 @@ class UdoitUtils
 
     public function exitWithPartialError($error)
     {
-        $templates = new League\Plates\Engine(__DIR__.'/../templates');
+        $templates = UdoitUtils::instance()->getTemplates();
         echo($templates->render('partials/error', ['error' => $error]));
         error_log($error);
         exit();
@@ -284,6 +285,29 @@ class UdoitUtils
         }
 
         return $ordered_report_groups;
+    }
+
+    public static function getActiveTheme()
+    {
+        global $active_theme;
+
+        if (!empty($active_theme)) {
+            return $active_theme;
+        }
+
+        return self::$default_theme;
+    }
+
+    public function getTemplates()
+    {
+        $active_theme = $this->getActiveTheme();
+        $path = __DIR__.'/../public/themes/'.$active_theme.'/templates';
+
+        if (!is_dir($path)) {
+            $path = __DIR__.'/../public/themes/'.self::$default_theme.'/templates';
+        }
+
+        return new \League\Plates\Engine($path);
     }
 
     protected function curlOauthToken($base_url, $post_data)

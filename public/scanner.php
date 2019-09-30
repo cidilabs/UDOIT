@@ -53,5 +53,5 @@ $template_data = [
     'udoit_tests'        => include(__DIR__.'/../config/tests.php'),
 ];
 
-$templates = new League\Plates\Engine(__DIR__.'/../templates');
+$templates = UdoitUtils::instance()->getTemplates();
 echo($templates->render('index', $template_data));
