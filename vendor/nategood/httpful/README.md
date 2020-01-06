@@ -21,7 +21,7 @@ Here's something to whet your appetite.  Search the twitter API for tweets conta
 ```php
 
 // Make a request to the GitHub API with a custom
-// header of "X-Trvial-Header: Just as a demo".
+// header of "X-Trvial-AppGlobal: Just as a demo".
 $url = "https://api.github.com/users/nategood";
 $response = \Httpful\Request::get($url)
     ->expectsJson()
