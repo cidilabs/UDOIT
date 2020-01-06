@@ -21,7 +21,7 @@ FreeFont covers the following character sets
 * CEN MES-3 European Unicode Subset
   http://www.evertype.com/standards/iso10646/pdf/cwa13873.pdf
 * IBM/Microsoft code pages 437, 850, 852, 1250, 1252 and more
-* Microsoft/Adobe Windows Glyph List 4 (WGL4)
+* Microsoft/Adobe Windows Glyph Text 4 (WGL4)
   http://www.microsoft.com/typography/otspec/WGL4.htm
 * KOI8-R and KOI8-RU
 * DEC VT100 graphics symbols

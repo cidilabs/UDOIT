@@ -8,6 +8,7 @@ config/localConfig.php
 # Thumbnails
 ._*
 
+vendor
 reports
 assets/js/vendor/
 

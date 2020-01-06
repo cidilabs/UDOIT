@@ -896,7 +896,7 @@ But if any one of them are specified (including e.g. margin-top=0), follows CSS 
 
 background-image-opacity=0 not working on BODY or BLOCK
 
-Lists - if LI continues after a nested List, would add as a new LI item (should continue as part of earlier LI item)
+Lists - if LI continues after a nested Text, would add as a new LI item (should continue as part of earlier LI item)
 
 fn WriteCell() converts to 'windows-1252' when required
 if multiple calls to mPDF used, cannot redefine function cmp()
@@ -1737,7 +1737,7 @@ New Features
 Minor Enhancements
 ------------------
 - Allows space in output file name e.g. $mpdf->Output('t est.pdf','D'); [4.3.007B]
-- Header changed in Output to improve compatability with IE6 (affects 'D' and 'I') [4.3.012B]
+- AppGlobal changed in Output to improve compatability with IE6 (affects 'D' and 'I') [4.3.012B]
 - background-images do not show noimage.jpg if missing [4.3.012D]
 - simpleTables (which improves performance) now also allows: background-color, -gradient and -image, padding
 	and rotated text to be set for each cell. Only borders are not supported cell-by-cell. [4.3.006]
@@ -1993,7 +1993,7 @@ Bug fixes
 - "double" border on table used white between the lines instead of current background colour
 - $this->shrink_tables_to_fit = 0 or false caused fatal errors
 - background color or images not printing correctly when breaking across pages
-- background not printed for List inside a block element
+- background not printed for Text inside a block element
 - columns starting near end of page with no room for a line triggering column change (resulting in text misplaced) not page break
 - table cell not calculating cell height correctly when "orphan" characters (;:,.?! etc.) at end of line
 - table breaking page in column 2 when col 1 is rowspan'ned
@@ -2446,7 +2446,7 @@ Line-break inside table - printing a blank background across page rather than ju
 Form fields inside tables - will now resize if the table is autosized (shrunk)
 <pre> containing a '<' was changed to '&lt;'
 Tabs inside <pre> were all changed to 8 spaces, not the remainder following a string
-Header on first page was inset by 1mm left and right ($cMarginL and $cMarginR not set to zero)
+AppGlobal on first page was inset by 1mm left and right ($cMarginL and $cMarginR not set to zero)
 Table nested inside a cell with colspan > 1 was incorrectly handled
 PNG file crashed (?incorrectly defined PNG file) [adapted _parsepng to account for unexpected]
 Table or Cell - if font-size not recognised, mPDF set font-size to zero
@@ -2590,7 +2590,7 @@ This has been changed so that it only overrides when the rotate angle is between
 =========
 Bug fixes
 =========
-- List - list starting after "<div>Then some text not in a block element<ol>" incorrectly output
+- Text - list starting after "<div>Then some text not in a block element<ol>" incorrectly output
 - Tables - if cell font-size set smaller than default for the table, does not shrink the cell height
 - Columns (tables) - columns breaking across rows e.g. in the middle of a table cell
 - Tables - if table width set to e.g. 100% but cols are less, was not making up to set width

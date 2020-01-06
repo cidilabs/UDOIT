@@ -25,11 +25,6 @@ $exploded   = explode('/',$_SERVER['PHP_SELF']);
 $scriptname = @end( $exploded );
 $scriptpath = str_replace($scriptname,'',$_SERVER['PHP_SELF']);
 $launch     = $servername . $scriptpath;
-
-$get = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
-$course_nav_default = isset($get['default']) ? $get['default'] : 'disabled';
-$course_nav_enabled = isset($get['enabled']) ? $get['enabled'] : 'false';
-
 header('Content-type: text/xml');
 echo('<?xml version="1.0" encoding="UTF-8"?>');
 
@@ -57,10 +52,10 @@ echo('<?xml version="1.0" encoding="UTF-8"?>');
 		</lticm:options>
 		<lticm:options name="course_navigation">
 			<lticm:property name="url"><?= $launch ?>?d=scanner</lticm:property>
-			<lticm:property name="default"><?= $course_nav_default ?></lticm:property>
+			<lticm:property name="default">enabled</lticm:property>
 			<lticm:property name="visibility">admins</lticm:property>
 			<lticm:property name="text"><?= $canvas_nav_item_name ? $canvas_nav_item_name : 'UDOIT' ?></lticm:property>
-			<lticm:property name="enabled"><?= $course_nav_enabled ?></lticm:property>
+			<lticm:property name="enabled">true</lticm:property>
 		</lticm:options>
 <?php if ($admin_panel_enabled): ?>
 		<lticm:options name="account_navigation">

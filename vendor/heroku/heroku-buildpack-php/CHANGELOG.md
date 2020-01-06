@@ -639,7 +639,7 @@
 ### CHG
 
 - Use Composer/1.0.0alpha10 [David Zuelke]
-- Link only `.heroku/php/` subfolder and not all of `.heroku/` during compile to prevent potential collisions in multi BP scenarios [David Zuelke]
+- Image only `.heroku/php/` subfolder and not all of `.heroku/` during compile to prevent potential collisions in multi BP scenarios [David Zuelke]
 
 ### FIX
 
