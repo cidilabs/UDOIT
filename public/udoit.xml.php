@@ -39,7 +39,7 @@ echo('<?xml version="1.0" encoding="UTF-8"?>');
 	http://www.imsglobal.org/xsd/imslticm_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticm_v1p0.xsd
 	http://www.imsglobal.org/xsd/imslticp_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticp_v1p0.xsd">
 	<blti:title>UDOIT</blti:title>
-	<blti:description>This tool allows you scan your courses and check for common accessibility issues.</blti:description>
+	<blti:description>This tool allows you scan your courses and check for common accessibility issues. Version: <?= UDOIT_VERSION ?></blti:description>
 	<blti:icon><?= $launch ?>assets/img/udoit_icon.png</blti:icon>
 	<blti:launch_url><?= $launch ?></blti:launch_url>
 	<blti:extensions platform="canvas.instructure.com">
