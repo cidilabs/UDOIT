@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'zz' => array($vendorDir . '/zaininnari/html-minifier/src'),
-    'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Httpful' => array($vendorDir . '/nategood/httpful/src'),
     'Composer\\CustomDirectoryInstaller' => array($vendorDir . '/mnsami/composer-custom-directory-installer/src'),
