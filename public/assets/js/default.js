@@ -389,19 +389,21 @@ $doc.ready(function() {
 	$doc.on('click', '#udoitForm button.submit', runScanner);
 
 	// result panel collapsing
-	$doc.on('click', '.panel-heading .btn-toggle', function() {
-		$(this).children('button span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+	$doc.on('click', '.panel-heading .btn-toggle', function () {
 		var $errorItem = $(this).parent();
 		if ($errorItem.parent().find('.errorSummary').is(':visible')) {
-			$errorItem.parent().find('.errorSummary').slideUp(function() {
+			$('button span.glyphicon', this).removeClass('glyphicon-minus').addClass('glyphicon-plus');
+			$('button span.sr-only span', this).text('Expand');
+			$errorItem.parent().find('.errorSummary').slideUp(function () {
 				$errorItem.children('button span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
 				setTimeout(resizeFrame, 200);
 				//resizeFrame();
 			});
 		}
 		else {
-			$(this).children('button span').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-			$errorItem.parent().find('.errorSummary').slideDown(function(){
+			$('button span.glyphicon', this).removeClass('glyphicon-plus').addClass('glyphicon-minus');
+			$('button span.sr-only span', this).text('Collapse');
+			$errorItem.parent().find('.errorSummary').slideDown(function () {
 				resizeFrame();
 			});
 		}
