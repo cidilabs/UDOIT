@@ -390,10 +390,11 @@ $doc.ready(function() {
 
 	// result panel collapsing
 	$doc.on('click', '.panel-heading .btn-toggle', function () {
+		$('button span.glyphicon', this).removeClass('glyphicon-minus').addClass('glyphicon-plus');
+		$('button span.sr-only span', this).text('Expand');
+
 		var $errorItem = $(this).parent();
 		if ($errorItem.parent().find('.errorSummary').is(':visible')) {
-			$('button span.glyphicon', this).removeClass('glyphicon-minus').addClass('glyphicon-plus');
-			$('button span.sr-only span', this).text('Expand');
 			$errorItem.parent().find('.errorSummary').slideUp(function () {
 				$errorItem.children('button span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
 				setTimeout(resizeFrame, 200);
