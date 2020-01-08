@@ -1,0 +1,54 @@
+commit 61cf5508b308bd39bf8ac08d8012a7840cea5c5c
+Author: Chuck Crandall <chuck@webchuckweb.com>
+Date:   Wed Jan 8 15:32:59 2020 -0700
+
+    Adding label to expand/collapse buttons in error results.
+
+diff --git a/public/assets/js/default.js b/public/assets/js/default.js
+index f750f3c..14e7f15 100755
+--- a/public/assets/js/default.js
++++ b/public/assets/js/default.js
+@@ -390,9 +390,10 @@ $doc.ready(function() {
+ 
+ 	// result panel collapsing
+ 	$doc.on('click', '.panel-heading .btn-toggle', function () {
+-		$(this).children('button span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+ 		var $errorItem = $(this).parent();
+ 		if ($errorItem.parent().find('.errorSummary').is(':visible')) {
++			$('button span.glyphicon', this).removeClass('glyphicon-minus').addClass('glyphicon-plus');
++			$('button span.sr-only span', this).text('Expand');
+ 			$errorItem.parent().find('.errorSummary').slideUp(function () {
+ 				$errorItem.children('button span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+ 				setTimeout(resizeFrame, 200);
+@@ -400,7 +401,8 @@ $doc.ready(function() {
+ 			});
+ 		}
+ 		else {
+-			$(this).children('button span').removeClass('glyphicon-plus').addClass('glyphicon-minus');
++			$('button span.glyphicon', this).removeClass('glyphicon-plus').addClass('glyphicon-minus');
++			$('button span.sr-only span', this).text('Collapse');
+ 			$errorItem.parent().find('.errorSummary').slideDown(function () {
+ 				resizeFrame();
+ 			});
+diff --git a/templates/partials/results_scannable.php b/templates/partials/results_scannable.php
+index e862561..fb40dd7 100644
+--- a/templates/partials/results_scannable.php
++++ b/templates/partials/results_scannable.php
+@@ -1,4 +1,5 @@
+ <?php
++
+ /**
+  *	Copyright (C) 2014 University of Central Florida, created by Jacob Bates, Eric Colon, Fenel Joseph, and Emily Sachs.
+  *
+@@ -31,7 +32,10 @@
+ 		<?php if ($item->amount > 0) : ?>
+ 			<div class="errorItem panel panel-default">
+ 				<div class="panel-heading clearfix">
+-					<button class="btn btn-xs btn-default btn-toggle pull-left no-print margin-right-small"><span class="glyphicon glyphicon-plus"></span></button>
++					<button class="btn btn-xs btn-default btn-toggle pull-left no-print margin-right-small">
++						<span class="glyphicon glyphicon-plus"></span>
++						<span class="sr-only"><span>Expand</span> <?= $content_group->title . ': ' . $item->name; ?></span>
++					</button>
+ 
+ 					<h3 class="plus pull-left"><a class="report-url" href="<?= $item->url; ?>" target="_blank"><?= $item->name; ?>&nbsp;<small><span class="glyphicon glyphicon-new-window"></span></small></a></h3>
+ 
