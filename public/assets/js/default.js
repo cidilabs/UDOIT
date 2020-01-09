@@ -491,11 +491,11 @@ $doc.ready(function() {
 
 		$this.hide();
 
+		var $contentForm = $issueContainer.find('form');
+
 		// Since we're hiding the button that has the focus, we need to move the
 		// focus to an item within this same error.
-		$('input, select, button', this).focus();
-
-		var $contentForm = $issueContainer.find('form');
+		$('input, select, button', $contentForm).focus();
 
 		if ($contentForm.is(':visible')) {
 			$contentForm.removeClass('show');
