@@ -8,9 +8,6 @@ config/localConfig.php
 # Thumbnails
 ._*
 
-reports
-assets/js/vendor/
-
 config/log.log
 
 docker/etc/nginx/nginx.conf

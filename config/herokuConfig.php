@@ -10,6 +10,7 @@ $shared_secret    = getenv('SHARED_SECRET');
 $oauth2_id        = getenv('OAUTH2_ID');
 $oauth2_key       = getenv('OAUTH2_KEY');
 $oauth2_uri       = getenv('OAUTH2_URI');
+$oauth2_enforce_scopes = (getenv('OAUTH2_ENFORCE_SCOPES')) == 'true';
 
 /* Tool name for display in Canvas Navigation */
 $canvas_nav_item_name = getenv('CANVAS_NAV_ITEM_NAME');
@@ -54,6 +55,9 @@ define('VIMEO_API_KEY', getenv('VIMEO_API_KEY')?:'');
 
 /* Google Analytics Tracking Code */
 define('GA_TRACKING_CODE', getenv('GA_TRACKING_CODE')?:'');
+
+/* Flag for API Caching */
+define('USE_API_CACHING', getenv('USE_API_CACHING')?:'');
 
 // Fix some issues caused by the heroku load balancer
 // The OAUTH signature verification doesn't know it's using https w/o this

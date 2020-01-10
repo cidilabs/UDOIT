@@ -1,24 +1,25 @@
 <?php
 /**
- *   Copyright (C) 2014 University of Central Florida, created by Jacob Bates, Eric Colon, Fenel Joseph, and Emily Sachs.
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *   Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
- */
+*   Copyright (C) 2014 University of Central Florida, created by Jacob Bates, Eric Colon, Fenel Joseph, and Emily Sachs.
+*
+*   This program is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   This program is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+*   Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
+*/
 
 require_once(__DIR__.'/../config/settings.php');
+
 global $logger;
 
 function isEmpty($teststr)
@@ -101,7 +102,16 @@ if (!empty($api_key)) {
         $redirect_to = 'scanner.php';
     }
 } else {
-    $redirect_to = "{$_SESSION['base_url']}/login/oauth2/auth/?client_id={$oauth2_id}&response_type=code&redirect_uri={$oauth2_uri}";
+    $scopes_encoded = '';
+
+    if (true === $oauth2_enforce_scopes) {
+        // if we are enforcing scopes we need to take our predefined scope array
+        // and implode it to be a long string with spaces between each scope
+        // and then URL encode it.
+        $scopes_encoded = '&scope='.urlencode(implode(" ", $oauth2_scopes));
+    }
+
+    $redirect_to = "{$_SESSION['base_url']}/login/oauth2/auth/?client_id={$oauth2_id}&response_type=code&redirect_uri={$oauth2_uri}{$scopes_encoded}";
 }
 
 header("Location: {$redirect_to}");

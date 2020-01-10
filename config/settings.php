@@ -3,13 +3,14 @@ define('ENV_TEST', 'test');
 define('ENV_PROD', 'prod');
 define('ENV_DEV', 'dev');
 
-define('UDOIT_VERSION', '2.5.0');
+define('UDOIT_VERSION', '2.6.0');
 
 $_SERVER['HTTPS'] = 'on';
 
 // SET UP AUTOLOADER (uses autoload rules from composer)
 require_once(__DIR__.'/../vendor/autoload.php');
 
+// Initialize db_options. This may be overridden in the local config
 $db_options = [];
 
 // LOAD LOCAL, TEST or HEROKU CONFIG
@@ -37,7 +38,35 @@ ini_set("display_errors", ($UDOIT_ENV == ENV_PROD ? 0 : 1));
 isset($UDOIT_ENV) || $UDOIT_ENV = ENV_PROD; // !! override in your localConfig.php
 
 // SET UP OAUTH
-UdoitUtils::setupOauth($oauth2_id, $oauth2_key, $oauth2_uri, $consumer_key, $shared_secret, $curl_ssl_verify);
+$oauth2_scopes = [
+    // assigments
+    'url:GET|/api/v1/courses/:course_id/assignments',
+    'url:GET|/api/v1/courses/:course_id/assignments/:id',
+    'url:PUT|/api/v1/courses/:course_id/assignments/:id',
+    // courses
+    'url:PUT|/api/v1/courses/:id',
+    'url:GET|/api/v1/courses/:id',
+    'url:POST|/api/v1/courses/:course_id/files',
+    // discussion topics
+    'url:GET|/api/v1/courses/:course_id/discussion_topics',
+    'url:GET|/api/v1/courses/:course_id/discussion_topics/:topic_id',
+    'url:PUT|/api/v1/courses/:course_id/discussion_topics/:topic_id',
+    // files
+    'url:GET|/api/v1/courses/:course_id/files',
+    'url:GET|/api/v1/courses/:course_id/folders/:id',
+    'url:GET|/api/v1/folders/:id/folders',
+    'url:GET|/api/v1/folders/:id/files',
+    // modules
+    'url:GET|/api/v1/courses/:course_id/modules',
+    'url:GET|/api/v1/courses/:course_id/modules/:module_id/items',
+    // pages
+    'url:GET|/api/v1/courses/:course_id/pages',
+    'url:GET|/api/v1/courses/:course_id/pages/:url',
+    'url:PUT|/api/v1/courses/:course_id/pages/:url',
+    // users
+    'url:GET|/api/v1/users/:user_id/profile',
+];
+UdoitUtils::setupOauth($oauth2_id, $oauth2_key, $oauth2_uri, $consumer_key, $shared_secret, $curl_ssl_verify, $oauth2_enforce_scopes, $oauth2_scopes);
 
 // SET UP DATABASE
 UdoitDB::setup($db_type, $dsn, $db_user, $db_password, $db_options);
