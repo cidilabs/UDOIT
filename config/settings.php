@@ -7,6 +7,10 @@ define('UDOIT_VERSION', '2.6.0');
 
 $_SERVER['HTTPS'] = 'on';
 
+// Hack to set SAMESITE=NONE and SECURE=TRUE for the session cookie
+// This needs to be updated before the switch to PHP 7.3
+session_set_cookie_params(0, '/; samesite=none;', NULL, TRUE, FALSE);
+
 // SET UP AUTOLOADER (uses autoload rules from composer)
 require_once(__DIR__.'/../vendor/autoload.php');
 
