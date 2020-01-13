@@ -7,15 +7,14 @@ define('UDOIT_VERSION', '2.6.0');
 
 $_SERVER['HTTPS'] = 'on';
 
-// Hack to set SAMESITE=NONE and SECURE=TRUE for the session cookie
-// This needs to be updated before the switch to PHP 7.3
-session_set_cookie_params(0, '/; samesite=none;', NULL, TRUE, FALSE);
-
 // SET UP AUTOLOADER (uses autoload rules from composer)
 require_once(__DIR__.'/../vendor/autoload.php');
 
 // Initialize db_options. This may be overridden in the local config
 $db_options = [];
+
+// Initialize session cookie options. This may be overridden in the local config.
+$session_cookie_options = [];
 
 // LOAD LOCAL, TEST or HEROKU CONFIG
 $local_config = getenv('USE_HEROKU_CONFIG') ? 'herokuConfig.php' : 'localConfig.php';
@@ -40,6 +39,9 @@ ini_set("display_errors", ($UDOIT_ENV == ENV_PROD ? 0 : 1));
 
 // SET DEFAULT ENVIRONMENT
 isset($UDOIT_ENV) || $UDOIT_ENV = ENV_PROD; // !! override in your localConfig.php
+
+// SET UP PHP SESSION COOKIE SAMESITE SESSIONS
+UdoitUtils::setupSession($session_cookie_options);
 
 // SET UP OAUTH
 $oauth2_scopes = [
