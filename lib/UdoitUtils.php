@@ -64,6 +64,35 @@ class UdoitUtils
         self::$canvas_scopes = $scopes;
     }
 
+    /**
+     * Support samesite cookie flag in both PHP < 7.3 and > PHP >= 7.3
+     *
+     * @param array $options
+     *
+     * @return void
+     */
+    public static function setupSession($options)
+    {
+        $expire = isset($options['expire']) ? $options['expire'] : 0;
+        $path = isset($options['path']) ? $options['path'] : '/';
+        $domain = isset($options['domain']) ? $options['domain'] : null;
+        $secure = isset($options['secure']) ? $options['secure'] : true;
+        $httponly = isset($options['httponly']) ? $options['httponly'] : false;
+
+        if (PHP_VERSION_ID < 70300) {
+            session_set_cookie_params($expire, "$path; samesite=None", $domain, $secure, $httponly);
+        } else {
+            session_set_cookie_params([
+                'expires' => $expire,
+                'path' => $path,
+                'domain' => $domain,
+                'samesite' => 'None',
+                'secure' => $secure,
+                'httponly' => $httponly,
+            ]);
+        }
+    }
+
     public function getYouTubeId($link_url)
     {
         $matches = null;
@@ -370,8 +399,8 @@ class UdoitUtils
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         // Ignore SSL certificates when specified in local config
         // (E.g. when Canvas instance does not have trusted SSL certificates)
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $curl_ssl_verify);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $curl_ssl_verify);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $curl_ssl_verify);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $curl_ssl_verify);
         $result = curl_exec($ch);
         curl_close($ch);
 
