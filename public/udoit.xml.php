@@ -31,6 +31,8 @@ $get = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
 $course_nav_default = isset($get['default']) ? $get['default'] : 'disabled';
 $course_nav_enabled = isset($get['enabled']) ? $get['enabled'] : 'false';
 
+$canvas_nav_item_name = isset($get['tool_title']) ? urldecode($get['tool_title']) : $canvas_nav_item_name;
+
 header('Content-type: text/xml');
 echo ('<?xml version="1.0" encoding="UTF-8"?>');
 
