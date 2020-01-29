@@ -40,6 +40,8 @@ ini_set("display_errors", ($UDOIT_ENV == ENV_PROD ? 0 : 1));
 // SET DEFAULT ENVIRONMENT
 isset($UDOIT_ENV) || $UDOIT_ENV = ENV_PROD; // !! override in your localConfig.php
 
+UdoitUtils::checkSafari();
+
 // SET UP PHP SESSION COOKIE SAMESITE SESSIONS
 UdoitUtils::setupSession($session_cookie_options);
 

@@ -406,4 +406,14 @@ class UdoitUtils
 
         return json_decode($result);
     }
+
+    public function checkSafari()
+    {
+        if (stripos($_SERVER['HTTP_USER_AGENT'], 'safari') >= 0) {
+            if (count($_COOKIE) === 0) {
+                header('Location: safari_fix.php');
+                exit;
+            }
+        }
+    }
 }
