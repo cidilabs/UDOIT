@@ -390,6 +390,16 @@ class UdoitUtils
         return $response;
     }
 
+    public function checkSafari()
+    {
+        if (stripos($_SERVER['HTTP_USER_AGENT'], 'safari') >= 0) {
+            if (count($_COOKIE) === 0) {
+                header('Location: safari_fix.php');
+                exit;
+            }
+        }
+    }
+
     protected function curlOauthToken($base_url, $post_data)
     {
         // @TODO - why not use Httpful here?
@@ -405,15 +415,5 @@ class UdoitUtils
         curl_close($ch);
 
         return json_decode($result);
-    }
-
-    public function checkSafari()
-    {
-        if (stripos($_SERVER['HTTP_USER_AGENT'], 'safari') >= 0) {
-            if (count($_COOKIE) === 0) {
-                header('Location: safari_fix.php');
-                exit;
-            }
-        }
     }
 }

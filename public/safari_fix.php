@@ -7,9 +7,9 @@ function createCookie($options)
     $value = $options['value'];
     $expire = isset($options['expire']) ? $options['expire'] : 0;
     $path = isset($options['path']) ? $options['path'] : '/';
-    $domain = isset($options['domain']) ? $options['domain'] : NULL;
-    $secure = isset($options['secure']) ? $options['secure'] : TRUE;
-    $httponly = isset($options['httponly']) ? $options['httponly'] : FALSE;
+    $domain = isset($options['domain']) ? $options['domain'] : null;
+    $secure = isset($options['secure']) ? $options['secure'] : true;
+    $httponly = isset($options['httponly']) ? $options['httponly'] : false;
     if (PHP_VERSION_ID < 70300) {
         setcookie($name, $value, $expire, "$path; samesite=None", $domain, $secure, $httponly);
     } else {
@@ -28,7 +28,7 @@ $get = filter_input_array(INPUT_GET);
 if (isset($get['redirect'])) {
     createCookie([
         'name' => 'safari_cookie_fix',
-        'value' => 'fixed'
+        'value' => 'fixed',
     ]);
 
     print "<script>window.history.back(2); </script>";
