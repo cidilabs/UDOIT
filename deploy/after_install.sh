@@ -22,7 +22,7 @@ cp /var/www/html/deploy/UdoitMultiTenant.php /var/www/html/lib/UdoitMultiTenant.
 cp /var/www/html/deploy/udoit.xml.php /var/www/html/public/udoit.xml.php
 
 # add HTTPS server setting
-echo -e "\n$_SERVER['HTTPS'] = 'on';" >> /var/www/html/config/settings.php
+echo -e "\n\$_SERVER['HTTPS'] = 'on';" >> /var/www/html/config/settings.php
 
 # add UdoitMultiTentant::setupOauth() to settings.php
 echo -e '\n// Setup MultiTenant oauth' >> /var/www/html/config/settings.php
