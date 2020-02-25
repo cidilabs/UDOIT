@@ -7,130 +7,75 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Util;
 
-use Iterator;
-use PharIo\Version\VersionConstraintParser;
-use PHPUnit\Framework\CodeCoverageException;
-use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\InvalidCoversTargetException;
-use PHPUnit\Framework\SelfDescribing;
-use PHPUnit\Framework\SkippedTestError;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Warning;
-use PHPUnit\Runner\Version;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionFunction;
-use ReflectionMethod;
-use SebastianBergmann\Environment\OperatingSystem;
-use Traversable;
-
-final class Test
-{
-    /**
-     * @var int
-     */
-    public const UNKNOWN = -1;
-
-    /**
-     * @var int
-     */
-    public const SMALL = 0;
-
-    /**
-     * @var int
-     */
-    public const MEDIUM = 1;
-
-    /**
-     * @var int
-     */
-    public const LARGE = 2;
-
-    /**
-     * @var string
-     *
-     * @todo This constant should be private (it's public because of TestTest::testGetProvidedDataRegEx)
-     */
-    public const REGEX_DATA_PROVIDER = '/@dataProvider\s+([a-zA-Z0-9._:-\\\\x7f-\xff]+)/';
-
-    /**
-     * @var string
-     */
-    private const REGEX_TEST_WITH = '/@testWith\s+/';
-
-    /**
-     * @var string
-     */
-    private const REGEX_EXPECTED_EXCEPTION = '(@expectedException\s+([:.\w\\\\x7f-\xff]+)(?:[\t ]+(\S*))?(?:[\t ]+(\S*))?\s*$)m';
-
-    /**
-     * @var string
-     */
-    private const REGEX_REQUIRES_VERSION = '/@requires\s+(?P<name>PHP(?:Unit)?)\s+(?P<operator>[<>=!]{0,2})\s*(?P<version>[\d\.-]+(dev|(RC|alpha|beta)[\d\.])?)[ \t]*\r?$/m';
-
-    /**
-     * @var string
-     */
-    private const REGEX_REQUIRES_VERSION_CONSTRAINT = '/@requires\s+(?P<name>PHP(?:Unit)?)\s+(?P<constraint>[\d\t -.|~^]+)[ \t]*\r?$/m';
-
-    /**
-     * @var string
-     */
-    private const REGEX_REQUIRES_OS = '/@requires\s+(?P<name>OS(?:FAMILY)?)\s+(?P<value>.+?)[ \t]*\r?$/m';
-
-    /**
-     * @var string
-     */
-    private const REGEX_REQUIRES_SETTING = '/@requires\s+(?P<name>setting)\s+(?P<setting>([^ ]+?))\s*(?P<value>[\w\.-]+[\w\.]?)?[ \t]*\r?$/m';
-
-    /**
-     * @var string
-     */
-    private const REGEX_REQUIRES = '/@requires\s+(?P<name>function|extension)\s+(?P<value>([^ ]+?))\s*(?P<operator>[<>=!]{0,2})\s*(?P<version>[\d\.-]+[\d\.]?)?[ \t]*\r?$/m';
-
-    /**
-     * @var array
-     */
-    private static $annotationCache = [];
-
-    /**
-     * @var array
-     */
-    private static $hookMethods = [];
-
-    public static function describe(\PHPUnit\Framework\Test $test): array
+if (!function_exists('trait_exists')) {
+    function trait_exists($traitname, $autoload = true)
     {
-        if ($test instanceof TestCase) {
-            return [\get_class($test), $test->getName()];
-        }
-
-        if ($test instanceof SelfDescribing) {
-            return ['', $test->toString()];
-        }
-
-        return ['', \get_class($test)];
+        return false;
     }
+}
 
-    public static function describeAsString(\PHPUnit\Framework\Test $test): string
+/**
+ * Test helpers.
+ *
+ * @since Class available since Release 3.0.0
+ */
+class PHPUnit_Util_Test
+{
+    const REGEX_DATA_PROVIDER      = '/@dataProvider\s+([a-zA-Z0-9._:-\\\\x7f-\xff]+)/';
+    const REGEX_TEST_WITH          = '/@testWith\s+/';
+    const REGEX_EXPECTED_EXCEPTION = '(@expectedException\s+([:.\w\\\\x7f-\xff]+)(?:[\t ]+(\S*))?(?:[\t ]+(\S*))?\s*$)m';
+    const REGEX_REQUIRES_VERSION   = '/@requires\s+(?P<name>PHP(?:Unit)?)\s+(?P<value>[\d\.-]+(dev|(RC|alpha|beta)[\d\.])?)[ \t]*\r?$/m';
+    const REGEX_REQUIRES_OS        = '/@requires\s+OS\s+(?P<value>.+?)[ \t]*\r?$/m';
+    const REGEX_REQUIRES           = '/@requires\s+(?P<name>function|extension)\s+(?P<value>([^ ]+?))[ \t]*\r?$/m';
+
+    const UNKNOWN = -1;
+    const SMALL   = 0;
+    const MEDIUM  = 1;
+    const LARGE   = 2;
+
+    private static $annotationCache = array();
+
+    private static $hookMethods = array();
+
+    /**
+     * @param PHPUnit_Framework_Test $test
+     * @param bool                   $asString
+     *
+     * @return mixed
+     */
+    public static function describe(PHPUnit_Framework_Test $test, $asString = true)
     {
-        if ($test instanceof SelfDescribing) {
-            return $test->toString();
+        if ($asString) {
+            if ($test instanceof PHPUnit_Framework_SelfDescribing) {
+                return $test->toString();
+            } else {
+                return get_class($test);
+            }
+        } else {
+            if ($test instanceof PHPUnit_Framework_TestCase) {
+                return array(
+                  get_class($test), $test->getName()
+                );
+            } elseif ($test instanceof PHPUnit_Framework_SelfDescribing) {
+                return array('', $test->toString());
+            } else {
+                return array('', get_class($test));
+            }
         }
-
-        return \get_class($test);
     }
 
     /**
      * @param string $className
      * @param string $methodName
      *
-     * @throws CodeCoverageException
-     *
      * @return array|bool
+     *
+     * @throws PHPUnit_Framework_CodeCoverageException
+     *
+     * @since  Method available since Release 4.0.0
      */
-    public static function getLinesToBeCovered(string $className, string $methodName)
+    public static function getLinesToBeCovered($className, $methodName)
     {
         $annotations = self::parseTestMethodAnnotations(
             $className,
@@ -150,13 +95,77 @@ final class Test
      * @param string $className
      * @param string $methodName
      *
-     * @throws CodeCoverageException
-     *
      * @return array
+     *
+     * @since  Method available since Release 4.0.0
      */
-    public static function getLinesToBeUsed(string $className, string $methodName): array
+    public static function getLinesToBeUsed($className, $methodName)
     {
         return self::getLinesToBeCoveredOrUsed($className, $methodName, 'uses');
+    }
+
+    /**
+     * @param string $className
+     * @param string $methodName
+     * @param string $mode
+     *
+     * @return array
+     *
+     * @throws PHPUnit_Framework_CodeCoverageException
+     *
+     * @since  Method available since Release 4.2.0
+     */
+    private static function getLinesToBeCoveredOrUsed($className, $methodName, $mode)
+    {
+        $annotations = self::parseTestMethodAnnotations(
+            $className,
+            $methodName
+        );
+
+        $classShortcut = null;
+
+        if (!empty($annotations['class'][$mode . 'DefaultClass'])) {
+            if (count($annotations['class'][$mode . 'DefaultClass']) > 1) {
+                throw new PHPUnit_Framework_CodeCoverageException(
+                    sprintf(
+                        'More than one @%sClass annotation in class or interface "%s".',
+                        $mode,
+                        $className
+                    )
+                );
+            }
+
+            $classShortcut = $annotations['class'][$mode . 'DefaultClass'][0];
+        }
+
+        $list = array();
+
+        if (isset($annotations['class'][$mode])) {
+            $list = $annotations['class'][$mode];
+        }
+
+        if (isset($annotations['method'][$mode])) {
+            $list = array_merge($list, $annotations['method'][$mode]);
+        }
+
+        $codeList = array();
+
+        foreach (array_unique($list) as $element) {
+            if ($classShortcut && strncmp($element, '::', 2) === 0) {
+                $element = $classShortcut . $element;
+            }
+
+            $element = preg_replace('/[\s()]+$/', '', $element);
+            $element = explode(' ', $element);
+            $element = $element[0];
+
+            $codeList = array_merge(
+                $codeList,
+                self::resolveElementToReflectionObjects($element)
+            );
+        }
+
+        return self::resolveReflectionObjectsToLines($codeList);
     }
 
     /**
@@ -165,77 +174,40 @@ final class Test
      * @param string $className
      * @param string $methodName
      *
-     * @throws Warning
-     *
      * @return array
+     *
+     * @since  Method available since Release 3.6.0
      */
-    public static function getRequirements(string $className, string $methodName): array
+    public static function getRequirements($className, $methodName)
     {
         $reflector  = new ReflectionClass($className);
         $docComment = $reflector->getDocComment();
         $reflector  = new ReflectionMethod($className, $methodName);
         $docComment .= "\n" . $reflector->getDocComment();
-        $requires = [];
+        $requires   = array();
 
-        if ($count = \preg_match_all(self::REGEX_REQUIRES_OS, $docComment, $matches)) {
-            foreach (\range(0, $count - 1) as $i) {
+        if ($count = preg_match_all(self::REGEX_REQUIRES_OS, $docComment, $matches)) {
+            $requires['OS'] = sprintf(
+                '/%s/i',
+                addcslashes($matches['value'][$count - 1], '/')
+            );
+        }
+        if ($count = preg_match_all(self::REGEX_REQUIRES_VERSION, $docComment, $matches)) {
+            for ($i = 0; $i < $count; $i++) {
                 $requires[$matches['name'][$i]] = $matches['value'][$i];
             }
         }
 
-        if ($count = \preg_match_all(self::REGEX_REQUIRES_VERSION, $docComment, $matches)) {
-            foreach (\range(0, $count - 1) as $i) {
-                $requires[$matches['name'][$i]] = [
-                    'version'  => $matches['version'][$i],
-                    'operator' => $matches['operator'][$i]
-                ];
-            }
-        }
+        // https://bugs.php.net/bug.php?id=63055
+        $matches = array();
 
-        if ($count = \preg_match_all(self::REGEX_REQUIRES_VERSION_CONSTRAINT, $docComment, $matches)) {
-            foreach (\range(0, $count - 1) as $i) {
-                if (!empty($requires[$matches['name'][$i]])) {
-                    continue;
-                }
-
-                try {
-                    $versionConstraintParser = new VersionConstraintParser;
-
-                    $requires[$matches['name'][$i] . '_constraint'] = [
-                        'constraint' => $versionConstraintParser->parse(\trim($matches['constraint'][$i]))
-                    ];
-                } catch (\PharIo\Version\Exception $e) {
-                    throw new Warning($e->getMessage(), $e->getCode(), $e);
-                }
-            }
-        }
-
-        if ($count = \preg_match_all(self::REGEX_REQUIRES_SETTING, $docComment, $matches)) {
-            $requires['setting'] = [];
-
-            foreach (\range(0, $count - 1) as $i) {
-                $requires['setting'][$matches['setting'][$i]] = $matches['value'][$i];
-            }
-        }
-
-        if ($count = \preg_match_all(self::REGEX_REQUIRES, $docComment, $matches)) {
-            foreach (\range(0, $count - 1) as $i) {
+        if ($count = preg_match_all(self::REGEX_REQUIRES, $docComment, $matches)) {
+            for ($i = 0; $i < $count; $i++) {
                 $name = $matches['name'][$i] . 's';
-
                 if (!isset($requires[$name])) {
-                    $requires[$name] = [];
+                    $requires[$name] = array();
                 }
-
                 $requires[$name][] = $matches['value'][$i];
-
-                if ($name !== 'extensions' || empty($matches['version'][$i])) {
-                    continue;
-                }
-
-                $requires['extension_versions'][$matches['value'][$i]] = [
-                    'version'  => $matches['version'][$i],
-                    'operator' => $matches['operator'][$i]
-                ];
             }
         }
 
@@ -248,106 +220,47 @@ final class Test
      * @param string $className
      * @param string $methodName
      *
-     * @throws Warning
+     * @return array
      *
-     * @return string[]
+     * @since  Method available since Release 4.3.0
      */
-    public static function getMissingRequirements(string $className, string $methodName): array
+    public static function getMissingRequirements($className, $methodName)
     {
         $required = static::getRequirements($className, $methodName);
-        $missing  = [];
+        $missing  = array();
 
-        if (!empty($required['PHP'])) {
-            $operator = empty($required['PHP']['operator']) ? '>=' : $required['PHP']['operator'];
-
-            if (!\version_compare(PHP_VERSION, $required['PHP']['version'], $operator)) {
-                $missing[] = \sprintf('PHP %s %s is required.', $operator, $required['PHP']['version']);
-            }
-        } elseif (!empty($required['PHP_constraint'])) {
-            $version = new \PharIo\Version\Version(self::sanitizeVersionNumber(PHP_VERSION));
-
-            if (!$required['PHP_constraint']['constraint']->complies($version)) {
-                $missing[] = \sprintf(
-                    'PHP version does not match the required constraint %s.',
-                    $required['PHP_constraint']['constraint']->asString()
-                );
-            }
+        if (!empty($required['PHP']) && version_compare(PHP_VERSION, $required['PHP'], '<')) {
+            $missing[] = sprintf('PHP %s (or later) is required.', $required['PHP']);
         }
 
         if (!empty($required['PHPUnit'])) {
-            $phpunitVersion = Version::id();
-
-            $operator = empty($required['PHPUnit']['operator']) ? '>=' : $required['PHPUnit']['operator'];
-
-            if (!\version_compare($phpunitVersion, $required['PHPUnit']['version'], $operator)) {
-                $missing[] = \sprintf('PHPUnit %s %s is required.', $operator, $required['PHPUnit']['version']);
-            }
-        } elseif (!empty($required['PHPUnit_constraint'])) {
-            $phpunitVersion = new \PharIo\Version\Version(self::sanitizeVersionNumber(Version::id()));
-
-            if (!$required['PHPUnit_constraint']['constraint']->complies($phpunitVersion)) {
-                $missing[] = \sprintf(
-                    'PHPUnit version does not match the required constraint %s.',
-                    $required['PHPUnit_constraint']['constraint']->asString()
-                );
+            $phpunitVersion = PHPUnit_Runner_Version::id();
+            if (version_compare($phpunitVersion, $required['PHPUnit'], '<')) {
+                $missing[] = sprintf('PHPUnit %s (or later) is required.', $required['PHPUnit']);
             }
         }
 
-        if (!empty($required['OSFAMILY']) && $required['OSFAMILY'] !== (new OperatingSystem())->getFamily()) {
-            $missing[] = \sprintf('Operating system %s is required.', $required['OSFAMILY']);
-        }
-
-        if (!empty($required['OS'])) {
-            $requiredOsPattern = \sprintf('/%s/i', \addcslashes($required['OS'], '/'));
-            if (!\preg_match($requiredOsPattern, PHP_OS)) {
-                $missing[] = \sprintf('Operating system matching %s is required.', $requiredOsPattern);
-            }
+        if (!empty($required['OS']) && !preg_match($required['OS'], PHP_OS)) {
+            $missing[] = sprintf('Operating system matching %s is required.', $required['OS']);
         }
 
         if (!empty($required['functions'])) {
             foreach ($required['functions'] as $function) {
-                $pieces = \explode('::', $function);
-
-                if (\count($pieces) === 2 && \method_exists($pieces[0], $pieces[1])) {
+                $pieces = explode('::', $function);
+                if (2 === count($pieces) && method_exists($pieces[0], $pieces[1])) {
                     continue;
                 }
-
-                if (\function_exists($function)) {
+                if (function_exists($function)) {
                     continue;
                 }
-
-                $missing[] = \sprintf('Function %s is required.', $function);
-            }
-        }
-
-        if (!empty($required['setting'])) {
-            foreach ($required['setting'] as $setting => $value) {
-                if (\ini_get($setting) != $value) {
-                    $missing[] = \sprintf('Setting "%s" must be "%s".', $setting, $value);
-                }
+                $missing[] = sprintf('Function %s is required.', $function);
             }
         }
 
         if (!empty($required['extensions'])) {
             foreach ($required['extensions'] as $extension) {
-                if (isset($required['extension_versions'][$extension])) {
-                    continue;
-                }
-
-                if (!\extension_loaded($extension)) {
-                    $missing[] = \sprintf('Extension %s is required.', $extension);
-                }
-            }
-        }
-
-        if (!empty($required['extension_versions'])) {
-            foreach ($required['extension_versions'] as $extension => $required) {
-                $actualVersion = \phpversion($extension);
-
-                $operator = empty($required['operator']) ? '>=' : $required['operator'];
-
-                if ($actualVersion === false || !\version_compare($actualVersion, $required['version'], $operator)) {
-                    $missing[] = \sprintf('Extension %s %s %s is required.', $extension, $operator, $required['version']);
+                if (!extension_loaded($extension)) {
+                    $missing[] = sprintf('Extension %s is required.', $extension);
                 }
             }
         }
@@ -361,15 +274,17 @@ final class Test
      * @param string $className
      * @param string $methodName
      *
-     * @return array|false
+     * @return array
+     *
+     * @since  Method available since Release 3.3.6
      */
-    public static function getExpectedException(string $className, ?string $methodName)
+    public static function getExpectedException($className, $methodName)
     {
         $reflector  = new ReflectionMethod($className, $methodName);
         $docComment = $reflector->getDocComment();
-        $docComment = \substr($docComment, 3, -2);
+        $docComment = substr($docComment, 3, -2);
 
-        if (\preg_match(self::REGEX_EXPECTED_EXCEPTION, $docComment, $matches)) {
+        if (preg_match(self::REGEX_EXPECTED_EXCEPTION, $docComment, $matches)) {
             $annotations = self::parseTestMethodAnnotations(
                 $className,
                 $methodName
@@ -381,7 +296,7 @@ final class Test
             $messageRegExp = '';
 
             if (isset($matches[2])) {
-                $message = \trim($matches[2]);
+                $message = trim($matches[2]);
             } elseif (isset($annotations['method']['expectedExceptionMessage'])) {
                 $message = self::parseAnnotationContent(
                     $annotations['method']['expectedExceptionMessage'][0]
@@ -402,18 +317,40 @@ final class Test
                 );
             }
 
-            if (\is_numeric($code)) {
+            if (is_numeric($code)) {
                 $code = (int) $code;
-            } elseif (\is_string($code) && \defined($code)) {
-                $code = (int) \constant($code);
+            } elseif (is_string($code) && defined($code)) {
+                $code = (int) constant($code);
             }
 
-            return [
-                'class' => $class, 'code' => $code, 'message' => $message, 'message_regex' => $messageRegExp
-            ];
+            return array(
+              'class' => $class, 'code' => $code, 'message' => $message, 'message_regex' => $messageRegExp
+            );
         }
 
         return false;
+    }
+
+    /**
+     * Parse annotation content to use constant/class constant values
+     *
+     * Constants are specified using a starting '@'. For example: @ClassName::CONST_NAME
+     *
+     * If the constant is not found the string is used as is to ensure maximum BC.
+     *
+     * @param string $message
+     *
+     * @return string
+     */
+    private static function parseAnnotationContent($message)
+    {
+        if (strpos($message, '::') !== false && count(explode('::', $message)) == 2) {
+            if (defined($message)) {
+                $message = constant($message);
+            }
+        }
+
+        return $message;
     }
 
     /**
@@ -422,12 +359,14 @@ final class Test
      * @param string $className
      * @param string $methodName
      *
-     * @throws Exception
+     * @return array|Iterator when a data provider is specified and exists
+     *                        null           when no data provider is specified
      *
-     * @return array When a data provider is specified and exists
-     *               null  When no data provider is specified
+     * @throws PHPUnit_Framework_Exception
+     *
+     * @since  Method available since Release 3.2.0
      */
-    public static function getProvidedData(string $className, string $methodName): ?array
+    public static function getProvidedData($className, $methodName)
     {
         $reflector  = new ReflectionMethod($className, $methodName);
         $docComment = $reflector->getDocComment();
@@ -438,17 +377,21 @@ final class Test
             $data = self::getDataFromTestWithAnnotation($docComment);
         }
 
-        if (\is_array($data) && empty($data)) {
-            throw new SkippedTestError;
+        if (is_array($data) && empty($data)) {
+            throw new PHPUnit_Framework_SkippedTestError;
         }
 
         if ($data !== null) {
+            if (is_object($data)) {
+                $data = iterator_to_array($data);
+            }
+
             foreach ($data as $key => $value) {
-                if (!\is_array($value)) {
-                    throw new Exception(
-                        \sprintf(
+                if (!is_array($value)) {
+                    throw new PHPUnit_Framework_Exception(
+                        sprintf(
                             'Data set %s is invalid.',
-                            \is_int($key) ? '#' . $key : '"' . $key . '"'
+                            is_int($key) ? '#' . $key : '"' . $key . '"'
                         )
                     );
                 }
@@ -459,34 +402,88 @@ final class Test
     }
 
     /**
+     * Returns the provided data for a method.
+     *
+     * @param string $docComment
+     * @param string $className
+     * @param string $methodName
+     *
+     * @return array|Iterator when a data provider is specified and exists
+     *                        null           when no data provider is specified
+     *
+     * @throws PHPUnit_Framework_Exception
+     */
+    private static function getDataFromDataProviderAnnotation($docComment, $className, $methodName)
+    {
+        if (preg_match(self::REGEX_DATA_PROVIDER, $docComment, $matches)) {
+            $dataProviderMethodNameNamespace = explode('\\', $matches[1]);
+            $leaf                            = explode('::', array_pop($dataProviderMethodNameNamespace));
+            $dataProviderMethodName          = array_pop($leaf);
+
+            if (!empty($dataProviderMethodNameNamespace)) {
+                $dataProviderMethodNameNamespace = implode('\\', $dataProviderMethodNameNamespace) . '\\';
+            } else {
+                $dataProviderMethodNameNamespace = '';
+            }
+
+            if (!empty($leaf)) {
+                $dataProviderClassName = $dataProviderMethodNameNamespace . array_pop($leaf);
+            } else {
+                $dataProviderClassName = $className;
+            }
+
+            $dataProviderClass  = new ReflectionClass($dataProviderClassName);
+            $dataProviderMethod = $dataProviderClass->getMethod(
+                $dataProviderMethodName
+            );
+
+            if ($dataProviderMethod->isStatic()) {
+                $object = null;
+            } else {
+                $object = $dataProviderClass->newInstance();
+            }
+
+            if ($dataProviderMethod->getNumberOfParameters() == 0) {
+                $data = $dataProviderMethod->invoke($object);
+            } else {
+                $data = $dataProviderMethod->invoke($object, $methodName);
+            }
+
+            return $data;
+        }
+    }
+
+    /**
      * @param string $docComment full docComment string
      *
-     * @throws Exception when @testWith annotation is defined but cannot be parsed
+     * @return array when @testWith annotation is defined
+     *               null  when @testWith annotation is omitted
      *
-     * @return null|array array when @testWith annotation is defined,
-     *                    null when @testWith annotation is omitted
+     * @throws PHPUnit_Framework_Exception when @testWith annotation is defined but cannot be parsed
      */
-    public static function getDataFromTestWithAnnotation(string $docComment): ?array
+    public static function getDataFromTestWithAnnotation($docComment)
     {
         $docComment = self::cleanUpMultiLineAnnotation($docComment);
 
-        if (\preg_match(self::REGEX_TEST_WITH, $docComment, $matches, PREG_OFFSET_CAPTURE)) {
-            $offset            = \strlen($matches[0][0]) + $matches[0][1];
-            $annotationContent = \substr($docComment, $offset);
-            $data              = [];
+        if (preg_match(self::REGEX_TEST_WITH, $docComment, $matches, PREG_OFFSET_CAPTURE)) {
+            $offset            = strlen($matches[0][0]) + $matches[0][1];
+            $annotationContent = substr($docComment, $offset);
+            $data              = array();
 
-            foreach (\explode("\n", $annotationContent) as $candidateRow) {
-                $candidateRow = \trim($candidateRow);
+            foreach (explode("\n", $annotationContent) as $candidateRow) {
+                $candidateRow = trim($candidateRow);
 
                 if ($candidateRow[0] !== '[') {
                     break;
                 }
 
-                $dataSet = \json_decode($candidateRow, true);
+                $dataSet = json_decode($candidateRow, true);
 
-                if (\json_last_error() !== JSON_ERROR_NONE) {
-                    throw new Exception(
-                        'The data set for the @testWith annotation cannot be parsed: ' . \json_last_error_msg()
+                if (json_last_error() != JSON_ERROR_NONE) {
+                    $error = function_exists('json_last_error_msg') ? json_last_error_msg() : json_last_error();
+
+                    throw new PHPUnit_Framework_Exception(
+                        'The dataset for the @testWith annotation cannot be parsed: ' . $error
                     );
                 }
 
@@ -494,52 +491,21 @@ final class Test
             }
 
             if (!$data) {
-                throw new Exception('The data set for the @testWith annotation cannot be parsed.');
+                throw new PHPUnit_Framework_Exception('The dataset for the @testWith annotation cannot be parsed.');
             }
 
             return $data;
         }
-
-        return null;
     }
 
-    public static function parseTestMethodAnnotations(string $className, ?string $methodName = ''): array
+    private static function cleanUpMultiLineAnnotation($docComment)
     {
-        if (!isset(self::$annotationCache[$className])) {
-            $class       = new ReflectionClass($className);
-            $traits      = $class->getTraits();
-            $annotations = [];
+        //removing initial '   * ' for docComment
+        $docComment = preg_replace('/' . '\n' . '\s*' . '\*' . '\s?' . '/', "\n", $docComment);
+        $docComment = substr($docComment, 0, -1);
+        $docComment = rtrim($docComment, "\n");
 
-            foreach ($traits as $trait) {
-                $annotations = \array_merge(
-                    $annotations,
-                    self::parseAnnotations($trait->getDocComment())
-                );
-            }
-
-            self::$annotationCache[$className] = \array_merge(
-                $annotations,
-                self::parseAnnotations($class->getDocComment())
-            );
-        }
-
-        $cacheKey = $className . '::' . $methodName;
-
-        if ($methodName !== null && !isset(self::$annotationCache[$cacheKey])) {
-            try {
-                $method      = new ReflectionMethod($className, $methodName);
-                $annotations = self::parseAnnotations($method->getDocComment());
-            } catch (ReflectionException $e) {
-                $annotations = [];
-            }
-
-            self::$annotationCache[$cacheKey] = $annotations;
-        }
-
-        return [
-            'class'  => self::$annotationCache[$className],
-            'method' => $methodName !== null ? self::$annotationCache[$cacheKey] : []
-        ];
+        return $docComment;
     }
 
     /**
@@ -547,47 +513,52 @@ final class Test
      * @param string $methodName
      *
      * @return array
+     *
+     * @throws ReflectionException
+     *
+     * @since  Method available since Release 3.4.0
      */
-    public static function getInlineAnnotations(string $className, string $methodName): array
+    public static function parseTestMethodAnnotations($className, $methodName = '')
     {
-        $method      = new ReflectionMethod($className, $methodName);
-        $code        = \file($method->getFileName());
-        $lineNumber  = $method->getStartLine();
-        $startLine   = $method->getStartLine() - 1;
-        $endLine     = $method->getEndLine() - 1;
-        $methodLines = \array_slice($code, $startLine, $endLine - $startLine + 1);
-        $annotations = [];
-
-        foreach ($methodLines as $line) {
-            if (\preg_match('#/\*\*?\s*@(?P<name>[A-Za-z_-]+)(?:[ \t]+(?P<value>.*?))?[ \t]*\r?\*/$#m', $line, $matches)) {
-                $annotations[\strtolower($matches['name'])] = [
-                    'line'  => $lineNumber,
-                    'value' => $matches['value']
-                ];
-            }
-
-            $lineNumber++;
+        if (!isset(self::$annotationCache[$className])) {
+            $class                             = new ReflectionClass($className);
+            self::$annotationCache[$className] = self::parseAnnotations($class->getDocComment());
         }
 
-        return $annotations;
+        if (!empty($methodName) && !isset(self::$annotationCache[$className . '::' . $methodName])) {
+            try {
+                $method      = new ReflectionMethod($className, $methodName);
+                $annotations = self::parseAnnotations($method->getDocComment());
+            } catch (ReflectionException $e) {
+                $annotations = array();
+            }
+            self::$annotationCache[$className . '::' . $methodName] = $annotations;
+        }
+
+        return array(
+          'class'  => self::$annotationCache[$className],
+          'method' => !empty($methodName) ? self::$annotationCache[$className . '::' . $methodName] : array()
+        );
     }
 
     /**
-     * @param string $docBlock
+     * @param string $docblock
      *
      * @return array
+     *
+     * @since  Method available since Release 3.4.0
      */
-    public static function parseAnnotations(string $docBlock): array
+    private static function parseAnnotations($docblock)
     {
-        $annotations = [];
+        $annotations = array();
         // Strip away the docblock header and footer to ease parsing of one line annotations
-        $docBlock = \substr($docBlock, 3, -2);
+        $docblock = substr($docblock, 3, -2);
 
-        if (\preg_match_all('/@(?P<name>[A-Za-z_-]+)(?:[ \t]+(?P<value>.*?))?[ \t]*\r?$/m', $docBlock, $matches)) {
-            $numMatches = \count($matches[0]);
+        if (preg_match_all('/@(?P<name>[A-Za-z_-]+)(?:[ \t]+(?P<value>.*?))?[ \t]*\r?$/m', $docblock, $matches)) {
+            $numMatches = count($matches[0]);
 
             for ($i = 0; $i < $numMatches; ++$i) {
-                $annotations[$matches['name'][$i]][] = (string) $matches['value'][$i];
+                $annotations[$matches['name'][$i]][] = $matches['value'][$i];
             }
         }
 
@@ -600,22 +571,24 @@ final class Test
      * @param string $className
      * @param string $methodName
      *
-     * @return array<string, null|bool>
+     * @return array
+     *
+     * @since  Method available since Release 3.4.0
      */
-    public static function getBackupSettings(string $className, string $methodName): array
+    public static function getBackupSettings($className, $methodName)
     {
-        return [
-            'backupGlobals' => self::getBooleanAnnotationSetting(
-                $className,
-                $methodName,
-                'backupGlobals'
-            ),
-            'backupStaticAttributes' => self::getBooleanAnnotationSetting(
-                $className,
-                $methodName,
-                'backupStaticAttributes'
-            )
-        ];
+        return array(
+          'backupGlobals' => self::getBooleanAnnotationSetting(
+              $className,
+              $methodName,
+              'backupGlobals'
+          ),
+          'backupStaticAttributes' => self::getBooleanAnnotationSetting(
+              $className,
+              $methodName,
+              'backupStaticAttributes'
+          )
+        );
     }
 
     /**
@@ -625,28 +598,30 @@ final class Test
      * @param string $methodName
      *
      * @return array
+     *
+     * @since  Method available since Release 3.4.0
      */
-    public static function getDependencies(string $className, string $methodName): array
+    public static function getDependencies($className, $methodName)
     {
         $annotations = self::parseTestMethodAnnotations(
             $className,
             $methodName
         );
 
-        $dependencies = [];
+        $dependencies = array();
 
         if (isset($annotations['class']['depends'])) {
             $dependencies = $annotations['class']['depends'];
         }
 
         if (isset($annotations['method']['depends'])) {
-            $dependencies = \array_merge(
+            $dependencies = array_merge(
                 $dependencies,
                 $annotations['method']['depends']
             );
         }
 
-        return \array_unique($dependencies);
+        return array_unique($dependencies);
     }
 
     /**
@@ -655,9 +630,11 @@ final class Test
      * @param string $className
      * @param string $methodName
      *
-     * @return ?bool
+     * @return bool
+     *
+     * @since  Method available since Release 3.4.0
      */
-    public static function getErrorHandlerSettings(string $className, ?string $methodName): ?bool
+    public static function getErrorHandlerSettings($className, $methodName)
     {
         return self::getBooleanAnnotationSetting(
             $className,
@@ -673,15 +650,17 @@ final class Test
      * @param string $methodName
      *
      * @return array
+     *
+     * @since  Method available since Release 3.2.0
      */
-    public static function getGroups(string $className, ?string $methodName = ''): array
+    public static function getGroups($className, $methodName = '')
     {
         $annotations = self::parseTestMethodAnnotations(
             $className,
             $methodName
         );
 
-        $groups = [];
+        $groups = array();
 
         if (isset($annotations['method']['author'])) {
             $groups = $annotations['method']['author'];
@@ -690,32 +669,36 @@ final class Test
         }
 
         if (isset($annotations['class']['group'])) {
-            $groups = \array_merge($groups, $annotations['class']['group']);
+            $groups = array_merge($groups, $annotations['class']['group']);
         }
 
         if (isset($annotations['method']['group'])) {
-            $groups = \array_merge($groups, $annotations['method']['group']);
+            $groups = array_merge($groups, $annotations['method']['group']);
         }
 
         if (isset($annotations['class']['ticket'])) {
-            $groups = \array_merge($groups, $annotations['class']['ticket']);
+            $groups = array_merge($groups, $annotations['class']['ticket']);
         }
 
         if (isset($annotations['method']['ticket'])) {
-            $groups = \array_merge($groups, $annotations['method']['ticket']);
+            $groups = array_merge($groups, $annotations['method']['ticket']);
         }
 
-        foreach (['method', 'class'] as $element) {
-            foreach (['small', 'medium', 'large'] as $size) {
+        foreach (array('method', 'class') as $element) {
+            foreach (array('small', 'medium', 'large') as $size) {
                 if (isset($annotations[$element][$size])) {
                     $groups[] = $size;
+                    break 2;
+                }
 
+                if (isset($annotations[$element][$size])) {
+                    $groups[] = $size;
                     break 2;
                 }
             }
         }
 
-        return \array_unique($groups);
+        return array_unique($groups);
     }
 
     /**
@@ -725,24 +708,58 @@ final class Test
      * @param string $methodName
      *
      * @return int
+     *
+     * @since  Method available since Release 3.6.0
      */
-    public static function getSize(string $className, ?string $methodName): int
+    public static function getSize($className, $methodName)
     {
-        $groups = \array_flip(self::getGroups($className, $methodName));
+        $groups = array_flip(self::getGroups($className, $methodName));
+        $size   = self::UNKNOWN;
+        $class  = new ReflectionClass($className);
 
-        if (isset($groups['large'])) {
-            return self::LARGE;
+        if (isset($groups['large']) ||
+            (class_exists('PHPUnit_Extensions_Database_TestCase', false) &&
+             $class->isSubclassOf('PHPUnit_Extensions_Database_TestCase')) ||
+            (class_exists('PHPUnit_Extensions_SeleniumTestCase', false) &&
+             $class->isSubclassOf('PHPUnit_Extensions_SeleniumTestCase'))) {
+            $size = self::LARGE;
+        } elseif (isset($groups['medium'])) {
+            $size = self::MEDIUM;
+        } elseif (isset($groups['small'])) {
+            $size = self::SMALL;
         }
 
-        if (isset($groups['medium'])) {
-            return self::MEDIUM;
+        return $size;
+    }
+
+    /**
+     * Returns the tickets for a test class or method.
+     *
+     * @param string $className
+     * @param string $methodName
+     *
+     * @return array
+     *
+     * @since  Method available since Release 3.4.0
+     */
+    public static function getTickets($className, $methodName)
+    {
+        $annotations = self::parseTestMethodAnnotations(
+            $className,
+            $methodName
+        );
+
+        $tickets = array();
+
+        if (isset($annotations['class']['ticket'])) {
+            $tickets = $annotations['class']['ticket'];
         }
 
-        if (isset($groups['small'])) {
-            return self::SMALL;
+        if (isset($annotations['method']['ticket'])) {
+            $tickets = array_merge($tickets, $annotations['method']['ticket']);
         }
 
-        return self::UNKNOWN;
+        return array_unique($tickets);
     }
 
     /**
@@ -752,25 +769,22 @@ final class Test
      * @param string $methodName
      *
      * @return bool
+     *
+     * @since  Method available since Release 3.4.1
      */
-    public static function getProcessIsolationSettings(string $className, string $methodName): bool
+    public static function getProcessIsolationSettings($className, $methodName)
     {
         $annotations = self::parseTestMethodAnnotations(
             $className,
             $methodName
         );
 
-        return isset($annotations['class']['runTestsInSeparateProcesses']) || isset($annotations['method']['runInSeparateProcess']);
-    }
-
-    public static function getClassProcessIsolationSettings(string $className, string $methodName): bool
-    {
-        $annotations = self::parseTestMethodAnnotations(
-            $className,
-            $methodName
-        );
-
-        return isset($annotations['class']['runClassInSeparateProcess']);
+        if (isset($annotations['class']['runTestsInSeparateProcesses']) ||
+            isset($annotations['method']['runInSeparateProcess'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -779,9 +793,11 @@ final class Test
      * @param string $className
      * @param string $methodName
      *
-     * @return ?bool
+     * @return bool
+     *
+     * @since  Method available since Release 3.4.0
      */
-    public static function getPreserveGlobalStateSettings(string $className, string $methodName): ?bool
+    public static function getPreserveGlobalStateSettings($className, $methodName)
     {
         return self::getBooleanAnnotationSetting(
             $className,
@@ -794,10 +810,12 @@ final class Test
      * @param string $className
      *
      * @return array
+     *
+     * @since  Method available since Release 4.0.8
      */
-    public static function getHookMethods(string $className): array
+    public static function getHookMethods($className)
     {
-        if (!\class_exists($className, false)) {
+        if (!class_exists($className, false)) {
             return self::emptyHookMethodsArray();
         }
 
@@ -809,17 +827,11 @@ final class Test
 
                 foreach ($class->getMethods() as $method) {
                     if (self::isBeforeClassMethod($method)) {
-                        \array_unshift(
-                            self::$hookMethods[$className]['beforeClass'],
-                            $method->getName()
-                        );
+                        self::$hookMethods[$className]['beforeClass'][] = $method->getName();
                     }
 
                     if (self::isBeforeMethod($method)) {
-                        \array_unshift(
-                            self::$hookMethods[$className]['before'],
-                            $method->getName()
-                        );
+                        self::$hookMethods[$className]['before'][] = $method->getName();
                     }
 
                     if (self::isAfterMethod($method)) {
@@ -838,236 +850,83 @@ final class Test
     }
 
     /**
-     * @param string $className
-     * @param string $methodName
-     * @param string $mode
-     *
-     * @throws CodeCoverageException
-     *
      * @return array
+     *
+     * @since  Method available since Release 4.0.9
      */
-    private static function getLinesToBeCoveredOrUsed(string $className, string $methodName, string $mode): array
+    private static function emptyHookMethodsArray()
     {
-        $annotations = self::parseTestMethodAnnotations(
-            $className,
-            $methodName
+        return array(
+            'beforeClass' => array('setUpBeforeClass'),
+            'before'      => array('setUp'),
+            'after'       => array('tearDown'),
+            'afterClass'  => array('tearDownAfterClass')
         );
-
-        $classShortcut = null;
-
-        if (!empty($annotations['class'][$mode . 'DefaultClass'])) {
-            if (\count($annotations['class'][$mode . 'DefaultClass']) > 1) {
-                throw new CodeCoverageException(
-                    \sprintf(
-                        'More than one @%sClass annotation in class or interface "%s".',
-                        $mode,
-                        $className
-                    )
-                );
-            }
-
-            $classShortcut = $annotations['class'][$mode . 'DefaultClass'][0];
-        }
-
-        $list = [];
-
-        if (isset($annotations['class'][$mode])) {
-            $list = $annotations['class'][$mode];
-        }
-
-        if (isset($annotations['method'][$mode])) {
-            $list = \array_merge($list, $annotations['method'][$mode]);
-        }
-
-        $codeList = [];
-
-        foreach (\array_unique($list) as $element) {
-            if ($classShortcut && \strncmp($element, '::', 2) === 0) {
-                $element = $classShortcut . $element;
-            }
-
-            $element = \preg_replace('/[\s()]+$/', '', $element);
-            $element = \explode(' ', $element);
-            $element = $element[0];
-
-            $codeList = \array_merge(
-                $codeList,
-                self::resolveElementToReflectionObjects($element)
-            );
-        }
-
-        return self::resolveReflectionObjectsToLines($codeList);
     }
 
     /**
-     * Parse annotation content to use constant/class constant values
-     *
-     * Constants are specified using a starting '@'. For example: @ClassName::CONST_NAME
-     *
-     * If the constant is not found the string is used as is to ensure maximum BC.
-     *
-     * @param string $message
-     *
-     * @return string
-     */
-    private static function parseAnnotationContent(string $message): string
-    {
-        if (\defined($message) && (\strpos($message, '::') !== false && \substr_count($message, '::') + 1 === 2)) {
-            $message = \constant($message);
-        }
-
-        return $message;
-    }
-
-    /**
-     * Returns the provided data for a method.
-     *
-     * @param string $docComment
      * @param string $className
      * @param string $methodName
+     * @param string $settingName
      *
-     * @return array|Iterator when a data provider is specified and exists
-     *                        null           when no data provider is specified
+     * @return bool
+     *
+     * @since  Method available since Release 3.4.0
      */
-    private static function getDataFromDataProviderAnnotation(string $docComment, string $className, string $methodName): ?iterable
-    {
-        if (\preg_match_all(self::REGEX_DATA_PROVIDER, $docComment, $matches)) {
-            $result = [];
-
-            foreach ($matches[1] as $match) {
-                $dataProviderMethodNameNamespace = \explode('\\', $match);
-                $leaf                            = \explode('::', \array_pop($dataProviderMethodNameNamespace));
-                $dataProviderMethodName          = \array_pop($leaf);
-
-                if (empty($dataProviderMethodNameNamespace)) {
-                    $dataProviderMethodNameNamespace = '';
-                } else {
-                    $dataProviderMethodNameNamespace = \implode('\\', $dataProviderMethodNameNamespace) . '\\';
-                }
-
-                if (empty($leaf)) {
-                    $dataProviderClassName = $className;
-                } else {
-                    $dataProviderClassName = $dataProviderMethodNameNamespace . \array_pop($leaf);
-                }
-
-                $dataProviderClass  = new ReflectionClass($dataProviderClassName);
-                $dataProviderMethod = $dataProviderClass->getMethod(
-                    $dataProviderMethodName
-                );
-
-                if ($dataProviderMethod->isStatic()) {
-                    $object = null;
-                } else {
-                    $object = $dataProviderClass->newInstance();
-                }
-
-                if ($dataProviderMethod->getNumberOfParameters() === 0) {
-                    $data = $dataProviderMethod->invoke($object);
-                } else {
-                    $data = $dataProviderMethod->invoke($object, $methodName);
-                }
-
-                if ($data instanceof Traversable) {
-                    $origData = $data;
-                    $data     = [];
-
-                    foreach ($origData as $key => $value) {
-                        if (\is_int($key)) {
-                            $data[] = $value;
-                        } else {
-                            $data[$key] = $value;
-                        }
-                    }
-                }
-
-                if (\is_array($data)) {
-                    $result = \array_merge($result, $data);
-                }
-            }
-
-            return $result;
-        }
-
-        return null;
-    }
-
-    private static function cleanUpMultiLineAnnotation(string $docComment): string
-    {
-        //removing initial '   * ' for docComment
-        $docComment = \str_replace("\r\n", "\n", $docComment);
-        $docComment = \preg_replace('/' . '\n' . '\s*' . '\*' . '\s?' . '/', "\n", $docComment);
-        $docComment = \substr($docComment, 0, -1);
-        $docComment = \rtrim($docComment, "\n");
-
-        return $docComment;
-    }
-
-    private static function emptyHookMethodsArray(): array
-    {
-        return [
-            'beforeClass' => ['setUpBeforeClass'],
-            'before'      => ['setUp'],
-            'after'       => ['tearDown'],
-            'afterClass'  => ['tearDownAfterClass']
-        ];
-    }
-
-    private static function getBooleanAnnotationSetting(string $className, ?string $methodName, string $settingName): ?bool
+    private static function getBooleanAnnotationSetting($className, $methodName, $settingName)
     {
         $annotations = self::parseTestMethodAnnotations(
             $className,
             $methodName
         );
+
+        $result = null;
 
         if (isset($annotations['class'][$settingName])) {
-            if ($annotations['class'][$settingName][0] === 'enabled') {
-                return true;
-            }
-
-            if ($annotations['class'][$settingName][0] === 'disabled') {
-                return false;
+            if ($annotations['class'][$settingName][0] == 'enabled') {
+                $result = true;
+            } elseif ($annotations['class'][$settingName][0] == 'disabled') {
+                $result = false;
             }
         }
 
         if (isset($annotations['method'][$settingName])) {
-            if ($annotations['method'][$settingName][0] === 'enabled') {
-                return true;
-            }
-
-            if ($annotations['method'][$settingName][0] === 'disabled') {
-                return false;
+            if ($annotations['method'][$settingName][0] == 'enabled') {
+                $result = true;
+            } elseif ($annotations['method'][$settingName][0] == 'disabled') {
+                $result = false;
             }
         }
 
-        return null;
+        return $result;
     }
 
     /**
      * @param string $element
      *
-     * @throws InvalidCoversTargetException
-     *
      * @return array
+     *
+     * @throws PHPUnit_Framework_InvalidCoversTargetException
+     *
+     * @since  Method available since Release 4.0.0
      */
-    private static function resolveElementToReflectionObjects(string $element): array
+    private static function resolveElementToReflectionObjects($element)
     {
-        $codeToCoverList = [];
+        $codeToCoverList = array();
 
-        if (\strpos($element, '\\') !== false && \function_exists($element)) {
+        if (strpos($element, '\\') !== false && function_exists($element)) {
             $codeToCoverList[] = new ReflectionFunction($element);
-        } elseif (\strpos($element, '::') !== false) {
-            [$className, $methodName] = \explode('::', $element);
+        } elseif (strpos($element, '::') !== false) {
+            list($className, $methodName) = explode('::', $element);
 
-            if (isset($methodName[0]) && $methodName[0] === '<') {
-                $classes = [$className];
+            if (isset($methodName[0]) && $methodName[0] == '<') {
+                $classes = array($className);
 
                 foreach ($classes as $className) {
-                    if (!\class_exists($className) &&
-                        !\interface_exists($className) &&
-                        !\trait_exists($className)) {
-                        throw new InvalidCoversTargetException(
-                            \sprintf(
+                    if (!class_exists($className) &&
+                        !interface_exists($className)) {
+                        throw new PHPUnit_Framework_InvalidCoversTargetException(
+                            sprintf(
                                 'Trying to @cover or @use not existing class or ' .
                                 'interface "%s".',
                                 $className
@@ -1075,15 +934,16 @@ final class Test
                         );
                     }
 
-                    $class      = new ReflectionClass($className);
-                    $methods    = $class->getMethods();
-                    $inverse    = isset($methodName[1]) && $methodName[1] === '!';
-                    $visibility = 'isPublic';
+                    $class   = new ReflectionClass($className);
+                    $methods = $class->getMethods();
+                    $inverse = isset($methodName[1]) && $methodName[1] == '!';
 
-                    if (\strpos($methodName, 'protected')) {
+                    if (strpos($methodName, 'protected')) {
                         $visibility = 'isProtected';
-                    } elseif (\strpos($methodName, 'private')) {
+                    } elseif (strpos($methodName, 'private')) {
                         $visibility = 'isPrivate';
+                    } elseif (strpos($methodName, 'public')) {
+                        $visibility = 'isPublic';
                     }
 
                     foreach ($methods as $method) {
@@ -1095,18 +955,20 @@ final class Test
                     }
                 }
             } else {
-                $classes = [$className];
+                $classes = array($className);
 
                 foreach ($classes as $className) {
-                    if ($className === '' && \function_exists($methodName)) {
+                    if ($className == '' && function_exists($methodName)) {
                         $codeToCoverList[] = new ReflectionFunction(
                             $methodName
                         );
                     } else {
-                        if (!((\class_exists($className) || \interface_exists($className) || \trait_exists($className)) &&
-                            \method_exists($className, $methodName))) {
-                            throw new InvalidCoversTargetException(
-                                \sprintf(
+                        if (!((class_exists($className) ||
+                               interface_exists($className) ||
+                               trait_exists($className)) &&
+                              method_exists($className, $methodName))) {
+                            throw new PHPUnit_Framework_InvalidCoversTargetException(
+                                sprintf(
                                     'Trying to @cover or @use not existing method "%s::%s".',
                                     $className,
                                     $methodName
@@ -1124,27 +986,27 @@ final class Test
         } else {
             $extended = false;
 
-            if (\strpos($element, '<extended>') !== false) {
-                $element  = \str_replace('<extended>', '', $element);
+            if (strpos($element, '<extended>') !== false) {
+                $element  = str_replace('<extended>', '', $element);
                 $extended = true;
             }
 
-            $classes = [$element];
+            $classes = array($element);
 
             if ($extended) {
-                $classes = \array_merge(
+                $classes = array_merge(
                     $classes,
-                    \class_implements($element),
-                    \class_parents($element)
+                    class_implements($element),
+                    class_parents($element)
                 );
             }
 
             foreach ($classes as $className) {
-                if (!\class_exists($className) &&
-                    !\interface_exists($className) &&
-                    !\trait_exists($className)) {
-                    throw new InvalidCoversTargetException(
-                        \sprintf(
+                if (!class_exists($className) &&
+                    !interface_exists($className) &&
+                    !trait_exists($className)) {
+                    throw new PHPUnit_Framework_InvalidCoversTargetException(
+                        sprintf(
                             'Trying to @cover or @use not existing class or ' .
                             'interface "%s".',
                             $className
@@ -1164,64 +1026,73 @@ final class Test
      *
      * @return array
      */
-    private static function resolveReflectionObjectsToLines(array $reflectors): array
+    private static function resolveReflectionObjectsToLines(array $reflectors)
     {
-        $result = [];
+        $result = array();
 
         foreach ($reflectors as $reflector) {
             $filename = $reflector->getFileName();
 
             if (!isset($result[$filename])) {
-                $result[$filename] = [];
+                $result[$filename] = array();
             }
 
-            $result[$filename] = \array_merge(
-                $result[$filename],
-                \range($reflector->getStartLine(), $reflector->getEndLine())
+            $result[$filename] = array_unique(
+                array_merge(
+                    $result[$filename],
+                    range($reflector->getStartLine(), $reflector->getEndLine())
+                )
             );
-        }
-
-        foreach ($result as $filename => $lineNumbers) {
-            $result[$filename] = \array_keys(\array_flip($lineNumbers));
         }
 
         return $result;
     }
 
-    private static function isBeforeClassMethod(ReflectionMethod $method): bool
+    /**
+     * @param ReflectionMethod $method
+     *
+     * @return bool
+     *
+     * @since  Method available since Release 4.0.8
+     */
+    private static function isBeforeClassMethod(ReflectionMethod $method)
     {
-        return $method->isStatic() && \strpos($method->getDocComment(), '@beforeClass') !== false;
-    }
-
-    private static function isBeforeMethod(ReflectionMethod $method): bool
-    {
-        return \preg_match('/@before\b/', $method->getDocComment()) > 0;
-    }
-
-    private static function isAfterClassMethod(ReflectionMethod $method): bool
-    {
-        return $method->isStatic() && \strpos($method->getDocComment(), '@afterClass') !== false;
-    }
-
-    private static function isAfterMethod(ReflectionMethod $method): bool
-    {
-        return \preg_match('/@after\b/', $method->getDocComment()) > 0;
+        return $method->isStatic() && strpos($method->getDocComment(), '@beforeClass') !== false;
     }
 
     /**
-     * Trims any extensions from version string that follows after
-     * the <major>.<minor>[.<patch>] format
+     * @param ReflectionMethod $method
      *
-     * @param string $version
+     * @return bool
      *
-     * @return mixed
+     * @since  Method available since Release 4.0.8
      */
-    private static function sanitizeVersionNumber(string $version)
+    private static function isBeforeMethod(ReflectionMethod $method)
     {
-        return \preg_replace(
-            '/^(\d+\.\d+(?:.\d+)?).*$/',
-            '$1',
-            $version
-        );
+        return preg_match('/@before\b/', $method->getDocComment());
+    }
+
+    /**
+     * @param ReflectionMethod $method
+     *
+     * @return bool
+     *
+     * @since  Method available since Release 4.0.8
+     */
+    private static function isAfterClassMethod(ReflectionMethod $method)
+    {
+        return $method->isStatic() && strpos($method->getDocComment(), '@afterClass') !== false;
+    }
+
+    /**
+     * @param ReflectionMethod $method
+     *
+     * @return bool
+     *
+     * @since  Method available since Release 4.0.8
+     */
+    private static function isAfterMethod(ReflectionMethod $method)
+    {
+        return preg_match('/@after\b/', $method->getDocComment());
     }
 }

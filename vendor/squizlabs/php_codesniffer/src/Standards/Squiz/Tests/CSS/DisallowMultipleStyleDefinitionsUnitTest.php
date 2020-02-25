@@ -25,11 +25,11 @@ class DisallowMultipleStyleDefinitionsUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            3  => 1,
-            5  => 2,
-            10 => 4,
-        ];
+        return array(
+                3  => 1,
+                5  => 2,
+                10 => 4,
+               );
 
     }//end getErrorList()
 
@@ -44,7 +44,7 @@ class DisallowMultipleStyleDefinitionsUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

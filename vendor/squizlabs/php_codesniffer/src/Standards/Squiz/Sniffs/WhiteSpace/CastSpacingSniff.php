@@ -48,10 +48,10 @@ class CastSpacingSniff implements Sniff
 
         if ($content !== $expected) {
             $error = 'Cast statements must not contain whitespace; expected "%s" but found "%s"';
-            $data  = [
-                $expected,
-                $content,
-            ];
+            $data  = array(
+                      $expected,
+                      $content,
+                     );
 
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'ContainsWhiteSpace', $data);
             if ($fix === true) {

@@ -23,7 +23,7 @@ class EmptyCatchCommentSniff implements Sniff
      */
     public function register()
     {
-        return [T_CATCH];
+        return array(T_CATCH);
 
     }//end register()
 

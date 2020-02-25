@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace PHPUnit\Framework;
-
 /**
  * Creates a synthetic failed assertion.
+ *
+ * @since Class available since Release 3.5.0
  */
-class SyntheticError extends AssertionFailedError
+class PHPUnit_Framework_SyntheticError extends PHPUnit_Framework_AssertionFailedError
 {
     /**
      * The synthetic file.
@@ -34,7 +34,7 @@ class SyntheticError extends AssertionFailedError
      *
      * @var array
      */
-    protected $syntheticTrace = [];
+    protected $syntheticTrace = array();
 
     /**
      * Constructor.
@@ -57,7 +57,7 @@ class SyntheticError extends AssertionFailedError
     /**
      * @return string
      */
-    public function getSyntheticFile(): string
+    public function getSyntheticFile()
     {
         return $this->syntheticFile;
     }
@@ -65,7 +65,7 @@ class SyntheticError extends AssertionFailedError
     /**
      * @return int
      */
-    public function getSyntheticLine(): int
+    public function getSyntheticLine()
     {
         return $this->syntheticLine;
     }
@@ -73,7 +73,7 @@ class SyntheticError extends AssertionFailedError
     /**
      * @return array
      */
-    public function getSyntheticTrace(): array
+    public function getSyntheticTrace()
     {
         return $this->syntheticTrace;
     }

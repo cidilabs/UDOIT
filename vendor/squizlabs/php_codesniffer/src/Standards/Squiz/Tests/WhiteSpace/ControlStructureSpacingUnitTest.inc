@@ -197,9 +197,6 @@ try {
 catch (Exception $e) {
     // Something
 }
-finally {
-    // Something
-}
 
 if ($foo) {
 
@@ -221,33 +218,3 @@ if ($foo) {
 
 
 }
-
-if (true) { // some comment goes here
-
-    echo 'foo';
-}
-
-if (true) { echo 'foo';
-
-    echo 'foo';
-}
-
-if ($true) {
-    echo 'hi 2';
-}//end if
-echo 'hi';
-
-if ($true) {
-    echo 'hi 2';
-} // phpcs:enable Standard.Category.Sniff -- for reasons.
-echo 'hi';
-
-?>
-<?php foreach($formset['Fieldset'] as $fieldset): ?>
-
-    <?php foreach($fieldset['Field'] as $field):
-
-        echo 'foo';
-    ?>
-    <?php endforeach; ?>
-<?php endforeach; ?>

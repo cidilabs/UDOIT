@@ -15,14 +15,7 @@ echo 'test' . 1;
 echo 'test' . 1.1;
 echo 'test' . 1 . 'test' . 2.2 . 'test'   .   3;
 
-get_current_screen()->add_help_tab( array(
-'id'        => <<<EOD
-Here comes some text.
-EOD
-. '</hr>',
-) );
-
-// phpcs:set Squiz.Strings.ConcatenationSpacing spacing 1
+// @codingStandardsChangeSetting Squiz.Strings.ConcatenationSpacing spacing 1
 
 $string = 'Hello'.$there.'. How are'.$you.$going.   "today $okay";
 $string = 'Hello' . $there . '. How are' . $you . $going . "today $okay";
@@ -30,7 +23,7 @@ $string = 'Hello'.$there;
 $string = 'Hello'. $there;
 $string = 'Hello' .$there;
 
-// phpcs:set Squiz.Strings.ConcatenationSpacing ignoreNewlines true
+// @codingStandardsChangeSetting Squiz.Strings.ConcatenationSpacing ignoreNewlines true
 $y = '1'
    . '2'
    . '3';

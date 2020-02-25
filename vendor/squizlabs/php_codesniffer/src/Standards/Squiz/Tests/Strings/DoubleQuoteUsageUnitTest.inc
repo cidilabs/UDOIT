@@ -14,7 +14,6 @@ $string = 'Hello '.$there.' Greg';
 $string = "<div class='$class'>";
 $string = "Value: $var[test]";
 $string = "\0";
-$string = "\$var";
 
 $x = "bar = '$z',
 baz = '" . $a . "'...$x";
@@ -28,9 +27,6 @@ $string = "\123 \234"."\u123"."\e";
 
 echo "window.location = \"".$url."\";\n";
 echo ""
-
-$string = "Hello
-			there";
 
 function test() {
     echo "It Worked';

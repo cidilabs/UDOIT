@@ -25,12 +25,12 @@ class MissingColonUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            2  => 1,
-            4  => 1,
-            6  => 1,
-            12 => 1,
-        ];
+        return array(
+                2  => 1,
+                4  => 1,
+                6  => 1,
+                12 => 1,
+               );
 
     }//end getErrorList()
 
@@ -45,7 +45,7 @@ class MissingColonUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

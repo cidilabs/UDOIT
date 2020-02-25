@@ -21,7 +21,7 @@ class ColonSpacingSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['CSS'];
+    public $supportedTokenizers = array('CSS');
 
 
     /**
@@ -31,7 +31,7 @@ class ColonSpacingSniff implements Sniff
      */
     public function register()
     {
-        return [T_COLON];
+        return array(T_COLON);
 
     }//end register()
 
@@ -68,8 +68,7 @@ class ColonSpacingSniff implements Sniff
             }
         }
 
-        $next = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
-        if ($tokens[$next]['code'] === T_SEMICOLON || $tokens[$next]['code'] === T_STYLE) {
+        if ($tokens[($stackPtr + 1)]['code'] === T_SEMICOLON) {
             // Empty style definition, ignore it.
             return;
         }
@@ -86,7 +85,7 @@ class ColonSpacingSniff implements Sniff
                 $length = strlen($content);
                 if ($length !== 1) {
                     $error = 'Expected 1 space after colon in style definition; %s found';
-                    $data  = [$length];
+                    $data  = array($length);
                     $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'After', $data);
                     if ($fix === true) {
                         $phpcsFile->fixer->replaceToken(($stackPtr + 1), ' ');

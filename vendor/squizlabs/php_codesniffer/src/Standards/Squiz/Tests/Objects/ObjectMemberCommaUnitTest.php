@@ -28,14 +28,14 @@ class ObjectMemberCommaUnitTest extends AbstractSniffUnitTest
     public function getErrorList($testFile='ObjectMemberCommaUnitTest.js')
     {
         if ($testFile !== 'ObjectMemberCommaUnitTest.js') {
-            return [];
+            return array();
         }
 
-        return [
-            1  => 1,
-            22 => 1,
-            38 => 1,
-        ];
+        return array(
+                1  => 1,
+                22 => 1,
+                38 => 1,
+               );
 
     }//end getErrorList()
 
@@ -50,7 +50,7 @@ class ObjectMemberCommaUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

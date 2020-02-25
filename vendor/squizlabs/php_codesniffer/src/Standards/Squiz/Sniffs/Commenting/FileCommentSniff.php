@@ -20,10 +20,10 @@ class FileCommentSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
 
 
     /**
@@ -33,7 +33,7 @@ class FileCommentSniff implements Sniff
      */
     public function register()
     {
-        return [T_OPEN_TAG];
+        return array(T_OPEN_TAG);
 
     }//end register()
 
@@ -49,6 +49,8 @@ class FileCommentSniff implements Sniff
      */
     public function process(File $phpcsFile, $stackPtr)
     {
+        $this->currentFile = $phpcsFile;
+
         $tokens       = $phpcsFile->getTokens();
         $commentStart = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
 
@@ -62,14 +64,6 @@ class FileCommentSniff implements Sniff
             return ($phpcsFile->numTokens + 1);
         }
 
-        if (isset($tokens[$commentStart]['comment_closer']) === false
-            || ($tokens[$tokens[$commentStart]['comment_closer']]['content'] === ''
-            && $tokens[$commentStart]['comment_closer'] === ($phpcsFile->numTokens - 1))
-        ) {
-            // Don't process an unfinished file comment during live coding.
-            return ($phpcsFile->numTokens + 1);
-        }
-
         $commentEnd = $tokens[$commentStart]['comment_closer'];
 
         $nextToken = $phpcsFile->findNext(
@@ -79,25 +73,25 @@ class FileCommentSniff implements Sniff
             true
         );
 
-        $ignore = [
-            T_CLASS,
-            T_INTERFACE,
-            T_TRAIT,
-            T_FUNCTION,
-            T_CLOSURE,
-            T_PUBLIC,
-            T_PRIVATE,
-            T_PROTECTED,
-            T_FINAL,
-            T_STATIC,
-            T_ABSTRACT,
-            T_CONST,
-            T_PROPERTY,
-            T_INCLUDE,
-            T_INCLUDE_ONCE,
-            T_REQUIRE,
-            T_REQUIRE_ONCE,
-        ];
+        $ignore = array(
+                   T_CLASS,
+                   T_INTERFACE,
+                   T_TRAIT,
+                   T_FUNCTION,
+                   T_CLOSURE,
+                   T_PUBLIC,
+                   T_PRIVATE,
+                   T_PROTECTED,
+                   T_FINAL,
+                   T_STATIC,
+                   T_ABSTRACT,
+                   T_CONST,
+                   T_PROPERTY,
+                   T_INCLUDE,
+                   T_INCLUDE_ONCE,
+                   T_REQUIRE,
+                   T_REQUIRE_ONCE,
+                  );
 
         if (in_array($tokens[$nextToken]['code'], $ignore) === true) {
             $phpcsFile->addError('Missing file doc comment', $stackPtr, 'Missing');
@@ -121,21 +115,21 @@ class FileCommentSniff implements Sniff
         }
 
         // Required tags in correct order.
-        $required = [
-            '@package'    => true,
-            '@subpackage' => true,
-            '@author'     => true,
-            '@copyright'  => true,
-        ];
+        $required = array(
+                     '@package'    => true,
+                     '@subpackage' => true,
+                     '@author'     => true,
+                     '@copyright'  => true,
+                    );
 
-        $foundTags = [];
+        $foundTags = array();
         foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
             $name       = $tokens[$tag]['content'];
             $isRequired = isset($required[$name]);
 
             if ($isRequired === true && in_array($name, $foundTags) === true) {
                 $error = 'Only one %s tag is allowed in a file comment';
-                $data  = [$name];
+                $data  = array($name);
                 $phpcsFile->addError($error, $tag, 'Duplicate'.ucfirst(substr($name, 1)).'Tag', $data);
             }
 
@@ -148,7 +142,7 @@ class FileCommentSniff implements Sniff
             $string = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $tag, $commentEnd);
             if ($string === false || $tokens[$string]['line'] !== $tokens[$tag]['line']) {
                 $error = 'Content missing for %s tag in file comment';
-                $data  = [$name];
+                $data  = array($name);
                 $phpcsFile->addError($error, $tag, 'Empty'.ucfirst(substr($name, 1)).'Tag', $data);
                 continue;
             }
@@ -167,7 +161,7 @@ class FileCommentSniff implements Sniff
                     $error = 'Expected "xxxx-xxxx Squiz Pty Ltd (ABN 77 084 670 600)" for copyright declaration';
                     $fix   = $phpcsFile->addFixableError($error, $tag, 'IncorrectCopyright');
                     if ($fix === true) {
-                        $matches = [];
+                        $matches = array();
                         preg_match('/^(([0-9]{4})(-[0-9]{4})?)?.*$/', $tokens[$string]['content'], $matches);
                         if (isset($matches[1]) === false) {
                             $matches[1] = date('Y');
@@ -185,7 +179,7 @@ class FileCommentSniff implements Sniff
         foreach ($required as $tag => $true) {
             if (in_array($tag, $foundTags) === false) {
                 $error = 'Missing %s tag in file comment';
-                $data  = [$tag];
+                $data  = array($tag);
                 $phpcsFile->addError($error, $commentEnd, 'Missing'.ucfirst(substr($tag, 1)).'Tag', $data);
             }
 
@@ -195,10 +189,10 @@ class FileCommentSniff implements Sniff
 
             if ($foundTags[$pos] !== $tag) {
                 $error = 'The tag in position %s should be the %s tag';
-                $data  = [
-                    ($pos + 1),
-                    $tag,
-                ];
+                $data  = array(
+                          ($pos + 1),
+                          $tag,
+                         );
                 $phpcsFile->addError($error, $tokens[$commentStart]['comment_tags'][$pos], ucfirst(substr($tag, 1)).'TagOrder', $data);
             }
 

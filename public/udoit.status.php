@@ -34,7 +34,7 @@ $sth->execute();
 $url = $sth->fetch();
 $canvas_url = $url[0];
 
-$status['tool'] = "UDOIT ".UDOIT_VERSION;
+$status['tool'] = "UDOIT";
 $status['url'] = $server_link;
 $status['base_url'] = $canvas_url;
 

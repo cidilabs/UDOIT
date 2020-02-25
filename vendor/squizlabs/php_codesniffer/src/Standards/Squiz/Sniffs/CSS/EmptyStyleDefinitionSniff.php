@@ -11,7 +11,6 @@ namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\CSS;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
-use PHP_CodeSniffer\Util\Tokens;
 
 class EmptyStyleDefinitionSniff implements Sniff
 {
@@ -21,7 +20,7 @@ class EmptyStyleDefinitionSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['CSS'];
+    public $supportedTokenizers = array('CSS');
 
 
     /**
@@ -31,7 +30,7 @@ class EmptyStyleDefinitionSniff implements Sniff
      */
     public function register()
     {
-        return [T_STYLE];
+        return array(T_STYLE);
 
     }//end register()
 
@@ -48,11 +47,8 @@ class EmptyStyleDefinitionSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
+        $next   = $phpcsFile->findNext(array(T_WHITESPACE, T_COLON), ($stackPtr + 1), null, true);
 
-        $ignore   = Tokens::$emptyTokens;
-        $ignore[] = T_COLON;
-
-        $next = $phpcsFile->findNext($ignore, ($stackPtr + 1), null, true);
         if ($next === false || $tokens[$next]['code'] === T_SEMICOLON || $tokens[$next]['line'] !== $tokens[$stackPtr]['line']) {
             $error = 'Style definition is empty';
             $phpcsFile->addError($error, $stackPtr, 'Found');

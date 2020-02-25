@@ -7,23 +7,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Framework\Constraint;
 
-use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\ExpectationFailedException;
-
-class Attribute extends Composite
+/**
+ * @since Class available since Release 3.1.0
+ */
+class PHPUnit_Framework_Constraint_Attribute extends PHPUnit_Framework_Constraint_Composite
 {
     /**
      * @var string
      */
-    private $attributeName;
+    protected $attributeName;
 
     /**
-     * @param Constraint $constraint
-     * @param string     $attributeName
+     * @param PHPUnit_Framework_Constraint $constraint
+     * @param string                       $attributeName
      */
-    public function __construct(Constraint $constraint, $attributeName)
+    public function __construct(PHPUnit_Framework_Constraint $constraint, $attributeName)
     {
         parent::__construct($constraint);
 
@@ -40,20 +39,18 @@ class Attribute extends Composite
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param mixed  $other        value or object to evaluate
+     * @param mixed  $other        Value or object to evaluate.
      * @param string $description  Additional information about the test
      * @param bool   $returnResult Whether to return a result or throw an exception
      *
-     * @throws ExpectationFailedException
-     * @throws \PHPUnit\Framework\Exception
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
      * @return mixed
+     *
+     * @throws PHPUnit_Framework_ExpectationFailedException
      */
     public function evaluate($other, $description = '', $returnResult = false)
     {
         return parent::evaluate(
-            Assert::readAttribute(
+            PHPUnit_Framework_Assert::readAttribute(
                 $other,
                 $this->attributeName
             ),
@@ -67,9 +64,10 @@ class Attribute extends Composite
      *
      * @return string
      */
-    public function toString(): string
+    public function toString()
     {
-        return 'attribute "' . $this->attributeName . '" ' . $this->innerConstraint()->toString();
+        return 'attribute "' . $this->attributeName . '" ' .
+               $this->innerConstraint->toString();
     }
 
     /**
@@ -78,11 +76,11 @@ class Attribute extends Composite
      * The beginning of failure messages is "Failed asserting that" in most
      * cases. This method should return the second part of that sentence.
      *
-     * @param mixed $other evaluated value or object
+     * @param mixed $other Evaluated value or object.
      *
      * @return string
      */
-    protected function failureDescription($other): string
+    protected function failureDescription($other)
     {
         return $this->toString();
     }

@@ -41,7 +41,7 @@ MyFunction = function()
 
 };
 
-// phpcs:set Squiz.WhiteSpace.SuperfluousWhitespace ignoreBlankLines true
+// @codingStandardsChangeSetting Squiz.WhiteSpace.SuperfluousWhitespace ignoreBlankLines true
 
 function myFunction2()
 {
@@ -51,6 +51,6 @@ function myFunction2()
     
 }
 
-// phpcs:set Squiz.WhiteSpace.SuperfluousWhitespace ignoreBlankLines false
+// @codingStandardsChangeSetting Squiz.WhiteSpace.SuperfluousWhitespace ignoreBlankLines false
 
 

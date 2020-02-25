@@ -21,7 +21,7 @@ class CSSLintSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['CSS'];
+    public $supportedTokenizers = array('CSS');
 
 
     /**
@@ -31,7 +31,7 @@ class CSSLintSniff implements Sniff
      */
     public function register()
     {
-        return [T_OPEN_TAG];
+        return array(T_OPEN_TAG);
 
     }//end register()
 
@@ -64,7 +64,7 @@ class CSSLintSniff implements Sniff
         $count = count($output);
 
         for ($i = 0; $i < $count; $i++) {
-            $matches    = [];
+            $matches    = array();
             $numMatches = preg_match(
                 '/(error|warning) at line (\d+)/',
                 $output[$i],

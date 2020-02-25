@@ -23,7 +23,7 @@ class IncludeOwnSystemSniff implements Sniff
      */
     public function register()
     {
-        return [T_DOUBLE_COLON];
+        return array(T_DOUBLE_COLON);
 
     }//end register()
 
@@ -40,7 +40,7 @@ class IncludeOwnSystemSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr)
     {
         $fileName = $phpcsFile->getFilename();
-        $matches  = [];
+        $matches  = array();
         if (preg_match('|/systems/(.*)/([^/]+)?actions.inc$|i', $fileName, $matches) === 0) {
             // Not an actions file.
             return;
@@ -67,7 +67,7 @@ class IncludeOwnSystemSniff implements Sniff
 
         if ($included === strtolower($ownClass)) {
             $error = "You do not need to include \"%s\" from within the system's own actions file";
-            $data  = [$ownClass];
+            $data  = array($ownClass);
             $phpcsFile->addError($error, $stackPtr, 'NotRequired', $data);
         }
 

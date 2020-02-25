@@ -25,24 +25,16 @@ class ObjectOperatorSpacingUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            3  => 1,
-            4  => 2,
-            6  => 2,
-            8  => 1,
-            9  => 1,
-            15 => 1,
-            16 => 2,
-            18 => 2,
-            27 => 1,
-            28 => 2,
-            30 => 2,
-            32 => 1,
-            33 => 1,
-            39 => 1,
-            40 => 2,
-            42 => 2,
-        ];
+        return array(
+                3  => 1,
+                4  => 2,
+                6  => 2,
+                8  => 1,
+                9  => 1,
+                15 => 1,
+                16 => 2,
+                18 => 2,
+               );
 
     }//end getErrorList()
 
@@ -57,7 +49,7 @@ class ObjectOperatorSpacingUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

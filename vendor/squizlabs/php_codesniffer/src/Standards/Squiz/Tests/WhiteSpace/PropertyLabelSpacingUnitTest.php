@@ -25,14 +25,14 @@ class PropertyLabelSpacingUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            2  => 1,
-            4  => 1,
-            9  => 2,
-            10 => 1,
-            12 => 1,
-            18 => 1,
-        ];
+        return array(
+                2  => 1,
+                4  => 1,
+                9  => 2,
+                10 => 1,
+                12 => 1,
+                18 => 1,
+               );
 
     }//end getErrorList()
 
@@ -47,7 +47,7 @@ class PropertyLabelSpacingUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

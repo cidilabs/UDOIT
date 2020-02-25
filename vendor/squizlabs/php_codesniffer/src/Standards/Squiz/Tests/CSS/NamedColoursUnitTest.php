@@ -25,13 +25,13 @@ class NamedColoursUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            2  => 1,
-            6  => 1,
-            7  => 1,
-            11 => 1,
-            12 => 1,
-        ];
+        return array(
+                2  => 1,
+                6  => 1,
+                7  => 1,
+                11 => 1,
+                12 => 1,
+               );
 
     }//end getErrorList()
 
@@ -46,7 +46,7 @@ class NamedColoursUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

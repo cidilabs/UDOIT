@@ -54,6 +54,3 @@ class test
        return false;
     }
 }
-
-( function ( $ ) {
-    foo(function ( value ) {} )( jQuery );

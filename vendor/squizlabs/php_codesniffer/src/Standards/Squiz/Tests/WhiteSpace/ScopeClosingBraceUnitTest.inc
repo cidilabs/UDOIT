@@ -88,20 +88,3 @@ switch ($blah) {
     if ($foo) {
         ?>
     <?php } ?>
-
-<?php
-public function foo()
-{
-    $foo('some
-    long description', function () {
-    });
-
-    $foo('some
-    long
-    description', function () {
-});
-
-    $foo(
-'bad indent here leads to bad indent for closer', function () {
-});
-}

@@ -11,7 +11,6 @@ namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\Scope;
 
 use PHP_CodeSniffer\Sniffs\AbstractScopeSniff;
 use PHP_CodeSniffer\Files\File;
-use PHP_CodeSniffer\Util\Tokens;
 
 class StaticThisUsageSniff extends AbstractScopeSniff
 {
@@ -22,7 +21,7 @@ class StaticThisUsageSniff extends AbstractScopeSniff
      */
     public function __construct()
     {
-        parent::__construct([T_CLASS], [T_FUNCTION]);
+        parent::__construct(array(T_CLASS), array(T_FUNCTION));
 
     }//end __construct()
 
@@ -39,43 +38,36 @@ class StaticThisUsageSniff extends AbstractScopeSniff
      */
     public function processTokenWithinScope(File $phpcsFile, $stackPtr, $currScope)
     {
-        $tokens = $phpcsFile->getTokens();
+        $tokens   = $phpcsFile->getTokens();
+        $function = $tokens[($stackPtr + 2)];
 
-        // Ignore abstract functions.
-        if (isset($tokens[$stackPtr]['scope_closer']) === false) {
+        if ($function['code'] !== T_STRING) {
             return;
         }
 
-        $next = $phpcsFile->findNext(Tokens::$emptyTokens, ($stackPtr + 1), null, true);
-        if ($next === false || $tokens[$next]['code'] !== T_STRING) {
-            // Not a function declaration, or incomplete.
-            return;
-        }
+        $functionName = $function['content'];
+        $classOpener  = $tokens[$currScope]['scope_condition'];
+        $className    = $tokens[($classOpener + 2)]['content'];
 
         $methodProps = $phpcsFile->getMethodProperties($stackPtr);
-        if ($methodProps['is_static'] === false) {
-            return;
-        }
 
-        $next = $stackPtr;
-        $end  = $tokens[$stackPtr]['scope_closer'];
-
-        do {
-            $next = $phpcsFile->findNext([T_VARIABLE, T_CLOSURE, T_ANON_CLASS], ($next + 1), $end);
-            if ($next === false) {
-                continue;
-            } else if ($tokens[$next]['code'] === T_CLOSURE
-                || $tokens[$next]['code'] === T_ANON_CLASS
-            ) {
-                $next = $tokens[$next]['scope_closer'];
-                continue;
-            } else if (strtolower($tokens[$next]['content']) !== '$this') {
-                continue;
+        if ($methodProps['is_static'] === true) {
+            if (isset($tokens[$stackPtr]['scope_closer']) === false) {
+                // There is no scope opener or closer, so the function
+                // must be abstract.
+                return;
             }
 
-            $error = 'Usage of "$this" in static methods will cause runtime errors';
-            $phpcsFile->addError($error, $next, 'Found');
-        } while ($next !== false);
+            $thisUsage = $stackPtr;
+            while (($thisUsage = $phpcsFile->findNext(array(T_VARIABLE), ($thisUsage + 1), $tokens[$stackPtr]['scope_closer'], false, '$this')) !== false) {
+                if ($thisUsage === false) {
+                    return;
+                }
+
+                $error = 'Usage of "$this" in static methods will cause runtime errors';
+                $phpcsFile->addError($error, $thisUsage, 'Found');
+            }
+        }//end if
 
     }//end processTokenWithinScope()
 

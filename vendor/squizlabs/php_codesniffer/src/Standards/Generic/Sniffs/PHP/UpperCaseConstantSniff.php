@@ -23,11 +23,11 @@ class UpperCaseConstantSniff implements Sniff
      */
     public function register()
     {
-        return [
-            T_TRUE,
-            T_FALSE,
-            T_NULL,
-        ];
+        return array(
+                T_TRUE,
+                T_FALSE,
+                T_NULL,
+               );
 
     }//end register()
 
@@ -54,10 +54,10 @@ class UpperCaseConstantSniff implements Sniff
             }
 
             $error = 'TRUE, FALSE and NULL must be uppercase; expected "%s" but found "%s"';
-            $data  = [
-                $expected,
-                $keyword,
-            ];
+            $data  = array(
+                      $expected,
+                      $keyword,
+                     );
 
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Found', $data);
             if ($fix === true) {

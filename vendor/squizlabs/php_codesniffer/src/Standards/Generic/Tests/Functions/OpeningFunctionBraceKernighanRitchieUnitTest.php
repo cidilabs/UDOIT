@@ -25,34 +25,30 @@ class OpeningFunctionBraceKernighanRitchieUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            9   => 1,
-            13  => 1,
-            17  => 1,
-            29  => 1,
-            33  => 1,
-            37  => 1,
-            53  => 1,
-            58  => 1,
-            63  => 1,
-            77  => 1,
-            82  => 1,
-            87  => 1,
-            104 => 1,
-            119 => 1,
-            123 => 1,
-            127 => 1,
-            132 => 1,
-            137 => 1,
-            142 => 1,
-            157 => 1,
-            162 => 1,
-            171 => 1,
-            181 => 1,
-            191 => 1,
-            197 => 1,
-            203 => 1,
-        ];
+        return array(
+                9   => 1,
+                13  => 1,
+                17  => 1,
+                29  => 1,
+                33  => 1,
+                37  => 1,
+                53  => 1,
+                58  => 1,
+                63  => 1,
+                77  => 1,
+                82  => 1,
+                87  => 1,
+                104 => 1,
+                119 => 1,
+                123 => 1,
+                127 => 1,
+                132 => 1,
+                137 => 1,
+                142 => 1,
+                153 => 1,
+                158 => 1,
+                167 => 1,
+               );
 
     }//end getErrorList()
 
@@ -67,7 +63,7 @@ class OpeningFunctionBraceKernighanRitchieUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

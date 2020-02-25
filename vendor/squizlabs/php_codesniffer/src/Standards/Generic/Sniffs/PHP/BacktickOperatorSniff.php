@@ -23,7 +23,7 @@ class BacktickOperatorSniff implements Sniff
      */
     public function register()
     {
-        return [T_BACKTICK];
+        return array(T_BACKTICK);
 
     }//end register()
 

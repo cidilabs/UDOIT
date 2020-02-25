@@ -34,10 +34,10 @@ class ForLoopDeclarationSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
 
 
     /**
@@ -47,7 +47,7 @@ class ForLoopDeclarationSniff implements Sniff
      */
     public function register()
     {
-        return [T_FOR];
+        return array(T_FOR);
 
     }//end register()
 
@@ -90,10 +90,10 @@ class ForLoopDeclarationSniff implements Sniff
 
             if ($spaceAfterOpen !== $this->requiredSpacesAfterOpen) {
                 $error = 'Expected %s spaces after opening bracket; %s found';
-                $data  = [
-                    $this->requiredSpacesAfterOpen,
-                    $spaceAfterOpen,
-                ];
+                $data  = array(
+                          $this->requiredSpacesAfterOpen,
+                          $spaceAfterOpen,
+                         );
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpacingAfterOpen', $data);
                 if ($fix === true) {
                     $padding = str_repeat(' ', $this->requiredSpacesAfterOpen);
@@ -120,10 +120,10 @@ class ForLoopDeclarationSniff implements Sniff
 
             if ($this->requiredSpacesBeforeClose !== $spaceBeforeClose) {
                 $error = 'Expected %s spaces before closing bracket; %s found';
-                $data  = [
-                    $this->requiredSpacesBeforeClose,
-                    $spaceBeforeClose,
-                ];
+                $data  = array(
+                          $this->requiredSpacesBeforeClose,
+                          $spaceBeforeClose,
+                         );
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpacingBeforeClose', $data);
                 if ($fix === true) {
                     $padding = str_repeat(' ', $this->requiredSpacesBeforeClose);
@@ -160,7 +160,7 @@ class ForLoopDeclarationSniff implements Sniff
                 if (strlen($tokens[($firstSemicolon + 1)]['content']) !== 1) {
                     $spaces = strlen($tokens[($firstSemicolon + 1)]['content']);
                     $error  = 'Expected 1 space after first semicolon of FOR loop; %s found';
-                    $data   = [$spaces];
+                    $data   = array($spaces);
                     $fix    = $phpcsFile->addFixableError($error, $stackPtr, 'SpacingAfterFirst', $data);
                     if ($fix === true) {
                         $phpcsFile->fixer->replaceToken(($firstSemicolon + 1), ' ');
@@ -192,7 +192,7 @@ class ForLoopDeclarationSniff implements Sniff
                 } else {
                     if (strlen($tokens[($secondSemicolon + 1)]['content']) !== 1) {
                         $spaces = strlen($tokens[($secondSemicolon + 1)]['content']);
-                        $data   = [$spaces];
+                        $data   = array($spaces);
                         if (($secondSemicolon + 2) === $closingBracket) {
                             $error = 'Expected no space after second semicolon of FOR loop; %s found';
                             $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpacingAfterSecondNoThird', $data);

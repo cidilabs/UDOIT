@@ -21,10 +21,10 @@ class SemicolonSpacingSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
 
 
     /**
@@ -34,7 +34,7 @@ class SemicolonSpacingSniff implements Sniff
      */
     public function register()
     {
-        return [T_SEMICOLON];
+        return array(T_SEMICOLON);
 
     }//end register()
 
@@ -58,25 +58,7 @@ class SemicolonSpacingSniff implements Sniff
         }
 
         $nonSpace = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($stackPtr - 2), null, true);
-
-        // Detect whether this is a semi-colons for a conditions in a `for()` control structure.
-        $forCondition = false;
-        if (isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
-            $closeParenthesis = end($tokens[$stackPtr]['nested_parenthesis']);
-
-            if (isset($tokens[$closeParenthesis]['parenthesis_owner']) === true) {
-                $owner = $tokens[$closeParenthesis]['parenthesis_owner'];
-
-                if ($tokens[$owner]['code'] === T_FOR) {
-                    $forCondition = true;
-                    $nonSpace     = $phpcsFile->findPrevious(T_WHITESPACE, ($stackPtr - 2), null, true);
-                }
-            }
-        }
-
-        if ($tokens[$nonSpace]['code'] === T_SEMICOLON
-            || ($forCondition === true && $nonSpace === $tokens[$owner]['parenthesis_opener'])
-        ) {
+        if ($tokens[$nonSpace]['code'] === T_SEMICOLON) {
             // Empty statement.
             return;
         }
@@ -84,10 +66,10 @@ class SemicolonSpacingSniff implements Sniff
         $expected = $tokens[$nonSpace]['content'].';';
         $found    = $phpcsFile->getTokensAsString($nonSpace, ($stackPtr - $nonSpace)).';';
         $error    = 'Space found before semicolon; expected "%s" but found "%s"';
-        $data     = [
-            $expected,
-            $found,
-        ];
+        $data     = array(
+                     $expected,
+                     $found,
+                    );
 
         $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Incorrect', $data);
         if ($fix === true) {

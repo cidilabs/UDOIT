@@ -25,7 +25,7 @@ class NonExecutableCodeUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [];
+        return array();
 
     }//end getErrorList()
 
@@ -36,15 +36,11 @@ class NonExecutableCodeUnitTest extends AbstractSniffUnitTest
      * The key of the array should represent the line number and the value
      * should represent the number of warnings that should occur on that line.
      *
-     * @param string $testFile The name of the file being tested.
-     *
      * @return array<int, int>
      */
-    public function getWarningList($testFile='')
+    public function getWarningList()
     {
-        switch ($testFile) {
-        case 'NonExecutableCodeUnitTest.1.inc':
-            return [
+        return array(
                 5   => 1,
                 11  => 1,
                 17  => 1,
@@ -69,27 +65,11 @@ class NonExecutableCodeUnitTest extends AbstractSniffUnitTest
                 166 => 1,
                 180 => 1,
                 232 => 1,
-                240 => 1,
-                246 => 1,
-                252 => 1,
-                253 => 1,
-                254 => 2,
-            ];
-            break;
-        case 'NonExecutableCodeUnitTest.2.inc':
-            return [
-                7  => 1,
-                8  => 1,
-                9  => 1,
-                10 => 2,
-                14 => 1,
-                48 => 2,
-            ];
-            break;
-        default:
-            return [];
-            break;
-        }//end switch
+                233 => 1,
+                234 => 1,
+                235 => 2,
+                239 => 1,
+               );
 
     }//end getWarningList()
 

@@ -25,10 +25,10 @@ class GlobalKeywordUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            8 => 1,
-            9 => 1,
-        ];
+        return array(
+                8 => 1,
+                9 => 1,
+               );
 
     }//end getErrorList()
 
@@ -43,7 +43,7 @@ class GlobalKeywordUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

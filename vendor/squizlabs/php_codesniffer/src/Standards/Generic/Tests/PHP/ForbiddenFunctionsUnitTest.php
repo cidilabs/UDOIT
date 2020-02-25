@@ -25,11 +25,11 @@ class ForbiddenFunctionsUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        $errors = [
-            2 => 1,
-            4 => 1,
-            6 => 1,
-        ];
+        $errors = array(
+                   2 => 1,
+                   4 => 1,
+                   6 => 1,
+                  );
 
         return $errors;
 
@@ -46,7 +46,7 @@ class ForbiddenFunctionsUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

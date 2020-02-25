@@ -23,10 +23,10 @@ class ValidLogicalOperatorsSniff implements Sniff
      */
     public function register()
     {
-        return [
-            T_LOGICAL_AND,
-            T_LOGICAL_OR,
-        ];
+        return array(
+                T_LOGICAL_AND,
+                T_LOGICAL_OR,
+               );
 
     }//end register()
 
@@ -44,10 +44,10 @@ class ValidLogicalOperatorsSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $replacements = [
-            'and' => '&&',
-            'or'  => '||',
-        ];
+        $replacements = array(
+                         'and' => '&&',
+                         'or'  => '||',
+                        );
 
         $operator = strtolower($tokens[$stackPtr]['content']);
         if (isset($replacements[$operator]) === false) {
@@ -55,10 +55,10 @@ class ValidLogicalOperatorsSniff implements Sniff
         }
 
         $error = 'Logical operator "%s" is prohibited; use "%s" instead';
-        $data  = [
-            $operator,
-            $replacements[$operator],
-        ];
+        $data  = array(
+                  $operator,
+                  $replacements[$operator],
+                 );
         $phpcsFile->addError($error, $stackPtr, 'NotAllowed', $data);
 
     }//end process()

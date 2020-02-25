@@ -23,7 +23,7 @@ class InnerFunctionsSniff implements Sniff
      */
     public function register()
     {
-        return [T_FUNCTION];
+        return array(T_FUNCTION);
 
     }//end register()
 

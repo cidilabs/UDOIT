@@ -32,11 +32,16 @@ class EndFileNewlineUnitTest extends AbstractSniffUnitTest
         case 'EndFileNewlineUnitTest.3.inc':
         case 'EndFileNewlineUnitTest.6.inc':
         case 'EndFileNewlineUnitTest.7.inc':
+            return array(2 => 1);
         case 'EndFileNewlineUnitTest.9.inc':
         case 'EndFileNewlineUnitTest.10.inc':
-            return [2 => 1];
+            // HHVM just removes the entire comment token, as if it was never there.
+            if (defined('HHVM_VERSION') === true) {
+                return array();
+            }
+            return array(2 => 1);
         default:
-            return [];
+            return array();
         }//end switch
 
     }//end getErrorList()
@@ -54,7 +59,7 @@ class EndFileNewlineUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList($testFile='')
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

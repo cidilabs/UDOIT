@@ -11,6 +11,7 @@ namespace PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Util\Tokens;
 
 class SpaceAfterNotSniff implements Sniff
 {
@@ -20,10 +21,10 @@ class SpaceAfterNotSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
 
 
     /**
@@ -33,7 +34,7 @@ class SpaceAfterNotSniff implements Sniff
      */
     public function register()
     {
-        return [T_BOOLEAN_NOT];
+        return array(T_BOOLEAN_NOT);
 
     }//end register()
 
@@ -61,7 +62,7 @@ class SpaceAfterNotSniff implements Sniff
         }
 
         $message = 'There must be a single space after a NOT operator; %s found';
-        $fix     = $phpcsFile->addFixableError($message, $stackPtr, 'Incorrect', [$spacing]);
+        $fix     = $phpcsFile->addFixableError($message, $stackPtr, 'Incorrect', array($spacing));
 
         if ($fix === true) {
             if ($spacing === 0) {

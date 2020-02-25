@@ -54,6 +54,7 @@ To start the Heroku deployment process, you can click the button below, please n
 * PHP 7.1, 7.2 (Not yet compatible with 7.3.  See issue #422)
   * [GD Graphics Library](http://php.net/manual/en/book.image.php)
 * MySQL or PostgreSQL
+* Git (If you are using [The Git Method](#the-git-method) below) or if you plan on contributing to UDOIT
 
 ## Downloading the Source Code
 There are two methods of obtaining the source code and maintaining your installation of UDOIT:  Git Clone or Download ZIP.
@@ -81,7 +82,7 @@ If you'd like to add a little extra security to your installation, you can confi
 UDOIT uses [Composer](https://getcomposer.org/) to install PHP dependencies. So `cd` into your UDOIT directory and run this command before anything else:
 
 ```
-$ php composer.phar install
+$ php composer.phar install --no-dev
 ```
 
 The libraries (other then Quail) that we rely on can be found in `composer.json`.
@@ -372,6 +373,8 @@ Add contributors here and dont forget composer.json!)
 * [John Raible](https://github.com/rebelaide)
 * [Kevin Baugh](https://github.com/loraxx753)
 * [Sean Hernandez](https://github.com/seanlh)
+* [Ethan Finlay](https://github.com/atarisafari)
+* [Kenny G Perez](https://github.com/kennygperez)
 
 ### Special Thanks
 

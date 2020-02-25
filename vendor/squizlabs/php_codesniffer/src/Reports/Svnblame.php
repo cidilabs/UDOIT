@@ -9,8 +9,6 @@
 
 namespace PHP_CodeSniffer\Reports;
 
-use PHP_CodeSniffer\Exceptions\DeepExitException;
-
 class Svnblame extends VersionControl
 {
 
@@ -31,7 +29,7 @@ class Svnblame extends VersionControl
      */
     protected function getAuthor($line)
     {
-        $blameParts = [];
+        $blameParts = array();
         preg_match('|\s*([^\s]+)\s+([^\s]+)|', $line, $blameParts);
 
         if (isset($blameParts[2]) === false) {
@@ -55,8 +53,8 @@ class Svnblame extends VersionControl
         $command = 'svn blame "'.$filename.'" 2>&1';
         $handle  = popen($command, 'r');
         if ($handle === false) {
-            $error = 'ERROR: Could not execute "'.$command.'"'.PHP_EOL.PHP_EOL;
-            throw new DeepExitException($error, 3);
+            echo 'ERROR: Could not execute "'.$command.'"'.PHP_EOL.PHP_EOL;
+            exit(3);
         }
 
         $rawContent = stream_get_contents($handle);

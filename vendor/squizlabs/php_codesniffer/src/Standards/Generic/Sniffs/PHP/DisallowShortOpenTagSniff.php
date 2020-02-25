@@ -24,10 +24,10 @@ class DisallowShortOpenTagSniff implements Sniff
      */
     public function register()
     {
-        $targets = [
-            T_OPEN_TAG,
-            T_OPEN_TAG_WITH_ECHO,
-        ];
+        $targets = array(
+                    T_OPEN_TAG,
+                    T_OPEN_TAG_WITH_ECHO,
+                   );
 
         $shortOpenTags = (boolean) ini_get('short_open_tag');
         if ($shortOpenTags === false) {
@@ -55,7 +55,7 @@ class DisallowShortOpenTagSniff implements Sniff
 
         if ($token['code'] === T_OPEN_TAG && $token['content'] === '<?') {
             $error = 'Short PHP opening tag used; expected "<?php" but found "%s"';
-            $data  = [$token['content']];
+            $data  = array($token['content']);
             $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'Found', $data);
             if ($fix === true) {
                 $correctOpening = '<?php';
@@ -75,11 +75,11 @@ class DisallowShortOpenTagSniff implements Sniff
         if ($token['code'] === T_OPEN_TAG_WITH_ECHO) {
             $nextVar = $tokens[$phpcsFile->findNext(Tokens::$emptyTokens, ($stackPtr + 1), null, true)];
             $error   = 'Short PHP opening tag used with echo; expected "<?php echo %s ..." but found "%s %s ..."';
-            $data    = [
-                $nextVar['content'],
-                $token['content'],
-                $nextVar['content'],
-            ];
+            $data    = array(
+                        $nextVar['content'],
+                        $token['content'],
+                        $nextVar['content'],
+                       );
             $fix     = $phpcsFile->addFixableError($error, $stackPtr, 'EchoFound', $data);
             if ($fix === true) {
                 if ($tokens[($stackPtr + 1)]['code'] !== T_WHITESPACE) {
@@ -121,7 +121,7 @@ class DisallowShortOpenTagSniff implements Sniff
             if ($closerFound !== false) {
                 $error   = 'Possible use of short open tags detected; found: %s';
                 $snippet = $this->getSnippet($content, '<?');
-                $data    = ['<?'.$snippet];
+                $data    = array('<?'.$snippet);
 
                 $phpcsFile->addWarning($error, $stackPtr, 'PossibleFound', $data);
 

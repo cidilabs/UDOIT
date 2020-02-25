@@ -29,17 +29,17 @@ class ControlSignatureSniff extends AbstractPatternSniff
      */
     protected function getPatterns()
     {
-        return [
-            'do {EOL...} while (...);EOL',
-            'while (...) {EOL',
-            'for (...) {EOL',
-            'if (...) {EOL',
-            'foreach (...) {EOL',
-            '} else if (...) {EOL',
-            '} elseif (...) {EOL',
-            '} else {EOL',
-            'do {EOL',
-        ];
+        return array(
+                'do {EOL...} while (...);EOL',
+                'while (...) {EOL',
+                'for (...) {EOL',
+                'if (...) {EOL',
+                'foreach (...) {EOL',
+                '} else if (...) {EOL',
+                '} elseif (...) {EOL',
+                '} else {EOL',
+                'do {EOL',
+               );
 
     }//end getPatterns()
 

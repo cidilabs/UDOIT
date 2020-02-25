@@ -9,9 +9,9 @@
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\CSS;
 
-use PHP_CodeSniffer\Sniffs\Sniff;
-use PHP_CodeSniffer\Files\File;
-use PHP_CodeSniffer\Util\Tokens;
+ use PHP_CodeSniffer\Sniffs\Sniff;
+ use PHP_CodeSniffer\Files\File;
+ use PHP_CodeSniffer\Util\Tokens;
 
 class ClassDefinitionClosingBraceSpaceSniff implements Sniff
 {
@@ -21,7 +21,7 @@ class ClassDefinitionClosingBraceSpaceSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['CSS'];
+    public $supportedTokenizers = array('CSS');
 
 
     /**
@@ -31,7 +31,7 @@ class ClassDefinitionClosingBraceSpaceSniff implements Sniff
      */
     public function register()
     {
-        return [T_CLOSE_CURLY_BRACKET];
+        return array(T_CLOSE_CURLY_BRACKET);
 
     }//end register()
 
@@ -58,7 +58,7 @@ class ClassDefinitionClosingBraceSpaceSniff implements Sniff
             $found = (($tokens[$next]['line'] - $tokens[$stackPtr]['line']) - 1);
             if ($found !== 1) {
                 $error = 'Expected one blank line after closing brace of class definition; %s found';
-                $data  = [$found];
+                $data  = array($found);
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpacingAfterClose', $data);
 
                 if ($fix === true) {

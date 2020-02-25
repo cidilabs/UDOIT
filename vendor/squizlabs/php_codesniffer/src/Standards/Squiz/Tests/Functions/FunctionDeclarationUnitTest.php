@@ -25,10 +25,10 @@ class FunctionDeclarationUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            55 => 1,
-            68 => 1,
-        ];
+        return array(
+                55 => 1,
+                68 => 1,
+               );
 
     }//end getErrorList()
 
@@ -43,7 +43,7 @@ class FunctionDeclarationUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

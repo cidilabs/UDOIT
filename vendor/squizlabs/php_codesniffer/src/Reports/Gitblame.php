@@ -10,8 +10,6 @@
 
 namespace PHP_CodeSniffer\Reports;
 
-use PHP_CodeSniffer\Exceptions\DeepExitException;
-
 class Gitblame extends VersionControl
 {
 
@@ -32,7 +30,7 @@ class Gitblame extends VersionControl
      */
     protected function getAuthor($line)
     {
-        $blameParts = [];
+        $blameParts = array();
         $line       = preg_replace('|\s+|', ' ', $line);
         preg_match(
             '|\(.+[0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]+\)|',
@@ -72,8 +70,8 @@ class Gitblame extends VersionControl
         $command = 'git blame --date=short "'.$filename.'" 2>&1';
         $handle  = popen($command, 'r');
         if ($handle === false) {
-            $error = 'ERROR: Could not execute "'.$command.'"'.PHP_EOL.PHP_EOL;
-            throw new DeepExitException($error, 3);
+            echo 'ERROR: Could not execute "'.$command.'"'.PHP_EOL.PHP_EOL;
+            exit(3);
         }
 
         $rawContent = stream_get_contents($handle);

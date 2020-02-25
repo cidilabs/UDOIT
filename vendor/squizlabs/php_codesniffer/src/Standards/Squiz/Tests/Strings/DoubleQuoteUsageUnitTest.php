@@ -25,21 +25,19 @@ class DoubleQuoteUsageUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            4  => 1,
-            5  => 1,
-            6  => 1,
-            8  => 2,
-            14 => 1,
-            15 => 1,
-            17 => 1,
-            19 => 1,
-            20 => 1,
-            22 => 1,
-            29 => 1,
-            30 => 1,
-            32 => 1,
-        ];
+        return array(
+                4  => 1,
+                5  => 1,
+                6  => 1,
+                8  => 2,
+                14 => 1,
+                15 => 1,
+                18 => 1,
+                19 => 1,
+                21 => 1,
+                28 => 1,
+                29 => 1,
+               );
 
     }//end getErrorList()
 
@@ -54,7 +52,7 @@ class DoubleQuoteUsageUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

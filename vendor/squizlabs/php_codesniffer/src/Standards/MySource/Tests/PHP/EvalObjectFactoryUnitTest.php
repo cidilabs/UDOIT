@@ -25,7 +25,7 @@ class EvalObjectFactoryUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [];
+        return array();
 
     }//end getErrorList()
 
@@ -40,11 +40,11 @@ class EvalObjectFactoryUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [
-            4  => 1,
-            12 => 1,
-            21 => 1,
-        ];
+        return array(
+                4  => 1,
+                12 => 1,
+                21 => 1,
+               );
 
     }//end getWarningList()
 

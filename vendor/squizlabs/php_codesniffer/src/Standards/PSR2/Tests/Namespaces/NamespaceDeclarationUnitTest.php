@@ -25,12 +25,10 @@ class NamespaceDeclarationUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            6  => 1,
-            9  => 1,
-            17 => 1,
-            19 => 1,
-        ];
+        return array(
+                6 => 1,
+                9 => 1,
+               );
 
     }//end getErrorList()
 
@@ -45,7 +43,7 @@ class NamespaceDeclarationUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

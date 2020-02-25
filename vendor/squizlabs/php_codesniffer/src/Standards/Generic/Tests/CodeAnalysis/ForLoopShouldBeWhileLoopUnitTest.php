@@ -25,7 +25,7 @@ class ForLoopShouldBeWhileLoopUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [];
+        return array();
 
     }//end getErrorList()
 
@@ -40,10 +40,10 @@ class ForLoopShouldBeWhileLoopUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [
-            6  => 1,
-            10 => 1,
-        ];
+        return array(
+                6  => 1,
+                10 => 1,
+               );
 
     }//end getWarningList()
 

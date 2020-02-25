@@ -20,7 +20,7 @@ class DisallowMultipleStyleDefinitionsSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['CSS'];
+    public $supportedTokenizers = array('CSS');
 
 
     /**
@@ -30,7 +30,7 @@ class DisallowMultipleStyleDefinitionsSniff implements Sniff
      */
     public function register()
     {
-        return [T_STYLE];
+        return array(T_STYLE);
 
     }//end register()
 

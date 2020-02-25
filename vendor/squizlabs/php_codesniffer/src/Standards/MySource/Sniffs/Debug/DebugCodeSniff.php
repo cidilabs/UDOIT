@@ -23,7 +23,7 @@ class DebugCodeSniff implements Sniff
      */
     public function register()
     {
-        return [T_DOUBLE_COLON];
+        return array(T_DOUBLE_COLON);
 
     }//end register()
 
@@ -45,7 +45,7 @@ class DebugCodeSniff implements Sniff
         if (strtolower($tokens[$className]['content']) === 'debug') {
             $method = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
             $error  = 'Call to debug function Debug::%s() must be removed';
-            $data   = [$tokens[$method]['content']];
+            $data   = array($tokens[$method]['content']);
             $phpcsFile->addError($error, $stackPtr, 'Found', $data);
         }
 

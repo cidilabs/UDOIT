@@ -26,7 +26,7 @@ class AjaxNullComparisonSniff implements Sniff
      */
     public function register()
     {
-        return [T_FUNCTION];
+        return array(T_FUNCTION);
 
     }//end register()
 
@@ -54,7 +54,7 @@ class AjaxNullComparisonSniff implements Sniff
 
         // Find all the vars passed in as we are only interested in comparisons
         // to NULL for these specific variables.
-        $foundVars = [];
+        $foundVars = array();
         $open      = $tokens[$stackPtr]['parenthesis_opener'];
         $close     = $tokens[$stackPtr]['parenthesis_closer'];
         for ($i = ($open + 1); $i < $close; $i++) {

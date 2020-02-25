@@ -20,11 +20,11 @@ class LineEndingsSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-        'CSS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                   'CSS',
+                                  );
 
     /**
      * The valid EOL character.
@@ -41,7 +41,7 @@ class LineEndingsSniff implements Sniff
      */
     public function register()
     {
-        return [T_OPEN_TAG];
+        return array(T_OPEN_TAG);
 
     }//end register()
 
@@ -84,10 +84,10 @@ class LineEndingsSniff implements Sniff
         $expected = $this->eolChar;
         $expected = str_replace("\n", '\n', $expected);
         $expected = str_replace("\r", '\r', $expected);
-        $data     = [
-            $expected,
-            $found,
-        ];
+        $data     = array(
+                     $expected,
+                     $found,
+                    );
 
         // Errors are always reported on line 1, no matter where the first PHP tag is.
         $fix = $phpcsFile->addFixableError($error, 0, 'InvalidEOLChar', $data);

@@ -29,9 +29,9 @@ class FileExtensionUnitTest extends AbstractSniffUnitTest
     {
         switch ($testFile) {
         case 'FileExtensionUnitTest.1.inc':
-            return [1 => 1];
+            return array(1 => 1);
         default:
-            return [];
+            return array();
         }
 
     }//end getErrorList()
@@ -47,7 +47,7 @@ class FileExtensionUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

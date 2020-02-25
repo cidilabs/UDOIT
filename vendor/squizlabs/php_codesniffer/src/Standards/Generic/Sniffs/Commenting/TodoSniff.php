@@ -21,10 +21,10 @@ class TodoSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
 
 
     /**
@@ -34,7 +34,7 @@ class TodoSniff implements Sniff
      */
     public function register()
     {
-        return array_diff(Tokens::$commentTokens, Tokens::$phpcsCommentTokens);
+        return Tokens::$commentTokens;
 
     }//end register()
 
@@ -53,7 +53,7 @@ class TodoSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         $content = $tokens[$stackPtr]['content'];
-        $matches = [];
+        $matches = array();
         preg_match('/(?:\A|[^\p{L}]+)todo([^\p{L}]+(.*)|\Z)/ui', $content, $matches);
         if (empty($matches) === false) {
             // Clear whitespace and some common characters not required at
@@ -62,7 +62,7 @@ class TodoSniff implements Sniff
             $todoMessage = trim($matches[1]);
             $todoMessage = trim($todoMessage, '-:[](). ');
             $error       = 'Comment refers to a TODO task';
-            $data        = [$todoMessage];
+            $data        = array($todoMessage);
             if ($todoMessage !== '') {
                 $type   = 'TaskFound';
                 $error .= ' "%s"';

@@ -22,11 +22,11 @@ class FunctionDeclarationSniff extends AbstractPatternSniff
      */
     protected function getPatterns()
     {
-        return [
-            'function abc(...);',
-            'function abc(...)',
-            'abstract function abc(...);',
-        ];
+        return array(
+                'function abc(...);',
+                'function abc(...)',
+                'abstract function abc(...);',
+               );
 
     }//end getPatterns()
 

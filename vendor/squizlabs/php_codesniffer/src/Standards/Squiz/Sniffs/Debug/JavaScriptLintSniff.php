@@ -22,7 +22,7 @@ class JavaScriptLintSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['JS'];
+    public $supportedTokenizers = array('JS');
 
 
     /**
@@ -32,7 +32,7 @@ class JavaScriptLintSniff implements Sniff
      */
     public function register()
     {
-        return [T_OPEN_TAG];
+        return array(T_OPEN_TAG);
 
     }//end register()
 
@@ -49,7 +49,7 @@ class JavaScriptLintSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr)
     {
         $jslPath = Config::getExecutablePath('jsl');
-        if ($jslPath === null) {
+        if (is_null($jslPath) === true) {
             return;
         }
 

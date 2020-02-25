@@ -11,8 +11,6 @@
 
 namespace Prophecy\Prophecy;
 
-use SebastianBergmann\Comparator\ComparisonFailure;
-use Prophecy\Comparator\Factory as ComparatorFactory;
 use Prophecy\Call\Call;
 use Prophecy\Doubler\LazyDouble;
 use Prophecy\Argument\ArgumentsWildcard;
@@ -32,7 +30,6 @@ class ObjectProphecy implements ProphecyInterface
     private $lazyDouble;
     private $callCenter;
     private $revealer;
-    private $comparatorFactory;
 
     /**
      * @var MethodProphecy[][]
@@ -45,19 +42,13 @@ class ObjectProphecy implements ProphecyInterface
      * @param LazyDouble        $lazyDouble
      * @param CallCenter        $callCenter
      * @param RevealerInterface $revealer
-     * @param ComparatorFactory $comparatorFactory
      */
-    public function __construct(
-        LazyDouble $lazyDouble,
-        CallCenter $callCenter = null,
-        RevealerInterface $revealer = null,
-        ComparatorFactory $comparatorFactory = null
-    ) {
+    public function __construct(LazyDouble $lazyDouble, CallCenter $callCenter = null,
+                                RevealerInterface $revealer = null)
+    {
         $this->lazyDouble = $lazyDouble;
         $this->callCenter = $callCenter ?: new CallCenter;
         $this->revealer   = $revealer ?: new Revealer;
-
-        $this->comparatorFactory = $comparatorFactory ?: ComparatorFactory::getInstance();
     }
 
     /**
@@ -146,7 +137,7 @@ class ObjectProphecy implements ProphecyInterface
             ), $methodProphecy);
         }
 
-        $methodName = strtolower($methodProphecy->getMethodName());
+        $methodName = $methodProphecy->getMethodName();
 
         if (!isset($this->methodProphecies[$methodName])) {
             $this->methodProphecies[$methodName] = array();
@@ -167,8 +158,6 @@ class ObjectProphecy implements ProphecyInterface
         if (null === $methodName) {
             return $this->methodProphecies;
         }
-
-        $methodName = strtolower($methodName);
 
         if (!isset($this->methodProphecies[$methodName])) {
             return array();
@@ -210,14 +199,11 @@ class ObjectProphecy implements ProphecyInterface
      * Checks that registered method predictions do not fail.
      *
      * @throws \Prophecy\Exception\Prediction\AggregateException If any of registered predictions fail
-     * @throws \Prophecy\Exception\Call\UnexpectedCallException
      */
     public function checkProphecyMethodsPredictions()
     {
         $exception = new AggregateException(sprintf("%s:\n", get_class($this->reveal())));
         $exception->setObjectProphecy($this);
-
-        $this->callCenter->checkUnexpectedCalls();
 
         foreach ($this->methodProphecies as $prophecies) {
             foreach ($prophecies as $prophecy) {
@@ -247,15 +233,10 @@ class ObjectProphecy implements ProphecyInterface
         $arguments = new ArgumentsWildcard($this->revealer->reveal($arguments));
 
         foreach ($this->getMethodProphecies($methodName) as $prophecy) {
-            $argumentsWildcard = $prophecy->getArgumentsWildcard();
-            $comparator = $this->comparatorFactory->getComparatorFor(
-                $argumentsWildcard, $arguments
-            );
-
-            try {
-                $comparator->assertEquals($argumentsWildcard, $arguments);
+            // Use the silence operator to suppress any notice about object to integer casting
+            if (@($prophecy->getArgumentsWildcard() == $arguments)) {
                 return $prophecy;
-            } catch (ComparisonFailure $failure) {}
+            }
         }
 
         return new MethodProphecy($this, $methodName, $arguments);
@@ -265,8 +246,6 @@ class ObjectProphecy implements ProphecyInterface
      * Tries to get property value from double.
      *
      * @param string $name
-     *
-     * @return mixed
      */
     public function __get($name)
     {
@@ -277,7 +256,7 @@ class ObjectProphecy implements ProphecyInterface
      * Tries to set property value to double.
      *
      * @param string $name
-     * @param mixed  $value
+     * @param string $value
      */
     public function __set($name, $value)
     {

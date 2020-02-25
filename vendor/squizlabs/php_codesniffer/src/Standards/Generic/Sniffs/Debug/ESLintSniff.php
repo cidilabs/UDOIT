@@ -21,7 +21,7 @@ class ESLintSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['JS'];
+    public $supportedTokenizers = array('JS');
 
 
     /**
@@ -39,7 +39,7 @@ class ESLintSniff implements Sniff
      */
     public function register()
     {
-        return [T_OPEN_TAG];
+        return array(T_OPEN_TAG);
 
     }//end register()
 
@@ -52,7 +52,7 @@ class ESLintSniff implements Sniff
      *                                               the token was found.
      *
      * @return void
-     * @throws \PHP_CodeSniffer\Exceptions\RuntimeException If jshint.js could not be run
+     * @throws PHP_CodeSniffer_Exception If jshint.js could not be run
      */
     public function process(File $phpcsFile, $stackPtr)
     {
@@ -72,7 +72,7 @@ class ESLintSniff implements Sniff
             }
         }
 
-        $eslintOptions = ['--format json'];
+        $eslintOptions = array('--format json');
         if (empty($configFile) === false) {
             $eslintOptions[] = '--config '.escapeshellarg($configFile);
         }

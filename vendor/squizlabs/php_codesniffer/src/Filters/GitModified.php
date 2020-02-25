@@ -22,7 +22,7 @@ class GitModified extends ExactMatch
      */
     protected function getBlacklist()
     {
-        return [];
+        return array();
 
     }//end getBlacklist()
 
@@ -34,10 +34,10 @@ class GitModified extends ExactMatch
      */
     protected function getWhitelist()
     {
-        $modified = [];
+        $modified = array();
 
-        $cmd    = 'git ls-files -o -m --exclude-standard -- '.escapeshellarg($this->basedir);
-        $output = [];
+        $cmd    = 'git ls-files -o -m --exclude-standard -- '.$this->basedir;
+        $output = array();
         exec($cmd, $output);
 
         $basedir = $this->basedir;

@@ -28,10 +28,10 @@ class ClosingTagUnitTest extends AbstractSniffUnitTest
     public function getErrorList($testFile='')
     {
         if ($testFile !== 'ClosingTagUnitTest.1.inc') {
-            return [];
+            return array();
         }
 
-        return [11 => 1];
+        return array(11 => 1);
 
     }//end getErrorList()
 
@@ -46,7 +46,7 @@ class ClosingTagUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

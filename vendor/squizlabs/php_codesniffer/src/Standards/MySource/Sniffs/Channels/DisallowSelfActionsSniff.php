@@ -24,7 +24,7 @@ class DisallowSelfActionsSniff implements Sniff
      */
     public function register()
     {
-        return [T_CLASS];
+        return array(T_CLASS);
 
     }//end register()
 
@@ -55,8 +55,8 @@ class DisallowSelfActionsSniff implements Sniff
             return;
         }
 
-        $foundFunctions = [];
-        $foundCalls     = [];
+        $foundFunctions = array();
+        $foundCalls     = array();
 
         // Find all static method calls in the form self::method() in the class.
         $classEnd = $tokens[$stackPtr]['scope_closer'];
@@ -95,10 +95,10 @@ class DisallowSelfActionsSniff implements Sniff
                 continue;
             }
 
-            $foundCalls[$i] = [
-                'name' => $funcName,
-                'type' => strtolower($tokens[$prevToken]['content']),
-            ];
+            $foundCalls[$i] = array(
+                               'name' => $funcName,
+                               'type' => strtolower($tokens[$prevToken]['content']),
+                              );
         }//end for
 
         $errorClassName = substr($className, 0, -7);
@@ -111,10 +111,10 @@ class DisallowSelfActionsSniff implements Sniff
             } else if ($foundFunctions[$funcData['name']] === 'public') {
                 $type  = $funcData['type'];
                 $error = "Static calls to public methods in Action classes must not use the $type keyword; use %s::%s() instead";
-                $data  = [
-                    $errorClassName,
-                    $funcName,
-                ];
+                $data  = array(
+                          $errorClassName,
+                          $funcName,
+                         );
                 $phpcsFile->addError($error, $token, 'Found'.ucfirst($funcData['type']), $data);
             }
         }

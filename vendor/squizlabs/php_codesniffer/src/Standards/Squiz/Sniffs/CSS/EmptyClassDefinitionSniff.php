@@ -21,7 +21,7 @@ class EmptyClassDefinitionSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['CSS'];
+    public $supportedTokenizers = array('CSS');
 
 
     /**
@@ -31,7 +31,7 @@ class EmptyClassDefinitionSniff implements Sniff
      */
     public function register()
     {
-        return [T_OPEN_CURLY_BRACKET];
+        return array(T_OPEN_CURLY_BRACKET);
 
     }//end register()
 

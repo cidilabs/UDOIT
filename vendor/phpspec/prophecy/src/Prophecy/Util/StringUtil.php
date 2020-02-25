@@ -20,16 +20,6 @@ use Prophecy\Call\Call;
  */
 class StringUtil
 {
-    private $verbose;
-
-    /**
-     * @param bool $verbose
-     */
-    public function __construct($verbose = true)
-    {
-        $this->verbose = $verbose;
-    }
-
     /**
      * Stringifies any provided value.
      *
@@ -41,7 +31,7 @@ class StringUtil
     public function stringify($value, $exportObject = true)
     {
         if (is_array($value)) {
-            if (range(0, count($value) - 1) === array_keys($value)) {
+            if (range(0, count($value) - 1) == array_keys($value)) {
                 return '['.implode(', ', array_map(array($this, __FUNCTION__), $value)).']';
             }
 
@@ -64,7 +54,7 @@ class StringUtil
         if (is_string($value)) {
             $str = sprintf('"%s"', str_replace("\n", '\\n', $value));
 
-            if (!$this->verbose && 50 <= strlen($str)) {
+            if (50 <= strlen($str)) {
                 return substr($str, 0, 50).'"...';
             }
 

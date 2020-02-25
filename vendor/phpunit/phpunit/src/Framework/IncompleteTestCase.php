@@ -7,12 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Framework;
 
 /**
  * An incomplete test case
+ *
+ * @since Class available since Release 4.3.0
  */
-class IncompleteTestCase extends TestCase
+class PHPUnit_Framework_IncompleteTestCase extends PHPUnit_Framework_TestCase
 {
     /**
      * @var string
@@ -56,9 +57,17 @@ class IncompleteTestCase extends TestCase
     }
 
     /**
+     * @throws PHPUnit_Framework_Exception
+     */
+    protected function runTest()
+    {
+        $this->markTestIncomplete($this->message);
+    }
+
+    /**
      * @return string
      */
-    public function getMessage(): string
+    public function getMessage()
     {
         return $this->message;
     }
@@ -66,20 +75,10 @@ class IncompleteTestCase extends TestCase
     /**
      * Returns a string representation of the test case.
      *
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
      * @return string
      */
-    public function toString(): string
+    public function toString()
     {
         return $this->getName();
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function runTest(): void
-    {
-        $this->markTestIncomplete($this->message);
     }
 }

@@ -29,37 +29,37 @@ class LowerCaseConstantUnitTest extends AbstractSniffUnitTest
     {
         switch ($testFile) {
         case 'LowerCaseConstantUnitTest.inc':
-            return [
-                7  => 1,
-                10 => 1,
-                15 => 1,
-                16 => 1,
-                23 => 1,
-                26 => 1,
-                31 => 1,
-                32 => 1,
-                39 => 1,
-                42 => 1,
-                47 => 1,
-                48 => 1,
-                70 => 1,
-                71 => 1,
-            ];
+            return array(
+                    7  => 1,
+                    10 => 1,
+                    15 => 1,
+                    16 => 1,
+                    23 => 1,
+                    26 => 1,
+                    31 => 1,
+                    32 => 1,
+                    39 => 1,
+                    42 => 1,
+                    47 => 1,
+                    48 => 1,
+                    70 => 1,
+                    71 => 1,
+                   );
         break;
         case 'LowerCaseConstantUnitTest.js':
-            return [
-                2  => 1,
-                3  => 1,
-                4  => 1,
-                7  => 1,
-                8  => 1,
-                12 => 1,
-                13 => 1,
-                14 => 1,
-            ];
+            return array(
+                    2  => 1,
+                    3  => 1,
+                    4  => 1,
+                    7  => 1,
+                    8  => 1,
+                    12 => 1,
+                    13 => 1,
+                    14 => 1,
+                   );
             break;
         default:
-            return [];
+            return array();
             break;
         }//end switch
 
@@ -76,7 +76,7 @@ class LowerCaseConstantUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

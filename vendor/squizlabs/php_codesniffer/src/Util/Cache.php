@@ -12,6 +12,7 @@ namespace PHP_CodeSniffer\Util;
 use PHP_CodeSniffer\Autoload;
 use PHP_CodeSniffer\Config;
 use PHP_CodeSniffer\Ruleset;
+use PHP_CodeSniffer\Util\Common;
 
 class Cache
 {
@@ -28,7 +29,7 @@ class Cache
      *
      * @var array<string, mixed>
      */
-    private static $cache = [];
+    private static $cache = array();
 
 
     /**
@@ -49,9 +50,8 @@ class Cache
             echo PHP_EOL."\tGenerating loaded file list for code hash".PHP_EOL;
         }
 
-        $codeHashFiles = [];
-
-        $classes = array_keys(Autoload::getLoadedClasses());
+        $codeHash = '';
+        $classes  = array_keys(Autoload::getLoadedClasses());
         sort($classes);
 
         $installDir     = dirname(__DIR__);
@@ -72,7 +72,7 @@ class Cache
                 echo "\t\t=> internal sniff: $file".PHP_EOL;
             }
 
-            $codeHashFiles[] = $file;
+            $codeHash .= md5_file($file);
         }
 
         // Add the content of the used rulesets to the hash so that sniff setting
@@ -88,13 +88,19 @@ class Cache
                 echo "\t\t=> internal ruleset: $file".PHP_EOL;
             }
 
-            $codeHashFiles[] = $file;
+            $codeHash .= md5_file($file);
         }
 
         // Go through the core PHPCS code and add those files to the file
         // hash. This ensures that core PHPCS changes will also invalidate the cache.
         // Note that we ignore sniffs here, and any files that don't affect
         // the outcome of the run.
+        $di = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($installDir),
+            0,
+            \RecursiveIteratorIterator::CATCH_GET_CHILD
+        );
+
         $di     = new \RecursiveDirectoryIterator($installDir);
         $filter = new \RecursiveCallbackFilterIterator(
             $di,
@@ -123,19 +129,12 @@ class Cache
             }
         );
 
-        $iterator      = new \RecursiveIteratorIterator($filter);
-        $codeHashFiles = [];
+        $iterator = new \RecursiveIteratorIterator($filter);
         foreach ($iterator as $file) {
             if (PHP_CODESNIFFER_VERBOSITY > 1) {
                 echo "\t\t=> core file: $file".PHP_EOL;
             }
 
-            $codeHashFiles[] = $file->getPathname();
-        }
-
-        $codeHash = '';
-        sort($codeHashFiles);
-        foreach ($codeHashFiles as $file) {
             $codeHash .= md5_file($file);
         }
 
@@ -145,41 +144,28 @@ class Cache
         // the results of a run to create a new hash. This hash will be used
         // in the cache file name.
         $rulesetHash = md5(var_export($ruleset->ignorePatterns, true).var_export($ruleset->includePatterns, true));
-        $configData  = [
-            'phpVersion'   => PHP_VERSION_ID,
-            'tabWidth'     => $config->tabWidth,
-            'encoding'     => $config->encoding,
-            'recordErrors' => $config->recordErrors,
-            'annotations'  => $config->annotations,
-            'configData'   => Config::getAllConfigData(),
-            'codeHash'     => $codeHash,
-            'rulesetHash'  => $rulesetHash,
-        ];
+        $configData  = array(
+                        'tabWidth'     => $config->tabWidth,
+                        'encoding'     => $config->encoding,
+                        'recordErrors' => $config->recordErrors,
+                        'annotations'  => $config->annotations,
+                        'codeHash'     => $codeHash,
+                        'rulesetHash'  => $rulesetHash,
+                       );
 
-        $configString = var_export($configData, true);
+        $configString = implode(',', $configData);
         $cacheHash    = substr(sha1($configString), 0, 12);
 
         if (PHP_CODESNIFFER_VERBOSITY > 1) {
             echo "\tGenerating cache key data".PHP_EOL;
-            foreach ($configData as $key => $value) {
-                if (is_array($value) === true) {
-                    echo "\t\t=> $key:".PHP_EOL;
-                    foreach ($value as $subKey => $subValue) {
-                        echo "\t\t\t=> $subKey: $subValue".PHP_EOL;
-                    }
-
-                    continue;
-                }
-
-                if ($value === true || $value === false) {
-                    $value = (int) $value;
-                }
-
-                echo "\t\t=> $key: $value".PHP_EOL;
-            }
-
+            echo "\t\t=> tabWidth: ".$configData['tabWidth'].PHP_EOL;
+            echo "\t\t=> encoding: ".$configData['encoding'].PHP_EOL;
+            echo "\t\t=> recordErrors: ".(int) $configData['recordErrors'].PHP_EOL;
+            echo "\t\t=> annotations: ".(int) $configData['annotations'].PHP_EOL;
+            echo "\t\t=> codeHash: ".$configData['codeHash'].PHP_EOL;
+            echo "\t\t=> rulesetHash: ".$configData['rulesetHash'].PHP_EOL;
             echo "\t\t=> cacheHash: $cacheHash".PHP_EOL;
-        }//end if
+        }
 
         if ($config->cacheFile !== null) {
             $cacheFile = $config->cacheFile;
@@ -191,7 +177,7 @@ class Cache
                 echo "\tChecking possible cache file paths".PHP_EOL;
             }
 
-            $paths = [];
+            $paths = array();
             foreach ($config->files as $file) {
                 $file = Common::realpath($file);
                 while ($file !== DIRECTORY_SEPARATOR) {
@@ -258,7 +244,7 @@ class Cache
 
             // Verify the contents of the cache file.
             if (self::$cache['config'] !== $configData) {
-                self::$cache = [];
+                self::$cache = array();
                 if (PHP_CODESNIFFER_VERBOSITY > 1) {
                     echo "\t* cache was invalid and has been cleared *".PHP_EOL;
                 }

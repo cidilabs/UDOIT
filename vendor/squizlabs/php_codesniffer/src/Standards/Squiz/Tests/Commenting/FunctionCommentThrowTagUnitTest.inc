@@ -212,25 +212,6 @@ class FunctionCommentThrowTagUnitTest
     }//end notOkVariableRethrown()
 
     /**
-     * Needs at throws tag for rethrown exception,
-     * even though we have one throws tag.
-     *
-     * @throws PHP_Exception1
-     */
-    public function notOkVariableRethrown()
-    {
-        throw new PHP_Exception1('Error');
-
-        try {
-            // Do something.
-        } catch (PHP_Exception1 | PHP_Exception2 $e) {
-            logError();
-            throw $e;
-        }
-
-    }//end notOkVariableRethrown()
-
-    /**
      * Has correct throws tags for all exceptions
      *
      * @throws PHP_Exception1
@@ -248,23 +229,6 @@ class FunctionCommentThrowTagUnitTest
         }
 
     }//end okVariableRethrown()
-
-    /**
-     * Has correct throws tags for all exceptions
-     *
-     * @throws PHP_Exception1
-     * @throws PHP_Exception2
-     */
-    public function okVariableMultiRethrown()
-    {
-        try {
-            // Do something.
-        } catch (PHP_Exception1 | PHP_Exception2 $e) {
-            logError();
-            throw $e;
-        }
-
-    }//end okVariableMultiRethrown()
 }//end class
 
 class NamespacedException {
@@ -357,56 +321,4 @@ class Test
             throw new RuntimeException("bam!");
         };
     }
-}
-
-/**
- * Class comment.
- */
-class A
-{
-    /**
-     * Function B.
-     */
-    public function b()
-    {
-        return new class {
-            public function c()
-            {
-                throw new \Exception();
-            }
-        }
-    }
-}
-
-/**
- * Class comment.
- */
-class A
-{
-    /**
-     * Function B.
-     */
-    public function b()
-    {
-        return new class {
-            /**
-             * Tag and token number mismatch.
-             *
-             * @throws PHP_Exception1
-             * @throws PHP_Exception2
-             */
-            public function oneLessThrowsTagNeeded()
-            {
-                throw new PHP_Exception1('Error');
-
-            }//end oneLessThrowsTagNeeded()
-        }
-    }
-}
-
-abstract class SomeClass {
-    /**
-     * Comment here.
-     */
-    abstract public function getGroups();
 }

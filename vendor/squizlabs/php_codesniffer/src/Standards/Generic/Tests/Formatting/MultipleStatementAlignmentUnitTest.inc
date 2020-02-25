@@ -201,7 +201,7 @@ if (TRUE) {
     $res  = 'bar';
 }
 
-// phpcs:set Generic.Formatting.MultipleStatementAlignment maxPadding 8
+// @codingStandardsChangeSetting Generic.Formatting.MultipleStatementAlignment maxPadding 8
 
 $one                = 'one';
 $varonetwo          = 'two';
@@ -215,7 +215,7 @@ $varonetwo .= 'two';
 $varonetwothree     = 'three';
 $varonetwothreefour = 'four';
 
-// phpcs:set Generic.Formatting.MultipleStatementAlignment maxPadding 1000
+// @codingStandardsChangeSetting Generic.Formatting.MultipleStatementAlignment maxPadding 1000
 
 $filterQuery = SquizRoadmap::getSearchQueryFilter($searchParams);
 Channels::addToBasket('itemid', $filterQuery);
@@ -232,174 +232,3 @@ $bar = 'hi';
 $foo = $moo = $test;
 $boo = 'boo';
 $foo = $moooo = 'foo';
-
-$foobarbaz = array_map(
-    function ($n) {
-        return $n * $n;
-    },
-    [1, 2, 3]
-);
-$foo       = 5;
-
-$loggerResult = $util->setLogger(new class {
-    public function log($msg)
-    {
-        echo $msg;
-    }
-});
-$foo          = 5;
-
-$foo = array(
-    'a' => 'b',
-);
-$barbar = 'bar';
-
-$foo = array(
-    // Some comment.
-    'a' => 'b',
-);
-$barbar = 'bar';
-
-$foo = [
-    // phpcs:ignore Standard.Category.Sniff.Code -- for reasons.
-    'a' => 'b',
-];
-$barbar = 'bar';
-
-$foo = [
-
-    'a' => 'b',
-];
-$barbar = 'bar';
-
-public function buildForm(FormBuilderInterface $builder, array $options)
-{
-    $transformer = new ContractTransformer($options['contracts']);
-    $types       = ['support.contact.question' => ContactData::QUESTION];
-
-    [$important, $questions, $incidents, $requests] = $this->createContractBuckets($options['contracts']);
-}
-
-public function buildForm(FormBuilderInterface $builder, array $options)
-{
-    $transformer                                    = new ContractTransformer($options['contracts']);
-    $types                                          = ['support.contact.question' => ContactData::QUESTION];
-    [$important, $questions, $incidents, $requests] = $this->createContractBuckets($options['contracts']);
-}
-
-$loggerResult = $util->setLogger(new class {
-    public function log($msg)
-    {
-        $a = $msg;
-        $foobar = $msg;
-        $foo = function() {
-            $a = $msg;
-            $foobar = $msg;
-            $loggerResult = $util->setLogger(new class {
-                public function log($msg)
-                {
-                    $a = $msg;
-                    $foobar = $msg;
-                    $foo = function() {
-                        foo(function() {
-                            foo(function() {
-                                echo 'hi';
-                            });
-                            $a = $msg;
-                            $foobar = $msg;
-
-                            $foo = function() {
-
-                                $foo = 1;
-                                $barbar=2;
-                            }
-                            $barbar = function() {
-                                $foo    = 1;
-                                $barbar = 2;
-                            }
-                        });
-                        $a = $msg;
-                        $foobar      = $msg;
-                    }
-                    $bar = $msg;
-                }
-
-                public function log2($msg)
-                {
-                    $a = $msg;
-                    $foobar = $msg;
-                    $foo = function() {
-                        foo(function() {
-                            foo(function() {
-                                echo 'hi';
-                            });
-                            $a = $msg;
-                            $foobar = $msg;
-
-                            $foo = function() {
-
-                                $foo = 1;
-                                $barbar=2;
-                            }
-                            $barbar = function() {
-                                $foo    = 1;
-                                $barbar = 2;
-                            }
-                        });
-                        $a = $msg;
-                        $foobar      = $msg;
-                    }
-                    $bar = $msg;
-                }
-            });
-            $foo          = 5;
-        }
-        $bar = $msg;
-    }
-});
-$foo          = 5;
-
-$foo = [
-    0 => function () {
-        $foo = 'foo';
-        $barbar = 'bar';
-    },
-    1 => function () {
-        $foo    = 'foo';
-        $barbar = 'bar';
-    },
-];
-
-$abc = 'something';
-if ($foo) {}
-$defghi = 'longer something';
-
-function foo() {
-    $foo = 'foo';
-    $bar = 'bar';
-    ?>
-
-    <div>
-        <?php
-        $foo = 'foo';
-        $bar = 'bar';
-        ?>
-    </div>
-    <?php
-}
-
-$foo = new Foo([
-    $a = new Bar(),
-    $b = new Bar(),
-]);
-
-$foo = new Foo([
-    $a = new Bar(),
-    $b    = new Bar(),
-    $c  = new Bar(),
-]);
-$foofoo   = new Foo([
-    $a = new Bar(),
-    $b = new Bar(),
-    $c = new Bar(),
-]);

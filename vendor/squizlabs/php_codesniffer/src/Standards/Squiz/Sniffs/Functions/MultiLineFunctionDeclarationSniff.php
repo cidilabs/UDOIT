@@ -20,10 +20,10 @@ class MultiLineFunctionDeclarationSniff extends PEARFunctionDeclarationSniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
 
 
     /**
@@ -41,7 +41,7 @@ class MultiLineFunctionDeclarationSniff extends PEARFunctionDeclarationSniff
      */
     public function isMultiLineDeclaration($phpcsFile, $stackPtr, $openBracket, $tokens)
     {
-        $bracketsToCheck = [$stackPtr => $openBracket];
+        $bracketsToCheck = array($stackPtr => $openBracket);
 
         // Closures may use the USE keyword and so be multi-line in this way.
         if ($tokens[$stackPtr]['code'] === T_CLOSURE) {
@@ -124,6 +124,13 @@ class MultiLineFunctionDeclarationSniff extends PEARFunctionDeclarationSniff
         $openBracket = $phpcsFile->findNext(T_OPEN_PARENTHESIS, ($use + 1), null);
         $this->processBracket($phpcsFile, $openBracket, $tokens, 'use');
 
+        // Also check spacing.
+        if ($tokens[($use - 1)]['code'] === T_WHITESPACE) {
+            $gap = strlen($tokens[($use - 1)]['content']);
+        } else {
+            $gap = 0;
+        }
+
     }//end processMultiLineDeclaration()
 
 
@@ -179,7 +186,7 @@ class MultiLineFunctionDeclarationSniff extends PEARFunctionDeclarationSniff
                 continue;
             }
 
-            $next = $phpcsFile->findNext(Tokens::$emptyTokens, ($i + 1), null, true);
+            $next = $phpcsFile->findNext(T_WHITESPACE, ($i + 1), null, true);
             if ($tokens[$next]['line'] === $tokens[$i]['line']) {
                 $error = 'Multi-line '.$type.' declarations must define one parameter per line';
                 $fix   = $phpcsFile->addFixableError($error, $next, $errorPrefix.'OneParamPerLine');

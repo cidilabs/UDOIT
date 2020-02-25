@@ -7,14 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Framework\Constraint;
 
-class ExceptionCode extends Constraint
+/**
+ * @since Class available since Release 3.6.6
+ */
+class PHPUnit_Framework_Constraint_ExceptionCode extends PHPUnit_Framework_Constraint
 {
     /**
      * @var int
      */
-    private $expectedCode;
+    protected $expectedCode;
 
     /**
      * @param int $expected
@@ -22,29 +24,20 @@ class ExceptionCode extends Constraint
     public function __construct($expected)
     {
         parent::__construct();
-
         $this->expectedCode = $expected;
-    }
-
-    /**
-     * @return string
-     */
-    public function toString(): string
-    {
-        return 'exception code is ';
     }
 
     /**
      * Evaluates the constraint for parameter $other. Returns true if the
      * constraint is met, false otherwise.
      *
-     * @param \Throwable $other
+     * @param Exception $other
      *
      * @return bool
      */
-    protected function matches($other): bool
+    protected function matches($other)
     {
-        return (string) $other->getCode() === (string) $this->expectedCode;
+        return (string) $other->getCode() == (string) $this->expectedCode;
     }
 
     /**
@@ -53,18 +46,24 @@ class ExceptionCode extends Constraint
      * The beginning of failure messages is "Failed asserting that" in most
      * cases. This method should return the second part of that sentence.
      *
-     * @param mixed $other evaluated value or object
-     *
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @param mixed $other Evaluated value or object.
      *
      * @return string
      */
-    protected function failureDescription($other): string
+    protected function failureDescription($other)
     {
-        return \sprintf(
+        return sprintf(
             '%s is equal to expected exception code %s',
             $this->exporter->export($other->getCode()),
             $this->exporter->export($this->expectedCode)
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function toString()
+    {
+        return 'exception code is ';
     }
 }

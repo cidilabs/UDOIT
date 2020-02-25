@@ -23,10 +23,10 @@ class HeredocSniff implements Sniff
      */
     public function register()
     {
-        return [
-            T_START_HEREDOC,
-            T_START_NOWDOC,
-        ];
+        return array(
+                T_START_HEREDOC,
+                T_START_NOWDOC,
+               );
 
     }//end register()
 

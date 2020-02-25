@@ -23,7 +23,7 @@ class OneInterfacePerFileSniff implements Sniff
      */
     public function register()
     {
-        return [T_INTERFACE];
+        return array(T_INTERFACE);
 
     }//end register()
 

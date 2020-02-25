@@ -25,11 +25,11 @@ class FunctionDuplicateArgumentUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            2 => 1,
-            4 => 2,
-            5 => 1,
-        ];
+        return array(
+                2 => 1,
+                4 => 2,
+                5 => 1,
+               );
 
     }//end getErrorList()
 
@@ -44,7 +44,7 @@ class FunctionDuplicateArgumentUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

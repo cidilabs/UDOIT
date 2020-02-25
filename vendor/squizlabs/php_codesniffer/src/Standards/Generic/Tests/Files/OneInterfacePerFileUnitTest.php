@@ -25,10 +25,10 @@ class OneInterfacePerFileUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            6  => 1,
-            10 => 1,
-        ];
+        return array(
+                6  => 1,
+                10 => 1,
+               );
 
     }//end getErrorList()
 
@@ -43,7 +43,7 @@ class OneInterfacePerFileUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

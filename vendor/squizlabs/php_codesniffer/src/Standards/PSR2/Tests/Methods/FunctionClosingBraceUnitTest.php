@@ -25,14 +25,14 @@ class FunctionClosingBraceUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            16 => 1,
-            23 => 1,
-            40 => 1,
-            47 => 1,
-            63 => 1,
-            70 => 1,
-        ];
+        return array(
+                16 => 1,
+                23 => 1,
+                40 => 1,
+                47 => 1,
+                63 => 1,
+                70 => 1,
+               );
 
     }//end getErrorList()
 
@@ -47,7 +47,7 @@ class FunctionClosingBraceUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

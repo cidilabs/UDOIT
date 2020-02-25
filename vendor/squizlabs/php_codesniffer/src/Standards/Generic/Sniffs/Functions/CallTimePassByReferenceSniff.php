@@ -24,10 +24,10 @@ class CallTimePassByReferenceSniff implements Sniff
      */
     public function register()
     {
-        return [
-            T_STRING,
-            T_VARIABLE,
-        ];
+        return array(
+                T_STRING,
+                T_VARIABLE,
+               );
 
     }//end register()
 
@@ -47,7 +47,7 @@ class CallTimePassByReferenceSniff implements Sniff
 
         $findTokens = array_merge(
             Tokens::$emptyTokens,
-            [T_BITWISE_AND]
+            array(T_BITWISE_AND)
         );
 
         $prev = $phpcsFile->findPrevious($findTokens, ($stackPtr - 1), null, true);
@@ -82,10 +82,10 @@ class CallTimePassByReferenceSniff implements Sniff
         $closeBracket = $tokens[$openBracket]['parenthesis_closer'];
 
         $nextSeparator = $openBracket;
-        $find          = [
-            T_VARIABLE,
-            T_OPEN_SHORT_ARRAY,
-        ];
+        $find          = array(
+                          T_VARIABLE,
+                          T_OPEN_SHORT_ARRAY,
+                         );
 
         while (($nextSeparator = $phpcsFile->findNext($find, ($nextSeparator + 1), $closeBracket)) !== false) {
             if (isset($tokens[$nextSeparator]['nested_parenthesis']) === false) {

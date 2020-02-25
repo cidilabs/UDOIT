@@ -42,7 +42,7 @@ class CyclomaticComplexitySniff implements Sniff
      */
     public function register()
     {
-        return [T_FUNCTION];
+        return array(T_FUNCTION);
 
     }//end register()
 
@@ -58,6 +58,8 @@ class CyclomaticComplexitySniff implements Sniff
      */
     public function process(File $phpcsFile, $stackPtr)
     {
+        $this->currentFile = $phpcsFile;
+
         $tokens = $phpcsFile->getTokens();
 
         // Ignore abstract methods.
@@ -70,17 +72,17 @@ class CyclomaticComplexitySniff implements Sniff
         $end   = $tokens[$stackPtr]['scope_closer'];
 
         // Predicate nodes for PHP.
-        $find = [
-            T_CASE    => true,
-            T_DEFAULT => true,
-            T_CATCH   => true,
-            T_IF      => true,
-            T_FOR     => true,
-            T_FOREACH => true,
-            T_WHILE   => true,
-            T_DO      => true,
-            T_ELSEIF  => true,
-        ];
+        $find = array(
+                 T_CASE    => true,
+                 T_DEFAULT => true,
+                 T_CATCH   => true,
+                 T_IF      => true,
+                 T_FOR     => true,
+                 T_FOREACH => true,
+                 T_WHILE   => true,
+                 T_DO      => true,
+                 T_ELSEIF  => true,
+                );
 
         $complexity = 1;
 
@@ -93,17 +95,17 @@ class CyclomaticComplexitySniff implements Sniff
 
         if ($complexity > $this->absoluteComplexity) {
             $error = 'Function\'s cyclomatic complexity (%s) exceeds allowed maximum of %s';
-            $data  = [
-                $complexity,
-                $this->absoluteComplexity,
-            ];
+            $data  = array(
+                      $complexity,
+                      $this->absoluteComplexity,
+                     );
             $phpcsFile->addError($error, $stackPtr, 'MaxExceeded', $data);
         } else if ($complexity > $this->complexity) {
             $warning = 'Function\'s cyclomatic complexity (%s) exceeds %s; consider refactoring the function';
-            $data    = [
-                $complexity,
-                $this->complexity,
-            ];
+            $data    = array(
+                        $complexity,
+                        $this->complexity,
+                       );
             $phpcsFile->addWarning($warning, $stackPtr, 'TooHigh', $data);
         }
 

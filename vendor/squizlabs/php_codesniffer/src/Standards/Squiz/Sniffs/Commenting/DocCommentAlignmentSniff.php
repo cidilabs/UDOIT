@@ -21,10 +21,10 @@ class DocCommentAlignmentSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
 
 
     /**
@@ -34,7 +34,7 @@ class DocCommentAlignmentSniff implements Sniff
      */
     public function register()
     {
-        return [T_DOC_COMMENT_OPEN_TAG];
+        return array(T_DOC_COMMENT_OPEN_TAG);
 
     }//end register()
 
@@ -61,22 +61,22 @@ class DocCommentAlignmentSniff implements Sniff
         }
 
         $nextToken = $phpcsFile->findNext($ignore, ($stackPtr + 1), null, true);
-        $ignore    = [
-            T_CLASS     => true,
-            T_INTERFACE => true,
-            T_FUNCTION  => true,
-            T_PUBLIC    => true,
-            T_PRIVATE   => true,
-            T_PROTECTED => true,
-            T_STATIC    => true,
-            T_ABSTRACT  => true,
-            T_PROPERTY  => true,
-            T_OBJECT    => true,
-            T_PROTOTYPE => true,
-            T_VAR       => true,
-        ];
+        $ignore    = array(
+                      T_CLASS     => true,
+                      T_INTERFACE => true,
+                      T_FUNCTION  => true,
+                      T_PUBLIC    => true,
+                      T_PRIVATE   => true,
+                      T_PROTECTED => true,
+                      T_STATIC    => true,
+                      T_ABSTRACT  => true,
+                      T_PROPERTY  => true,
+                      T_OBJECT    => true,
+                      T_PROTOTYPE => true,
+                      T_VAR       => true,
+                     );
 
-        if ($nextToken === false || isset($ignore[$tokens[$nextToken]['code']]) === false) {
+        if (isset($ignore[$tokens[$nextToken]['code']]) === false) {
             // Could be a file comment.
             $prevToken = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($stackPtr - 1), null, true);
             if ($tokens[$prevToken]['code'] !== T_OPEN_TAG) {
@@ -96,11 +96,6 @@ class DocCommentAlignmentSniff implements Sniff
             }
 
             if ($tokens[$i]['code'] === T_DOC_COMMENT_CLOSE_TAG) {
-                if (trim($tokens[$i]['content']) === '') {
-                    // Don't process an unfinished docblock close tag during live coding.
-                    continue;
-                }
-
                 // Can't process the close tag if it is not the first thing on the line.
                 $prev = $phpcsFile->findPrevious(T_DOC_COMMENT_WHITESPACE, ($i - 1), $stackPtr, true);
                 if ($tokens[$prev]['line'] === $tokens[$i]['line']) {
@@ -110,10 +105,10 @@ class DocCommentAlignmentSniff implements Sniff
 
             if ($tokens[$i]['column'] !== $requiredColumn) {
                 $error = 'Expected %s space(s) before asterisk; %s found';
-                $data  = [
-                    ($requiredColumn - 1),
-                    ($tokens[$i]['column'] - 1),
-                ];
+                $data  = array(
+                          ($requiredColumn - 1),
+                          ($tokens[$i]['column'] - 1),
+                         );
                 $fix   = $phpcsFile->addFixableError($error, $i, 'SpaceBeforeStar', $data);
                 if ($fix === true) {
                     $padding = str_repeat(' ', ($requiredColumn - 1));
@@ -144,7 +139,7 @@ class DocCommentAlignmentSniff implements Sniff
                 && $tokens[($i + 1)]['content'] !== ' '
             ) {
                 $error = 'Expected 1 space after asterisk; %s found';
-                $data  = [strlen($tokens[($i + 1)]['content'])];
+                $data  = array(strlen($tokens[($i + 1)]['content']));
                 $fix   = $phpcsFile->addFixableError($error, $i, 'SpaceAfterStar', $data);
                 if ($fix === true) {
                     $phpcsFile->fixer->replaceToken(($i + 1), ' ');

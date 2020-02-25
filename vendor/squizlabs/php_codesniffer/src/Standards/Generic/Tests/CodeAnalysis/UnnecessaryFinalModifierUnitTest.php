@@ -25,7 +25,7 @@ class UnnecessaryFinalModifierUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [];
+        return array();
 
     }//end getErrorList()
 
@@ -40,11 +40,11 @@ class UnnecessaryFinalModifierUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [
-            11 => 1,
-            14 => 1,
-            17 => 1,
-        ];
+        return array(
+                11 => 1,
+                14 => 1,
+                17 => 1,
+               );
 
     }//end getWarningList()
 

@@ -13,7 +13,6 @@
 
 namespace PHP_CodeSniffer\Reports;
 
-use PHP_CodeSniffer\Exceptions\DeepExitException;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util;
 
@@ -52,8 +51,9 @@ class Cbf implements Report
             // Replacing STDIN, so output current file to STDOUT
             // even if nothing was fixed. Exit here because we
             // can't process any more than 1 file in this setup.
-            $fixedContent = $phpcsFile->fixer->getContents();
-            throw new DeepExitException($fixedContent, 1);
+            echo $phpcsFile->fixer->getContents();
+            ob_end_flush();
+            exit(1);
         }
 
         if ($errors === 0) {
@@ -78,15 +78,8 @@ class Cbf implements Report
         }
 
         if ($fixed === true) {
-            // The filename in the report may be truncated due to a basepath setting
-            // but we are using it for writing here and not display,
-            // so find the correct path if basepath is in use.
             $newFilename = $report['filename'].$phpcsFile->config->suffix;
-            if ($phpcsFile->config->basepath !== null) {
-                $newFilename = $phpcsFile->config->basepath.DIRECTORY_SEPARATOR.$newFilename;
-            }
-
-            $newContent = $phpcsFile->fixer->getContents();
+            $newContent  = $phpcsFile->fixer->getContents();
             file_put_contents($newFilename, $newContent);
 
             if (PHP_CODESNIFFER_VERBOSITY > 0) {
@@ -148,7 +141,7 @@ class Cbf implements Report
             return;
         }
 
-        $reportFiles = [];
+        $reportFiles = array();
         $maxLength   = 0;
         $totalFixed  = 0;
         $failures    = 0;
@@ -156,13 +149,13 @@ class Cbf implements Report
         foreach ($lines as $line) {
             $parts   = explode('>>', $line);
             $fileLen = strlen($parts[0]);
-            $reportFiles[$parts[0]] = [
-                'errors'   => $parts[1],
-                'warnings' => $parts[2],
-                'fixable'  => $parts[3],
-                'fixed'    => $parts[4],
-                'strlen'   => $fileLen,
-            ];
+            $reportFiles[$parts[0]] = array(
+                                       'errors'   => $parts[1],
+                                       'warnings' => $parts[2],
+                                       'fixable'  => $parts[3],
+                                       'fixed'    => $parts[4],
+                                       'strlen'   => $fileLen,
+                                      );
 
             $maxLength = max($maxLength, $fileLen);
 

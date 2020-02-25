@@ -20,10 +20,10 @@ class LowerCaseConstantSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
 
 
     /**
@@ -33,11 +33,11 @@ class LowerCaseConstantSniff implements Sniff
      */
     public function register()
     {
-        return [
-            T_TRUE,
-            T_FALSE,
-            T_NULL,
-        ];
+        return array(
+                T_TRUE,
+                T_FALSE,
+                T_NULL,
+               );
 
     }//end register()
 
@@ -64,10 +64,10 @@ class LowerCaseConstantSniff implements Sniff
             }
 
             $error = 'TRUE, FALSE and NULL must be lowercase; expected "%s" but found "%s"';
-            $data  = [
-                $expected,
-                $keyword,
-            ];
+            $data  = array(
+                      $expected,
+                      $keyword,
+                     );
 
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Found', $data);
             if ($fix === true) {

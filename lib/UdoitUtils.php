@@ -361,18 +361,28 @@ class UdoitUtils
         return $response;
     }
 
-    public function checkSafari()
+    /**
+     * Check for Safari and redirect to set cookies at top level
+     * rather than in an iframe.
+     *
+     * @return void
+     */
+    public static function checkSafari()
     {
-        if (stripos($_SERVER['HTTP_USER_AGENT'], 'safari') >= 0) {
-            if (count($_COOKIE) === 0) {
-                header('Location: safari_fix.php');
-                exit;
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            if (stripos($_SERVER['HTTP_USER_AGENT'], 'safari') >= 0) {
+                if (count($_COOKIE) === 0) {
+                    header('Location: safari_fix.php');
+                    exit;
+                }
             }
         }
     }
 
     protected function curlOauthToken($base_url, $post_data)
     {
+        global $curl_ssl_verify;
+        
         // @TODO - why not use Httpful here?
         $ch = curl_init("{$base_url}/login/oauth2/token");
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -380,8 +390,8 @@ class UdoitUtils
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         // Ignore SSL certificates when specified in local config
         // (E.g. when Canvas instance does not have trusted SSL certificates)
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $curl_ssl_verify);
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $curl_ssl_verify);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $curl_ssl_verify);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $curl_ssl_verify);
         $result = curl_exec($ch);
         curl_close($ch);
 

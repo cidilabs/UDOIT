@@ -28,22 +28,22 @@ class FileCommentUnitTest extends AbstractSniffUnitTest
     public function getErrorList($testFile='FileCommentUnitTest.inc')
     {
         switch ($testFile) {
-        case 'FileCommentUnitTest.1.inc':
+        case 'FileCommentUnitTest.inc':
         case 'FileCommentUnitTest.js':
-            return [
-                1  => 1,
-                22 => 2,
-                23 => 1,
-                24 => 2,
-                25 => 2,
-                26 => 1,
-                27 => 2,
-                28 => 2,
-                32 => 2,
-            ];
+            return array(
+                    1  => 1,
+                    22 => 2,
+                    23 => 1,
+                    24 => 2,
+                    25 => 2,
+                    26 => 1,
+                    27 => 2,
+                    28 => 2,
+                    32 => 2,
+                   );
         default:
-            return [];
-        }//end switch
+            return array();
+        }
 
     }//end getErrorList()
 
@@ -58,7 +58,7 @@ class FileCommentUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

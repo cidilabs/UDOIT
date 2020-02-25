@@ -25,10 +25,10 @@ class HeredocUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            2 => 1,
-            8 => 1,
-        ];
+        return array(
+                2 => 1,
+                8 => 1,
+               );
 
     }//end getErrorList()
 
@@ -43,7 +43,7 @@ class HeredocUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

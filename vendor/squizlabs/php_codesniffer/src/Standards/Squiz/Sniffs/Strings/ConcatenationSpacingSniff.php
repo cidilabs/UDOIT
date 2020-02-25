@@ -11,7 +11,6 @@ namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\Strings;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
-use PHP_CodeSniffer\Util\Tokens;
 
 class ConcatenationSpacingSniff implements Sniff
 {
@@ -38,7 +37,7 @@ class ConcatenationSpacingSniff implements Sniff
      */
     public function register()
     {
-        return [T_STRING_CONCAT];
+        return array(T_STRING_CONCAT);
 
     }//end register()
 
@@ -54,29 +53,17 @@ class ConcatenationSpacingSniff implements Sniff
      */
     public function process(File $phpcsFile, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
-
-        $ignoreBefore = false;
-        $prev         = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($stackPtr - 1), null, true);
-        if ($tokens[$prev]['code'] === T_END_HEREDOC || $tokens[$prev]['code'] === T_END_NOWDOC) {
-            // Spacing before must be preserved due to the here/nowdoc closing tag.
-            $ignoreBefore = true;
-        }
-
         $this->spacing = (int) $this->spacing;
 
-        if ($ignoreBefore === false) {
-            if ($tokens[($stackPtr - 1)]['code'] !== T_WHITESPACE) {
-                $before = 0;
+        $tokens = $phpcsFile->getTokens();
+        if ($tokens[($stackPtr - 1)]['code'] !== T_WHITESPACE) {
+            $before = 0;
+        } else {
+            if ($tokens[($stackPtr - 2)]['line'] !== $tokens[$stackPtr]['line']) {
+                $before = 'newline';
             } else {
-                if ($tokens[($stackPtr - 2)]['line'] !== $tokens[$stackPtr]['line']) {
-                    $before = 'newline';
-                } else {
-                    $before = $tokens[($stackPtr - 1)]['length'];
-                }
+                $before = $tokens[($stackPtr - 1)]['length'];
             }
-
-            $phpcsFile->recordMetric($stackPtr, 'Spacing before string concat', $before);
         }
 
         if ($tokens[($stackPtr + 1)]['code'] !== T_WHITESPACE) {
@@ -89,22 +76,18 @@ class ConcatenationSpacingSniff implements Sniff
             }
         }
 
+        $phpcsFile->recordMetric($stackPtr, 'Spacing before string concat', $before);
         $phpcsFile->recordMetric($stackPtr, 'Spacing after string concat', $after);
 
-        if (($ignoreBefore === true
-            || $before === $this->spacing
-            || ($before === 'newline'
-            && $this->ignoreNewlines === true))
-            && ($after === $this->spacing
-            || ($after === 'newline'
-            && $this->ignoreNewlines === true))
+        if (($before === $this->spacing || ($before === 'newline' && $this->ignoreNewlines === true))
+            && ($after === $this->spacing || ($after === 'newline' && $this->ignoreNewlines === true))
         ) {
             return;
         }
 
         if ($this->spacing === 0) {
             $message = 'Concat operator must not be surrounded by spaces';
-            $data    = [];
+            $data    = array();
         } else {
             if ($this->spacing > 1) {
                 $message = 'Concat operator must be surrounded by %s spaces';
@@ -112,14 +95,14 @@ class ConcatenationSpacingSniff implements Sniff
                 $message = 'Concat operator must be surrounded by a single space';
             }
 
-            $data = [$this->spacing];
+            $data = array($this->spacing);
         }
 
         $fix = $phpcsFile->addFixableError($message, $stackPtr, 'PaddingFound', $data);
 
         if ($fix === true) {
             $padding = str_repeat(' ', $this->spacing);
-            if ($ignoreBefore === false && ($before !== 'newline' || $this->ignoreNewlines === false)) {
+            if ($before !== 'newline' || $this->ignoreNewlines === false) {
                 if ($tokens[($stackPtr - 1)]['code'] === T_WHITESPACE) {
                     $phpcsFile->fixer->beginChangeset();
                     $phpcsFile->fixer->replaceToken(($stackPtr - 1), $padding);

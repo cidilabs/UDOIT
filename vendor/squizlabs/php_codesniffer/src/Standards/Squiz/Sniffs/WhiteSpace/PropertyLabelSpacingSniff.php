@@ -20,7 +20,7 @@ class PropertyLabelSpacingSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['JS'];
+    public $supportedTokenizers = array('JS');
 
 
     /**
@@ -30,10 +30,10 @@ class PropertyLabelSpacingSniff implements Sniff
      */
     public function register()
     {
-        return [
-            T_PROPERTY,
-            T_LABEL,
-        ];
+        return array(
+                T_PROPERTY,
+                T_LABEL,
+               );
 
     }//end register()
 

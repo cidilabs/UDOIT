@@ -1,4 +1,4 @@
-phpcs:set Generic.WhiteSpace.ScopeIndent tabIndent false
+@codingStandardsChangeSetting Generic.WhiteSpace.ScopeIndent tabIndent false
 var script = document.createElement('script');
 script.onload = function()
 {

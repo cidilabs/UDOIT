@@ -32,7 +32,7 @@ class ClassCommentSniff implements Sniff
      */
     public function register()
     {
-        return [T_CLASS];
+        return array(T_CLASS);
 
     }//end register()
 
@@ -56,8 +56,7 @@ class ClassCommentSniff implements Sniff
         if ($tokens[$commentEnd]['code'] !== T_DOC_COMMENT_CLOSE_TAG
             && $tokens[$commentEnd]['code'] !== T_COMMENT
         ) {
-            $class = $phpcsFile->getDeclarationName($stackPtr);
-            $phpcsFile->addError('Missing doc comment for class %s', $stackPtr, 'Missing', [$class]);
+            $phpcsFile->addError('Missing class doc comment', $stackPtr, 'Missing');
             $phpcsFile->recordMetric($stackPtr, 'Class has doc comment', 'no');
             return;
         }
@@ -77,7 +76,7 @@ class ClassCommentSniff implements Sniff
         $commentStart = $tokens[$commentEnd]['comment_opener'];
         foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
             $error = '%s tag is not allowed in class comment';
-            $data  = [$tokens[$tag]['content']];
+            $data  = array($tokens[$tag]['content']);
             $phpcsFile->addWarning($error, $tag, 'TagNotAllowed', $data);
         }
 

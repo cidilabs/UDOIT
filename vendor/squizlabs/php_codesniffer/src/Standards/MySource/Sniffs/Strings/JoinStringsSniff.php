@@ -21,7 +21,7 @@ class JoinStringsSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['JS'];
+    public $supportedTokenizers = array('JS');
 
 
     /**
@@ -31,7 +31,7 @@ class JoinStringsSniff implements Sniff
      */
     public function register()
     {
-        return [T_STRING];
+        return array(T_STRING);
 
     }//end register()
 

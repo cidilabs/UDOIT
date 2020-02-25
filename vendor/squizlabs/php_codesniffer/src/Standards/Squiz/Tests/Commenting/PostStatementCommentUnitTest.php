@@ -29,21 +29,21 @@ class PostStatementCommentUnitTest extends AbstractSniffUnitTest
     {
         switch ($testFile) {
         case 'PostStatementCommentUnitTest.inc':
-            return [
-                6  => 1,
-                10 => 1,
-                18 => 1,
-            ];
+            return array(
+                    6  => 1,
+                    10 => 1,
+                    18 => 1,
+                   );
             break;
         case 'PostStatementCommentUnitTest.js':
-            return [
-                1 => 1,
-                4 => 1,
-                9 => 1,
-            ];
+            return array(
+                    1 => 1,
+                    4 => 1,
+                    9 => 1,
+                   );
             break;
         default:
-            return [];
+            return array();
             break;
         }//end switch
 
@@ -60,7 +60,7 @@ class PostStatementCommentUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

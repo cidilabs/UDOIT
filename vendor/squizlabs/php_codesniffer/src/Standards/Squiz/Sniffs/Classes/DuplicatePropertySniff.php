@@ -20,7 +20,7 @@ class DuplicatePropertySniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['JS'];
+    public $supportedTokenizers = array('JS');
 
 
     /**
@@ -30,7 +30,7 @@ class DuplicatePropertySniff implements Sniff
      */
     public function register()
     {
-        return [T_OBJECT];
+        return array(T_OBJECT);
 
     }//end register()
 
@@ -48,11 +48,11 @@ class DuplicatePropertySniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $properties   = [];
-        $wantedTokens = [
-            T_PROPERTY,
-            T_OBJECT,
-        ];
+        $properties   = array();
+        $wantedTokens = array(
+                         T_PROPERTY,
+                         T_OBJECT,
+                        );
 
         $next = $phpcsFile->findNext($wantedTokens, ($stackPtr + 1), $tokens[$stackPtr]['bracket_closer']);
         while ($next !== false && $next < $tokens[$stackPtr]['bracket_closer']) {
@@ -63,10 +63,10 @@ class DuplicatePropertySniff implements Sniff
                 $propName = $tokens[$next]['content'];
                 if (isset($properties[$propName]) === true) {
                     $error = 'Duplicate property definition found for "%s"; previously defined on line %s';
-                    $data  = [
-                        $propName,
-                        $tokens[$properties[$propName]]['line'],
-                    ];
+                    $data  = array(
+                              $propName,
+                              $tokens[$properties[$propName]]['line'],
+                             );
                     $phpcsFile->addError($error, $next, 'Found', $data);
                 }
 

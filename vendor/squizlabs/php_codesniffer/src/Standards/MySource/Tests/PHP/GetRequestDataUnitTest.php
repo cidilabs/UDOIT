@@ -25,15 +25,15 @@ class GetRequestDataUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            2  => 1,
-            5  => 1,
-            8  => 1,
-            21 => 1,
-            26 => 1,
-            27 => 1,
-            28 => 1,
-        ];
+        return array(
+                2  => 1,
+                5  => 1,
+                8  => 1,
+                21 => 1,
+                26 => 1,
+                27 => 1,
+                28 => 1,
+               );
 
     }//end getErrorList()
 
@@ -48,7 +48,7 @@ class GetRequestDataUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

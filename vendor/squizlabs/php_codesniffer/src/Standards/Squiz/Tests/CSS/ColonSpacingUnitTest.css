@@ -33,10 +33,7 @@ li {
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#2e62a8, endColorstr=#123363);
 }
 
-/* Empty style defs. */
+/* empty style def */
 .p {
     margin:;
-    margin-right:
-    margin-left: 10px;
-    float:/* Some comment. */ ;
 }

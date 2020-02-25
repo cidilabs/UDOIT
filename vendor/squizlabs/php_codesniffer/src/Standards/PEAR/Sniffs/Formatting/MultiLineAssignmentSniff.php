@@ -30,7 +30,7 @@ class MultiLineAssignmentSniff implements Sniff
      */
     public function register()
     {
-        return [T_EQUAL];
+        return array(T_EQUAL);
 
     }//end register()
 
@@ -93,10 +93,10 @@ class MultiLineAssignmentSniff implements Sniff
         $foundIndent    = strlen($tokens[$prev]['content']);
         if ($foundIndent !== $expectedIndent) {
             $error = 'Multi-line assignment not indented correctly; expected %s spaces but found %s';
-            $data  = [
-                $expectedIndent,
-                $foundIndent,
-            ];
+            $data  = array(
+                      $expectedIndent,
+                      $foundIndent,
+                     );
             $phpcsFile->addError($error, $stackPtr, 'Indent', $data);
         }
 

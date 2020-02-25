@@ -108,11 +108,3 @@ function() {
     if (condition)
         foo = .4
 }
-
-x = x << y;
-x  <<= y;
-x = x >> y;
-x >>= y;
-
-x = x << y;
-x >>>= y;

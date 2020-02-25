@@ -25,18 +25,18 @@ class ValidFunctionNameUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return [
-            4  => 1,
-            5  => 1,
-            6  => 1,
-            7  => 1,
-            8  => 1,
-            9  => 1,
-            11 => 1,
-            12 => 1,
-            13 => 1,
-            14 => 2,
-        ];
+        return array(
+                4  => 1,
+                5  => 1,
+                6  => 1,
+                7  => 1,
+                8  => 1,
+                9  => 1,
+                11 => 1,
+                12 => 1,
+                13 => 1,
+                14 => 1,
+               );
 
     }//end getErrorList()
 
@@ -51,7 +51,7 @@ class ValidFunctionNameUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return [];
+        return array();
 
     }//end getWarningList()
 

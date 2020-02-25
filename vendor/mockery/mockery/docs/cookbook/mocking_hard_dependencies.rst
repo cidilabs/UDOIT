@@ -11,7 +11,7 @@ Let's take the following code for an example:
 .. code-block:: php
 
     <?php
-    namespace App;
+    namespace Edit;
     class Service
     {
         function callExternalService($param)
@@ -35,7 +35,7 @@ The way we can test this without doing any changes to the code itself is by crea
         {
             $param = 'Testing';
 
-            $externalMock = m::mock('overload:App\Service\External');
+            $externalMock = m::mock('overload:Edit\Service\External');
             $externalMock->shouldReceive('sendSomething')
                 ->once()
                 ->with($param);
@@ -43,7 +43,7 @@ The way we can test this without doing any changes to the code itself is by crea
                 ->once()
                 ->andReturn('Tested!');
 
-            $service = new \App\Service();
+            $service = new \Edit\Service();
 
             $result = $service->callExternalService($param);
 
@@ -51,9 +51,9 @@ The way we can test this without doing any changes to the code itself is by crea
         }
     }
 
-If we run this test now, it should pass. Mockery does its job and our ``App\Service`` will use the mocked external service instead of the real one.
+If we run this test now, it should pass. Mockery does its job and our ``Edit\Service`` will use the mocked external service instead of the real one.
 
-The problem with this is when we want to, for example, test the ``App\Service\External`` itself, or if we use that class somewhere else in our tests.
+The problem with this is when we want to, for example, test the ``Edit\Service\External`` itself, or if we use that class somewhere else in our tests.
 
 When Mockery overloads a class, because of how PHP works with files, that overloaded class file must not be included otherwise Mockery will throw a "class already exists" exception. This is where autoloading kicks in and makes our job a lot easier.
 
@@ -76,7 +76,7 @@ Our test example from above now becomes:
         {
             $param = 'Testing';
 
-            $externalMock = m::mock('overload:App\Service\External');
+            $externalMock = m::mock('overload:Edit\Service\External');
             $externalMock->shouldReceive('sendSomething')
                 ->once()
                 ->with($param);
@@ -84,7 +84,7 @@ Our test example from above now becomes:
                 ->once()
                 ->andReturn('Tested!');
 
-            $service = new \App\Service();
+            $service = new \Edit\Service();
 
             $result = $service->callExternalService($param);
 

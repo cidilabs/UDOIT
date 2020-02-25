@@ -20,7 +20,7 @@ class SemicolonSpacingSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = ['CSS'];
+    public $supportedTokenizers = array('CSS');
 
 
     /**
@@ -30,7 +30,7 @@ class SemicolonSpacingSniff implements Sniff
      */
     public function register()
     {
-        return [T_STYLE];
+        return array(T_STYLE);
 
     }//end register()
 
@@ -58,7 +58,7 @@ class SemicolonSpacingSniff implements Sniff
         if ($tokens[($semicolon - 1)]['code'] === T_WHITESPACE) {
             $length = strlen($tokens[($semicolon - 1)]['content']);
             $error  = 'Expected 0 spaces before semicolon in style definition; %s found';
-            $data   = [$length];
+            $data   = array($length);
             $fix    = $phpcsFile->addFixableError($error, $stackPtr, 'SpaceFound', $data);
             if ($fix === true) {
                 $phpcsFile->fixer->replaceToken(($semicolon - 1), '');
