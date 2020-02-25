@@ -15,10 +15,14 @@ else
 fi
 
 # copy Cidi Labs copy of UdoitMultiTenant.php
+rm /var/www/html/lib/UdoitMultiTenant.php
 cp /var/www/html/deploy/UdoitMultiTenant.php /var/www/html/lib/UdoitMultiTenant.php
 
 # copy Cidi Labs copy of udoit.xml.php 
 cp /var/www/html/deploy/udoit.xml.php /var/www/html/public/udoit.xml.php
+
+# add HTTPS server setting
+echo -e "\n$_SERVER['HTTPS'] = 'on';" >> /var/www/html/config/settings.php
 
 # add UdoitMultiTentant::setupOauth() to settings.php
 echo -e '\n// Setup MultiTenant oauth' >> /var/www/html/config/settings.php
