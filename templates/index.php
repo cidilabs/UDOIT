@@ -1,32 +1,33 @@
 <?php
+
 /**
-*	Copyright (C) 2014 University of Central Florida, created by Jacob Bates, Eric Colon, Fenel Joseph, and Emily Sachs.
-*
-*	This program is free software: you can redistribute it and/or modify
-*	it under the terms of the GNU General Public License as published by
-*	the Free Software Foundation, either version 3 of the License, or
-*	(at your option) any later version.
-*
-*	This program is distributed in the hope that it will be useful,
-*	but WITHOUT ANY WARRANTY; without even the implied warranty of
-*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*	GNU General Public License for more details.
-*
-*	You should have received a copy of the GNU General Public License
-*	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*	Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
-*/
+ *	Copyright (C) 2014 University of Central Florida, created by Jacob Bates, Eric Colon, Fenel Joseph, and Emily Sachs.
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *	Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
+ */
 
 $settings = [
 	'footer_scripts' => [
 		"//code.jquery.com/jquery-2.1.1.min.js",
 		"//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js",
 		"assets/js/vendor/jscolor/jscolor.js",
-		"assets/js/resize.js?v=".UDOIT_VERSION,
-		"assets/js/default.js?v=".UDOIT_VERSION,
+		"assets/js/resize.js?v=" . UDOIT_VERSION,
+		"assets/js/default.js?v=" . UDOIT_VERSION,
 		"assets/js/contrast.js",
-		"https://yoga.local/cidi/udoit/public/assets/js/results_filter.js?t=".time(),
+		"https://yoga.local/cidi/udoit/public/assets/js/results_filter.js?t=" . time(),
 	]
 ];
 
@@ -134,11 +135,11 @@ $this->layout('template', $settings);
 						</div>
 					</div>
 					<div class="col-sm-4">
+						<button type="submit" id="course_submit" name="course_submit" class="btn btn-block btn-lg btn-success submit">Scan This Course</button>
+
 						<div id="waitMsg" class="alert alert-warning" style="display: none;">
 							<p><span class="glyphicon glyphicon-warning-sign"></span> Please stay on this page while UDOIT scans your course content.</p>
 						</div>
-
-						<button type="submit" id="course_submit" name="course_submit" class="btn btn-block btn-lg btn-success submit">Scan This Course</button>
 
 						<div class="alert alert-danger no-margin margin-top" id="failMsg" style="display: none;">
 							<span class="glyphicon glyphicon-exclamation-sign"></span> <span class="msg">UDOIT failed to scan this course.</span><span class="custom-msg"></span>
