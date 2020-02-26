@@ -26,7 +26,7 @@ $settings = [
 		"assets/js/resize.js?v=".UDOIT_VERSION,
 		"assets/js/default.js?v=".UDOIT_VERSION,
 		"assets/js/contrast.js",
-		"https://yoga.local/cidi/udoit/public/assets/js/results_filter.js",
+		"https://yoga.local/cidi/udoit/public/assets/js/results_filter.js?t=".time(),
 	]
 ];
 
