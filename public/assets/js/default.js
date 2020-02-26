@@ -165,6 +165,7 @@ function displayScanResults(results) {
 	});
 
 	jscolor.bind();
+	ResultsFilter.init();
 }
 
 /* Builds up the results and adds them to the page */
