@@ -82,11 +82,6 @@ class MockBuilder
     private $allowMockingUnknownTypes = true;
 
     /**
-     * @var bool
-     */
-    private $returnValueGeneration = true;
-
-    /**
      * @var Generator
      */
     private $generator;
@@ -120,8 +115,7 @@ class MockBuilder
             $this->cloneArguments,
             $this->callOriginalMethods,
             $this->proxyTarget,
-            $this->allowMockingUnknownTypes,
-            $this->returnValueGeneration
+            $this->allowMockingUnknownTypes
         );
 
         $this->testCase->registerMockObject($object);
@@ -389,26 +383,6 @@ class MockBuilder
     public function disallowMockingUnknownTypes()
     {
         $this->allowMockingUnknownTypes = false;
-
-        return $this;
-    }
-
-    /**
-     * @return MockBuilder
-     */
-    public function enableAutoReturnValueGeneration()
-    {
-        $this->returnValueGeneration = true;
-
-        return $this;
-    }
-
-    /**
-     * @return MockBuilder
-     */
-    public function disableAutoReturnValueGeneration()
-    {
-        $this->returnValueGeneration = false;
 
         return $this;
     }

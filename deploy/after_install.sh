@@ -14,6 +14,20 @@ else
     cp /var/www/deploy/udoit/localConfig.stage.php /var/www/html/config/localConfig.php
 fi
 
+# copy Cidi Labs copy of UdoitMultiTenant.php
+rm /var/www/html/lib/UdoitMultiTenant.php
+cp /var/www/html/deploy/UdoitMultiTenant.php /var/www/html/lib/UdoitMultiTenant.php
+
+# copy Cidi Labs copy of udoit.xml.php 
+cp /var/www/html/deploy/udoit.xml.php /var/www/html/public/udoit.xml.php
+
+# add HTTPS server setting
+echo -e "\n\$_SERVER['HTTPS'] = 'on';" >> /var/www/html/config/settings.php
+
+# add UdoitMultiTentant::setupOauth() to settings.php
+echo -e '\n// Setup MultiTenant oauth' >> /var/www/html/config/settings.php
+echo -e 'UdoitMultiTenant::setupOauth();' >> /var/www/html/config/settings.php
+
 # change all file and directory permissions to give apache sufficient access
 sudo find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 

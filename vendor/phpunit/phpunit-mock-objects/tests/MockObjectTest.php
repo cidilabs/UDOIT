@@ -1052,41 +1052,9 @@ class MockObjectTest extends TestCase
         $this->assertInstanceOf(MockObject::class, $stub->methodWithClassReturnTypeDeclaration());
     }
 
-    public function testDisableAutomaticReturnValueGeneration()
-    {
-        $mock = $this->getMockBuilder(SomeClass::class)
-            ->disableAutoReturnValueGeneration()
-            ->getMock();
-
-        $this->expectException(ExpectationFailedException::class);
-        $this->expectExceptionMessage(
-            'Return value inference disabled and no expectation set up for SomeClass::doSomethingElse()'
-        );
-
-        $mock->doSomethingElse(1);
-    }
-
-    public function testDisableAutomaticReturnValueGenerationWithToString()
-    {
-        $mock = $this->getMockBuilder(StringableClass::class)
-            ->disableAutoReturnValueGeneration()
-            ->getMock();
-
-        (string) $mock;
-
-        try {
-            $mock->__phpunit_verify();
-            $this->fail('Exception expected');
-        } catch (ExpectationFailedException $e) {
-            $this->assertSame(
-                'Return value inference disabled and no expectation set up for StringableClass::__toString()',
-                $e->getMessage()
-            );
-        }
-
-        $this->resetMockObjects();
-    }
-
+    /**
+     * @requires PHP 7.1
+     */
     public function testVoidReturnTypeIsMockedCorrectly()
     {
         /** @var ClassWithAllPossibleReturnTypes|MockObject $stub */
@@ -1104,12 +1072,5 @@ class MockObjectTest extends TestCase
         $stub = $this->createMock(ClassWithAllPossibleReturnTypes::class);
 
         $this->assertInstanceOf(stdClass::class, $stub->methodWithObjectReturnTypeDeclaration());
-    }
-
-    public function testGetObjectForTrait()
-    {
-        $object = $this->getObjectForTrait(ExampleTrait::class);
-
-        $this->assertSame('ohHai', $object->ohHai());
     }
 }

@@ -10,11 +10,9 @@
 namespace PHPUnit\Framework\MockObject;
 
 use Exception;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Builder\InvocationMocker as BuilderInvocationMocker;
 use PHPUnit\Framework\MockObject\Builder\Match;
 use PHPUnit\Framework\MockObject\Builder\NamespaceMatch;
-use PHPUnit\Framework\MockObject\Matcher\DeferredError;
 use PHPUnit\Framework\MockObject\Matcher\Invocation as MatcherInvocation;
 use PHPUnit\Framework\MockObject\Stub\MatcherCollection;
 
@@ -43,18 +41,11 @@ class InvocationMocker implements MatcherCollection, Invokable, NamespaceMatch
     private $configurableMethods = [];
 
     /**
-     * @var bool
-     */
-    private $returnValueGeneration;
-
-    /**
      * @param array $configurableMethods
-     * @param bool  $returnValueGeneration
      */
-    public function __construct(array $configurableMethods, bool $returnValueGeneration)
+    public function __construct(array $configurableMethods)
     {
-        $this->configurableMethods   = $configurableMethods;
-        $this->returnValueGeneration = $returnValueGeneration;
+        $this->configurableMethods = $configurableMethods;
     }
 
     /**
@@ -157,22 +148,8 @@ class InvocationMocker implements MatcherCollection, Invokable, NamespaceMatch
             return $returnValue;
         }
 
-        if ($this->returnValueGeneration === false) {
-            $exception = new ExpectationFailedException(
-                \sprintf(
-                    'Return value inference disabled and no expectation set up for %s::%s()',
-                    $invocation->getClassName(),
-                    $invocation->getMethodName()
-                )
-            );
-
-            if (\strtolower($invocation->getMethodName()) === '__tostring') {
-                $this->addMatcher(new DeferredError($exception));
-
-                return '';
-            }
-
-            throw $exception;
+        if (\strtolower($invocation->getMethodName()) === '__tostring') {
+            return '';
         }
 
         return $invocation->generateReturnValue();

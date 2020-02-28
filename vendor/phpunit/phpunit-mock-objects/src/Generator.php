@@ -67,7 +67,6 @@ class Generator
      * @param bool            $callOriginalMethods
      * @param object          $proxyTarget
      * @param bool            $allowMockingUnknownTypes
-     * @param bool            $returnValueGeneration
      *
      * @throws Exception
      * @throws RuntimeException
@@ -76,7 +75,7 @@ class Generator
      *
      * @return MockObject
      */
-    public function getMock($type, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = true, $callOriginalMethods = false, $proxyTarget = null, $allowMockingUnknownTypes = true, $returnValueGeneration = true)
+    public function getMock($type, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = true, $callOriginalMethods = false, $proxyTarget = null, $allowMockingUnknownTypes = true)
     {
         if (!\is_array($type) && !\is_string($type)) {
             throw InvalidArgumentHelper::factory(1, 'array or string');
@@ -198,8 +197,7 @@ class Generator
             $callAutoload,
             $arguments,
             $callOriginalMethods,
-            $proxyTarget,
-            $returnValueGeneration
+            $proxyTarget
         );
     }
 
@@ -551,14 +549,13 @@ class Generator
      * @param array        $arguments
      * @param bool         $callOriginalMethods
      * @param object       $proxyTarget
-     * @param bool         $returnValueGeneration
      *
      * @throws \ReflectionException
      * @throws RuntimeException
      *
      * @return MockObject
      */
-    private function getObject($code, $className, $type = '', $callOriginalConstructor = false, $callAutoload = false, array $arguments = [], $callOriginalMethods = false, $proxyTarget = null, $returnValueGeneration = true)
+    private function getObject($code, $className, $type = '', $callOriginalConstructor = false, $callAutoload = false, array $arguments = [], $callOriginalMethods = false, $proxyTarget = null)
     {
         $this->evalClass($code, $className);
 
@@ -591,10 +588,6 @@ class Generator
             }
 
             $object->__phpunit_setOriginalObject($proxyTarget);
-        }
-
-        if ($object instanceof MockObject) {
-            $object->__phpunit_setReturnValueGeneration($returnValueGeneration);
         }
 
         return $object;
@@ -701,20 +694,6 @@ class Generator
             $cloneTemplate = $this->getTemplate('mocked_clone.tpl');
         } else {
             $class = new ReflectionClass($mockClassName['fullClassName']);
-
-            // @see https://github.com/sebastianbergmann/phpunit/issues/2995
-            if ($isInterface && $class->implementsInterface(\Throwable::class)) {
-                $additionalInterfaces[] = $class->getName();
-                $isInterface            = false;
-
-                $mockClassName = $this->generateClassName(
-                    \Exception::class,
-                    '',
-                    'Mock_'
-                );
-
-                $class = new ReflectionClass($mockClassName['fullClassName']);
-            }
 
             if ($class->isFinal()) {
                 throw new RuntimeException(
@@ -1178,13 +1157,8 @@ class Generator
 
                 if (!$parameter->isVariadic()) {
                     if ($parameter->isDefaultValueAvailable()) {
-                        $value = $parameter->getDefaultValueConstantName();
-
-                        if ($value === null) {
-                            $value = \var_export($parameter->getDefaultValue(), true);
-                        }
-
-                        $default = ' = ' . $value;
+                        $value   = $parameter->getDefaultValue();
+                        $default = ' = ' . \var_export($value, true);
                     } elseif ($parameter->isOptional()) {
                         $default = ' = null';
                     }

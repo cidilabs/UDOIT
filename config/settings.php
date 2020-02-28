@@ -3,23 +3,7 @@ define('ENV_TEST', 'test');
 define('ENV_PROD', 'prod');
 define('ENV_DEV', 'dev');
 
-define('UDOIT_VERSION', '2.6.0');
-
-$_SERVER['HTTPS'] = 'on';
-
-// Set up session cookie params for samesite setting.
-if (PHP_VERSION_ID < 70300) {
-    session_set_cookie_params(0, "/; samesite=None", null, true, false);
-} else {
-    session_set_cookie_params([
-        'expires' => 0,
-        'path' => '/',
-        'domain' => null,
-        'samesite' => 'None',
-        'secure' => true,
-        'httponly' => false,
-    ]);
-}
+define('UDOIT_VERSION', '2.6.1');
 
 // SET UP AUTOLOADER (uses autoload rules from composer)
 require_once(__DIR__.'/../vendor/autoload.php');
@@ -44,6 +28,26 @@ $logger = new \Monolog\Logger('udoit');
 $logger->pushHandler($log_handler);
 \Monolog\ErrorHandler::register($logger);
 
+// SET UP PHP SESSION COOKIE SAMESITE SESSIONS
+$expire = isset($session_cookie_options['expire']) ? $session_cookie_options['expire'] : 0;
+$path = isset($session_cookie_options['path']) ? $session_cookie_options['path'] : '/';
+$domain = isset($session_cookie_options['domain']) ? $session_cookie_options['domain'] : null;
+$secure = isset($session_cookie_options['secure']) ? $session_cookie_options['secure'] : true;
+$httponly = isset($session_cookie_options['httponly']) ? $session_cookie_options['httponly'] : false;
+
+if (PHP_VERSION_ID < 70300) {
+    session_set_cookie_params($expire, "$path; samesite=None", $domain, $secure, $httponly);
+} else {
+    session_set_cookie_params([
+        'expires' => $expire,
+        'path' => $path,
+        'domain' => $domain,
+        'samesite' => 'None',
+        'secure' => $secure,
+        'httponly' => $httponly,
+    ]);
+}
+
 // SET UP ERROR REPORTING
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set("display_errors", ($UDOIT_ENV == ENV_PROD ? 0 : 1));
@@ -51,7 +55,7 @@ ini_set("display_errors", ($UDOIT_ENV == ENV_PROD ? 0 : 1));
 // SET DEFAULT ENVIRONMENT
 isset($UDOIT_ENV) || $UDOIT_ENV = ENV_PROD; // !! override in your localConfig.php
 
-// Check for Safari, and jump through cookie hoops if found
+// CHECK FOR SAFARI
 UdoitUtils::checkSafari();
 
 // SET UP OAUTH
@@ -87,9 +91,6 @@ UdoitUtils::setupOauth($oauth2_id, $oauth2_key, $oauth2_uri, $consumer_key, $sha
 
 // SET UP DATABASE
 UdoitDB::setup($db_type, $dsn, $db_user, $db_password, $db_options);
-
-// SET UP MULTITENANT OAUTH
-UdoitMultiTenant::setupOauth();
 
 // BACKGROUND WORKER
 if (isset($background_worker_enabled)) {

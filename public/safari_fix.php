@@ -31,19 +31,37 @@ if (isset($get['redirect'])) {
         'value' => 'fixed',
     ]);
 
-    print "<script>window.history.back(2); </script>";
-    exit;
+    exit("<script>window.history.back(2); </script>");
 }
 ?>
-
 <!DOCTYPE html>
 <html>
+<head>
+    <title>UDOIT on Safari</title>
+    <script>
+        window.onload = (event) => {
+            let launchBtn = document.getElementById("launch-btn");
+            launchBtn.onclick = (evt) => {
+                //Display setup complete message
+                let msg = document.getElementById("msg");
+                msg.innerHTML = "Setup complete!  Please refresh this page to use U<strong>DO</strong>IT.";
 
+                //Hide the setup button
+                let launchBtn = document.getElementById("launch-btn");
+                launchBtn.classList.add("hidden");
+            }
+        }
+    </script>
+</head>
 <body>
     <style type="text/css">
         .wrapper {
             text-align: center;
             margin: 50px;
+        }
+
+        .msg {
+            margin-bottom: 50px;
         }
 
         .button {
@@ -55,16 +73,19 @@ if (isset($get['redirect'])) {
             font-size: 1.4em;
             text-decoration: none;
         }
+
+        .hidden {
+            display: none;
+            visibility: hidden;
+        }
     </style>
     <div class="wrapper">
         <img src="assets/img/udoit_logo.png" width="200" alt="UDOIT logo" />
         <h2>Welcome to U<strong>DO</strong>IT on Safari</h2>
-        <p>Please click the button below to refresh this page, so we can overcome some minor issues Safari has with embedded LTI tools.</p>
-        <p>&nbsp;</p>
-        <a href="safari_fix.php?redirect=true" target="_parent" class="button">
-            Launch U<strong>DO</strong>IT
+        <p id="msg" class="msg">Please click the button below to set up this tool for use with Safari.</p>
+        <a id="launch-btn" href="safari_fix.php?redirect=true" target="_parent" class="button">
+            Setup U<strong>DO</strong>IT
         </a>
     </div>
 </body>
-
 </html>
