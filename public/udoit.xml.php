@@ -19,7 +19,7 @@
  *	Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
  */
 
-require_once('../config/settings.php');
+require_once('../config/localConfig.php');
 
 $servername = 'https://' . $_SERVER['SERVER_NAME'];
 $exploded   = explode('/', $_SERVER['PHP_SELF']);
