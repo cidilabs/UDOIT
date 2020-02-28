@@ -1,39 +1,33 @@
 <?php
-
 /**
- *	Copyright (C) 2014 University of Central Florida, created by Jacob Bates, Eric Colon, Fenel Joseph, and Emily Sachs.
- *
- *	This program is free software: you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
- *	the Free Software Foundation, either version 3 of the License, or
- *	(at your option) any later version.
- *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *	Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
- */
+*	Copyright (C) 2014 University of Central Florida, created by Jacob Bates, Eric Colon, Fenel Joseph, and Emily Sachs.
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+*	Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
+*/
 
 $settings = [
 	'footer_scripts' => [
 		"//code.jquery.com/jquery-2.1.1.min.js",
 		"//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js",
 		"assets/js/vendor/jscolor/jscolor.js",
-		"assets/js/resize.js?v=" . UDOIT_VERSION,
-		"assets/js/default.js?v=" . UDOIT_VERSION,
+		"assets/js/resize.js?v=".UDOIT_VERSION,
+		"assets/js/default.js?v=".UDOIT_VERSION,
 		"assets/js/contrast.js",
 	]
 ];
-
-$new_look = filter_input_array(INPUT_GET, 'newlook');
-if (isset($new_look) && $new_look) {
-	$settings['footer_scripts'][] = "assets/js/results_filter.js?t=".time();
-}
 
 $this->layout('template', $settings);
 
@@ -63,92 +57,90 @@ $this->layout('template', $settings);
 				<input type="hidden" name="session_context_label" value="<?= $this->escape($launch_params['context_label']); ?>">
 				<input type="hidden" name="session_context_title" value="<?= $this->escape($launch_params['context_title']); ?>">
 
-				<div class="row">
-					<div class="col-sm-4">
-						<div class="form-group">
-							<span class="col-sm-4 control-label"><strong>Content:</strong></span>
+				<div class="form-group">
+					<span class="col-sm-2 control-label"><strong>Content:</strong></span>
 
-							<div class="col-sm-8">
-								<div class="checkbox">
-									<label><input id="allContent" type="checkbox" value="all" id="allContent" class="content" name="content[]" checked>Select All</label>
-								</div>
+					<div class="col-sm-10">
+						<div class="checkbox">
+							<label><input id="allContent" type="checkbox" value="all" id="allContent" class="content" name="content[]" checked>Select All</label>
+						</div>
 
-								<br />
+						<br />
 
-								<div class="checkbox">
-									<label><input id="courseAnnouncements" type="checkbox" value="announcements" class="content" name="content[]" checked> Announcements</label>
-								</div>
+						<div class="checkbox">
+							<label><input id="courseAnnouncements" type="checkbox" value="announcements" class="content" name="content[]" checked> Announcements</label>
+						</div>
 
-								<div class="checkbox">
-									<label><input id="courseAssignments" type="checkbox" value="assignments" class="content" name="content[]" checked> Assignments</label>
-								</div>
+						<div class="checkbox">
+							<label><input id="courseAssignments" type="checkbox" value="assignments" class="content" name="content[]" checked> Assignments</label>
+						</div>
 
-								<div class="checkbox">
-									<label><input id="courseDiscussions" type="checkbox" value="discussions" class="content" class="content" name="content[]" checked> Discussions</label>
-								</div>
+						<div class="checkbox">
+							<label><input id="courseDiscussions" type="checkbox" value="discussions" class="content" class="content" name="content[]" checked> Discussions</label>
+						</div>
 
-								<div class="checkbox">
-									<label><input id="courseFiles" type="checkbox" value="files" class="content" name="content[]" checked> Files</label>
-								</div>
+						<div class="checkbox">
+							<label><input id="courseFiles" type="checkbox" value="files" class="content" name="content[]" checked> Files</label>
+						</div>
 
-								<div class="checkbox">
-									<label><input id="coursePages" type="checkbox" value="pages" class="content" name="content[]" checked> Pages</label>
-								</div>
+						<div class="checkbox">
+							<label><input id="coursePages" type="checkbox" value="pages" class="content" name="content[]" checked> Pages</label>
+						</div>
 
-								<div class="checkbox">
-									<label><input id="courseSyllabus" type="checkbox" value="syllabus" class="content" name="content[]" checked> Syllabus</label>
-								</div>
+						<div class="checkbox">
+							<label><input id="courseSyllabus" type="checkbox" value="syllabus" class="content" name="content[]" checked> Syllabus</label>
+						</div>
 
-								<div class="checkbox">
-									<label><input id="moduleUrls" type="checkbox" value="module_urls" class="content" name="content[]" checked> Module URLs</label>
-								</div>
+						<div class="checkbox">
+							<label><input id="moduleUrls" type="checkbox" value="module_urls" class="content" name="content[]" checked> Module URLs</label>
+						</div>
 
-								<br />
+						<br />
 
-								<div class="checkbox">
-									<label><input id="unpubCheckbox" type="checkbox" checked>Include unpublished content</label>
-								</div>
+  						<div class="checkbox">
+  							<label><input id="unpubCheckbox" type="checkbox" checked>Include unpublished content</label>
+  						</div>
 
-								<br />
+  						<br />
 
-							</div>
+					</div>
 
+				</div>
+
+				<hr />
+
+				<div class="form-group">
+					<span class="col-sm-2 control-label"><strong>Scan for:</strong></span>
+
+					<div class="col-sm-10">
+
+						<div class="checkbox">
+							<label><input id="allReport" type="checkbox" value="all" id="allReport" class="report" name="report[]" checked>Select All</label>
+						</div>
+
+						<br />
+
+						<div class="checkbox">
+							<label><input id="errors" type="checkbox" value="errors" class="report" name="report[]" checked> Errors</label>
+						</div>
+
+						<div class="checkbox">
+							<label><input id="suggestions" type="checkbox" value="suggestions" class="report" name="report[]" checked> Suggestions</label>
 						</div>
 					</div>
 
-					<div class="col-sm-4">
-						<div class="form-group">
-							<span class="col-sm-4 control-label"><strong>Scan for:</strong></span>
+				</div>
 
-							<div class="col-sm-8">
+				<br />
 
-								<div class="checkbox">
-									<label><input id="allReport" type="checkbox" value="all" id="allReport" class="report" name="report[]" checked>Select All</label>
-								</div>
+				<div id="waitMsg" class="alert alert-warning" style="display: none;">
+					<p><span class="glyphicon glyphicon-warning-sign"></span> Please stay on this page while UDOIT scans your course content.</p>
+				</div>
 
-								<br />
+				<button type="submit" id="course_submit" name="course_submit" class="btn btn-block btn-lg btn-success submit">Scan This Course</button>
 
-								<div class="checkbox">
-									<label><input id="errors" type="checkbox" value="errors" class="report" name="report[]" checked> Errors</label>
-								</div>
-
-								<div class="checkbox">
-									<label><input id="suggestions" type="checkbox" value="suggestions" class="report" name="report[]" checked> Suggestions</label>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<button type="submit" id="course_submit" name="course_submit" class="btn btn-block btn-lg btn-success submit">Scan This Course</button>
-
-						<div id="waitMsg" class="alert alert-warning" style="display: none;">
-							<p><span class="glyphicon glyphicon-warning-sign"></span> Please stay on this page while UDOIT scans your course content.</p>
-						</div>
-
-						<div class="alert alert-danger no-margin margin-top" id="failMsg" style="display: none;">
-							<span class="glyphicon glyphicon-exclamation-sign"></span> <span class="msg">UDOIT failed to scan this course.</span><span class="custom-msg"></span>
-						</div>
-					</div>
+				<div class="alert alert-danger no-margin margin-top" id="failMsg" style="display: none;">
+					<span class="glyphicon glyphicon-exclamation-sign"></span> <span class="msg">UDOIT failed to scan this course.</span><span class="custom-msg"></span>
 				</div>
 			</form>
 		</div>
