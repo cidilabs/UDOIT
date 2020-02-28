@@ -147,7 +147,6 @@ $this->layout('template', $settings);
 					</div>
 				</div>
 			</form>
-			<hr />
 		</div>
 		<div class="tab-pane" id="cached" role="tabpanel">
 
