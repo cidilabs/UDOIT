@@ -3,7 +3,6 @@
 namespace League\Plates\Extension;
 
 use League\Plates\Engine;
-use League\Plates\Template\Template;
 use LogicException;
 
 /**
@@ -41,7 +40,6 @@ class URI implements ExtensionInterface
 
     /**
      * Register extension functions.
-     * @param Engine $engine
      * @return null
      */
     public function register(Engine $engine)
@@ -64,7 +62,7 @@ class URI implements ExtensionInterface
         }
 
         if (is_numeric($var1) and is_null($var2)) {
-            return array_key_exists($var1, $this->parts) ? $this->parts[$var1] : null;
+            return $this->parts[$var1];
         }
 
         if (is_numeric($var1) and is_string($var2)) {
@@ -88,11 +86,11 @@ class URI implements ExtensionInterface
      */
     protected function checkUriSegmentMatch($key, $string, $returnOnTrue = null, $returnOnFalse = null)
     {
-        if (array_key_exists($key, $this->parts) && $this->parts[$key] === $string) {
+        if ($this->parts[$key] === $string) {
             return is_null($returnOnTrue) ? true : $returnOnTrue;
+        } else {
+            return is_null($returnOnFalse) ? false : $returnOnFalse;
         }
-
-        return is_null($returnOnFalse) ? false : $returnOnFalse;
     }
 
     /**
@@ -106,8 +104,8 @@ class URI implements ExtensionInterface
     {
         if (preg_match('#^' . $regex . '$#', $this->uri) === 1) {
             return is_null($returnOnTrue) ? true : $returnOnTrue;
+        } else {
+            return is_null($returnOnFalse) ? false : $returnOnFalse;
         }
-
-        return is_null($returnOnFalse) ? false : $returnOnFalse;
     }
 }

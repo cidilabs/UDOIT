@@ -31,19 +31,15 @@ class Data
     {
         if (is_null($templates)) {
             return $this->shareWithAll($data);
-        }
-
-        if (is_array($templates)) {
+        } elseif (is_array($templates)) {
             return $this->shareWithSome($data, $templates);
-        }
-
-        if (is_string($templates)) {
+        } elseif (is_string($templates)) {
             return $this->shareWithSome($data, array($templates));
+        } else {
+            throw new LogicException(
+                'The templates variable must be null, an array or a string, ' . gettype($templates) . ' given.'
+            );
         }
-
-        throw new LogicException(
-            'The templates variable must be null, an array or a string, ' . gettype($templates) . ' given.'
-        );
     }
 
     /**
@@ -86,8 +82,8 @@ class Data
     {
         if (isset($template, $this->templateVariables[$template])) {
             return array_merge($this->sharedVariables, $this->templateVariables[$template]);
+        } else {
+            return $this->sharedVariables;
         }
-
-        return $this->sharedVariables;
     }
 }

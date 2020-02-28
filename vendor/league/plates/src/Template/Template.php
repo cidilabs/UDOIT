@@ -2,10 +2,8 @@
 
 namespace League\Plates\Template;
 
-use Exception;
 use League\Plates\Engine;
 use LogicException;
-use Throwable;
 
 /**
  * Container which holds template data and provides access to template functions.
@@ -35,18 +33,6 @@ class Template
      * @var array
      */
     protected $sections = array();
-
-    /**
-     * The name of the section currently being rendered.
-     * @var string
-     */
-    protected $sectionName;
-
-    /**
-     * Whether the section should be appended or not.
-     * @var boolean
-     */
-    protected $appendSection;
 
     /**
      * The name of the template layout.
@@ -85,27 +71,12 @@ class Template
     }
 
     /**
-     * Alias for render() method.
-     * @throws \Throwable
-     * @throws \Exception
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render();
-    }
-
-    /**
-     * Assign or get template data.
+     * Assign data to template object.
      * @param  array $data
-     * @return mixed
+     * @return null
      */
-    public function data(array $data = null)
+    public function data(array $data)
     {
-        if (is_null($data)) {
-            return $this->data;
-        }
-
         $this->data = array_merge($this->data, $data);
     }
 
@@ -130,27 +101,26 @@ class Template
     /**
      * Render the template and layout.
      * @param  array  $data
-     * @throws \Throwable
-     * @throws \Exception
      * @return string
      */
     public function render(array $data = array())
     {
-        $this->data($data);
-        unset($data);
-        extract($this->data);
-
-        if (!$this->exists()) {
-            throw new LogicException(
-                'The template "' . $this->name->getName() . '" could not be found at "' . $this->path() . '".'
-            );
-        }
-
         try {
-            $level = ob_get_level();
+            $this->data($data);
+
+            unset($data);
+
+            extract($this->data);
+
             ob_start();
 
-            include $this->path();
+            if ($this->exists()) {
+                include $this->path();
+            } else {
+                throw new LogicException(
+                    'The template "' . $this->name->getName() . '" could not be found at "' . $this->path() . '".'
+                );
+            }
 
             $content = ob_get_clean();
 
@@ -161,14 +131,8 @@ class Template
             }
 
             return $content;
-        } catch (Throwable $e) {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-
-            throw $e;
-        } catch (Exception $e) {
-            while (ob_get_level() > $level) {
+        } catch (LogicException $e) {
+            if (ob_get_length() > 0) {
                 ob_end_clean();
             }
 
@@ -182,7 +146,7 @@ class Template
      * @param  array  $data
      * @return null
      */
-    public function layout($name, array $data = array())
+    protected function layout($name, array $data = array())
     {
         $this->layoutName = $name;
         $this->layoutData = $data;
@@ -190,10 +154,10 @@ class Template
 
     /**
      * Start a new section block.
-     * @param  string  $name
+     * @param  string $name
      * @return null
      */
-    public function start($name)
+    protected function start($name)
     {
         if ($name === 'content') {
             throw new LogicException(
@@ -201,55 +165,26 @@ class Template
             );
         }
 
-        if ($this->sectionName) {
-            throw new LogicException('You cannot nest sections within other sections.');
-        }
-
-        $this->sectionName = $name;
+        $this->sections[$name] = '';
 
         ob_start();
-    }
-
-    /**
-     * Start a new append section block.
-     * @param  string $name
-     * @return null
-     */
-    public function push($name)
-    {
-        $this->appendSection = true;
-
-        $this->start($name);
     }
 
     /**
      * Stop the current section block.
      * @return null
      */
-    public function stop()
+    protected function stop()
     {
-        if (is_null($this->sectionName)) {
+        if (empty($this->sections)) {
             throw new LogicException(
                 'You must start a section before you can stop it.'
             );
         }
 
-        if (!isset($this->sections[$this->sectionName])) {
-            $this->sections[$this->sectionName] = '';
-        }
+        end($this->sections);
 
-        $this->sections[$this->sectionName] = $this->appendSection ? $this->sections[$this->sectionName] . ob_get_clean() : ob_get_clean();
-        $this->sectionName = null;
-        $this->appendSection = false;
-    }
-
-    /**
-     * Alias of stop().
-     * @return null
-     */
-    public function end()
-    {
-        $this->stop();
+        $this->sections[key($this->sections)] = ob_get_clean();
     }
 
     /**
@@ -258,7 +193,7 @@ class Template
      * @param  string      $default Default section content
      * @return string|null
      */
-    public function section($name, $default = null)
+    protected function section($name, $default = null)
     {
         if (!isset($this->sections[$name])) {
             return $default;
@@ -273,7 +208,7 @@ class Template
      * @param  array  $data
      * @return string
      */
-    public function fetch($name, array $data = array())
+    protected function fetch($name, array $data = array())
     {
         return $this->engine->render($name, $data);
     }
@@ -284,7 +219,7 @@ class Template
      * @param  array  $data
      * @return null
      */
-    public function insert($name, array $data = array())
+    protected function insert($name, array $data = array())
     {
         echo $this->engine->render($name, $data);
     }
@@ -295,7 +230,7 @@ class Template
      * @param  string $functions
      * @return mixed
      */
-    public function batch($var, $functions)
+    protected function batch($var, $functions)
     {
         foreach (explode('|', $functions) as $function) {
             if ($this->engine->doesFunctionExist($function)) {
@@ -318,7 +253,7 @@ class Template
      * @param  null|string $functions
      * @return string
      */
-    public function escape($string, $functions = null)
+    protected function escape($string, $functions = null)
     {
         static $flags;
 
@@ -339,7 +274,7 @@ class Template
      * @param  null|string $functions
      * @return string
      */
-    public function e($string, $functions = null)
+    protected function e($string, $functions = null)
     {
         return $this->escape($string, $functions);
     }
