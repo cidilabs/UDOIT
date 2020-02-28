@@ -27,9 +27,13 @@ $settings = [
 		"assets/js/resize.js?v=" . UDOIT_VERSION,
 		"assets/js/default.js?v=" . UDOIT_VERSION,
 		"assets/js/contrast.js",
-		"https://yoga.local/cidi/udoit/public/assets/js/results_filter.js?t=".time(),
 	]
 ];
+
+$new_look = filter_input_array(INPUT_GET, 'newlook');
+if (isset($new_look) && $new_look) {
+	$settings['footer_scripts'][] = "assets/js/results_filter.js?t=".time();
+}
 
 $this->layout('template', $settings);
 

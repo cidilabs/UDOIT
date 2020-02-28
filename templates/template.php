@@ -17,6 +17,12 @@
 *
 *	Primary Author Contact:  Jacob Bates <jacob.bates@ucf.edu>
 */
+
+$new_look = filter_input_array(INPUT_GET, 'newlook');
+$new_css = '';
+if (isset($new_look) && $new_look) {
+	$new_css = '<link href="assets/css/results_filter.css?t='.time().'" type="text/css" rel="stylesheet">';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +34,7 @@
 		<link href='//fonts.googleapis.com/css?family=Sonsie+One' rel='stylesheet' type='text/css'>
 		<link href="assets/css/main.css?v=<?= UDOIT_VERSION ?>" type="text/css" rel="stylesheet" media="screen">
 		<link href="assets/css/print.css?v=<?= UDOIT_VERSION ?>" type="text/css" rel="stylesheet" media="print">
-		<link href="https://yoga.local/cidi/udoit/public/assets/css/results_filter.css?t=<?= time() ?>" type="text/css" rel="stylesheet">
+		<?= $new_css ?>		
 	</head>
 	<body>
 		<div class="container">
