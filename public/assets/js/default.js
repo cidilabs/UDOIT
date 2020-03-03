@@ -166,7 +166,7 @@ function displayScanResults(results) {
 
 	jscolor.bind();
 	
-	if (ResultsFilter) {
+	if (typeof ResultsFilter != 'undefined') {
 		ResultsFilter.init();
 	}
 }

@@ -31,7 +31,7 @@
 	<link href='//fonts.googleapis.com/css?family=Sonsie+One' rel='stylesheet' type='text/css'>
 	<link href="assets/css/main.css?v=<?= UDOIT_VERSION ?>" type="text/css" rel="stylesheet" media="screen">
 	<link href="assets/css/print.css?v=<?= UDOIT_VERSION ?>" type="text/css" rel="stylesheet" media="print">
-	<link href="<?= (isset($_SESSION['localdev'])) ? 'http://cidi.local/udoit/public/' : '' ?>assets/css/results_filter.css?t=<?= time() ?>" type="text/css" rel="stylesheet">
+	<link href="<?= (isset($_SESSION['localdev'])) ? 'https://yoga.local/cidi/udoit/public/' : '' ?>assets/css/results_filter.css?t=<?= time() ?>" type="text/css" rel="stylesheet">
 </head>
 
 <body>
