@@ -27,9 +27,15 @@ $settings = [
 		"assets/js/resize.js?v=" . UDOIT_VERSION,
 		"assets/js/default.js?v=" . UDOIT_VERSION,
 		"assets/js/contrast.js",
-		"assets/js/results_filter.js?t=" . time(),
 	]
 ];
+
+if (isset($_GET['localdev'])) {
+	$settings['footer_scripts'][] = "http://cidi.local/udoit/public/assets/js/results_filter.js?t=" . time();
+}
+else {
+	$settings['footer_scripts'][] = "assets/js/results_filter.js?t=" . time();
+}
 
 $this->layout('template', $settings);
 
