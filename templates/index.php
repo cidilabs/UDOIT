@@ -30,12 +30,7 @@ $settings = [
 	]
 ];
 
-if (isset($_GET['localdev'])) {
-	$settings['footer_scripts'][] = "http://cidi.local/udoit/public/assets/js/results_filter.js?t=" . time();
-}
-else {
-	$settings['footer_scripts'][] = "assets/js/results_filter.js?t=" . time();
-}
+$settings['footer_scripts'][] = isset($_SESSION['localdev']) ? "http://cidi.local/udoit/public/assets/js/results_filter.js?t=" . time() : "assets/js/results_filter.js?t=" . time();
 
 $this->layout('template', $settings);
 

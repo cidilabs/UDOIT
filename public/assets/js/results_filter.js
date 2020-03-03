@@ -9,7 +9,8 @@ var ResultsFilter = {
 
     init: function() {
         console.log('Filter script started.');
-
+        console.log('Local config');
+        
         this.scanContent();
         this.reorganizeContent();
         this.renderFilters();
