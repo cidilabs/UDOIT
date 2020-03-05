@@ -114,8 +114,4 @@ if (!empty($api_key)) {
     $redirect_to = "{$_SESSION['base_url']}/login/oauth2/auth/?client_id={$oauth2_id}&response_type=code&redirect_uri={$oauth2_uri}{$scopes_encoded}";
 }
 
-if (isset($_GET['localdev'])) {
-    $_SESSION['localdev'] = $_GET['localdev'];
-}
-
 header("Location: {$redirect_to}");

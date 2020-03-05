@@ -30,7 +30,7 @@ $settings = [
 	]
 ];
 
-$settings['footer_scripts'][] = isset($_SESSION['localdev']) ? "https://yoga.local/cidi/udoit/public/assets/js/results_filter.js?t=" . time() : "assets/js/results_filter.js?t=" . time();
+$settings['footer_scripts'][] = "https://yoga.local/cidi/udoit/public/assets/js/results_filter.js?t=" . time();
 
 $this->layout('template', $settings);
 
