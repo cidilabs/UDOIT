@@ -44,11 +44,15 @@ $this->layout('template', $settings);
 		<div class="tab-pane active" id="scanner" role="tabpanel">
 			<div class="panel panel-default welcome-panel">
 				<div class="panel-body">
+					<button class="btn btn-xs btn-default pull-right no-print margin-right-small welcome-toggle-btn">
+						<span class="glyphicon glyphicon-minus"></span>
+						<span class="sr-only">Toggle Welcome Message</span>
+					</button>
 					<h2>Welcome to <span style="font-weight: normal;">U</span><span style="font-weight: bold;">DO</span><span style="font-weight: normal;">IT</span>!</h2>
 
-					<p class="welcome-message welcome-shown"><?= $welcome_message; ?></p>
+					<p class="welcome-message welcome-toggle"><?= $welcome_message; ?></p>
 
-					<p class="disclaimer-message welcome-shown"><?= $disclaimer_message; ?></p>
+					<p class="disclaimer-message welcome-toggle"><?= $disclaimer_message; ?></p>
 
 					<p class="no-margin"><a href="#udoitInfo" class="btn btn-sm btn-default no-print" data-toggle="modal" data-target="#udoitInfo">What does UDOIT look for?</a></p>
 				</div>
@@ -62,7 +66,7 @@ $this->layout('template', $settings);
 
 				<div class="row">
 					<div class="col-sm-4">
-						<div class="form-group welcome-shown">
+						<div class="form-group welcome-toggle">
 							<span class="col-sm-4 control-label"><strong>Content:</strong></span>
 
 							<div class="col-sm-8">
@@ -114,7 +118,7 @@ $this->layout('template', $settings);
 					</div>
 
 					<div class="col-sm-4">
-						<div class="form-group welcome-shown">
+						<div class="form-group welcome-toggle">
 							<span class="col-sm-4 control-label"><strong>Scan for:</strong></span>
 
 							<div class="col-sm-8">

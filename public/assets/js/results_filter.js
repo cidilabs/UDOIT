@@ -17,19 +17,14 @@ var ResultsFilter = {
         this.createSummaryTab();
         this.renderSummaryFilters();
         this.setUpSummaryActions();
+        this.setUpWelcomeToggle();
         
         // These will get run each time a filter is changed
         this.addContentTypeTabs();
         this.setUpContentTypeActions();
 
         $('section#result', this.context).remove();
-
-        //this.scrollToResults();
-    },
-    scrollToResults: function() {
-        $([document.documentElement, document.body]).animate({
-            scrollTop: $(this.container).offset().top
-        }, 1000);
+        $('.welcome-toggle-btn').click();
     },
     scanContent: function() {
         let _this = this;
@@ -266,5 +261,14 @@ var ResultsFilter = {
     },
     getTextFromElement: function(obj) {
         return $(obj).clone().children().remove().end().text().trim().replace(/[.,#!$%;:=() "]/g, '').toLowerCase();
-    }
+    },
+    setUpWelcomeToggle: function() {
+        $('.welcome-toggle-btn').on('click', function(e) {
+            $('#scanner').toggleClass('welcome-hidden');
+            $('.glyphicon', this).toggleClass('glyphicon-minus').toggleClass('glyphicon-plus');
+        });
+    },
 }
+
+// This must get set up on page load, before init() is called
+ResultsFilter.setUpWelcomeToggle();
