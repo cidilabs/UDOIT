@@ -17,7 +17,6 @@ var ResultsFilter = {
         this.createSummaryTab();
         this.renderSummaryFilters();
         this.setUpSummaryActions();
-        this.setUpWelcomeToggle();
         
         // These will get run each time a filter is changed
         this.addContentTypeTabs();
@@ -264,8 +263,18 @@ var ResultsFilter = {
     },
     setUpWelcomeToggle: function() {
         $('.welcome-toggle-btn').on('click', function(e) {
-            $('#scanner').toggleClass('welcome-hidden');
-            $('.glyphicon', this).toggleClass('glyphicon-minus').toggleClass('glyphicon-plus');
+            if ($('.glyphicon', this).hasClass('glyphicon-plus')) {
+                $('.glyphicon', this).addClass('glyphicon-minus').removeClass('glyphicon-plus');
+                $('.welcome-toggle').slideDown(function () {
+                    setTimeout(resizeFrame, 200);
+                });
+            }
+            else {
+                $('.glyphicon', this).addClass('glyphicon-plus').removeClass('glyphicon-minus');
+                $('.welcome-toggle').slideUp(function () {
+                    setTimeout(resizeFrame, 200);
+                });
+            }
         });
     },
 }

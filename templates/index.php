@@ -48,12 +48,11 @@ $this->layout('template', $settings);
 						<span class="glyphicon glyphicon-minus"></span>
 						<span class="sr-only">Toggle Welcome Message</span>
 					</button>
-					<h2>Welcome to <span style="font-weight: normal;">U</span><span style="font-weight: bold;">DO</span><span style="font-weight: normal;">IT</span>!</h2>
-
-					<p class="welcome-message welcome-toggle"><?= $welcome_message; ?></p>
-
-					<p class="disclaimer-message welcome-toggle"><?= $disclaimer_message; ?></p>
-
+					<div class="welcome-toggle">
+						<h2>Welcome to <span style="font-weight: normal;">U</span><span style="font-weight: bold;">DO</span><span style="font-weight: normal;">IT</span>!</h2>
+						<p class="welcome-message"><?= $welcome_message; ?></p>
+						<p class="disclaimer-message"><?= $disclaimer_message; ?></p>
+					</div>
 					<p class="no-margin"><a href="#udoitInfo" class="btn btn-sm btn-default no-print" data-toggle="modal" data-target="#udoitInfo">What does UDOIT look for?</a></p>
 				</div>
 			</div>
