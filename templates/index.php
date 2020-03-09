@@ -42,13 +42,13 @@ $this->layout('template', $settings);
 <main id="contentWrapper" role="main">
 	<div class="tab-content">
 		<div class="tab-pane active" id="scanner" role="tabpanel">
-			<div class="panel panel-default">
+			<div class="panel panel-default welcome-panel">
 				<div class="panel-body">
 					<h2>Welcome to <span style="font-weight: normal;">U</span><span style="font-weight: bold;">DO</span><span style="font-weight: normal;">IT</span>!</h2>
 
-					<p><?= $welcome_message; ?></p>
+					<p class="welcome-message welcome-shown"><?= $welcome_message; ?></p>
 
-					<p><?= $disclaimer_message; ?></p>
+					<p class="disclaimer-message welcome-shown"><?= $disclaimer_message; ?></p>
 
 					<p class="no-margin"><a href="#udoitInfo" class="btn btn-sm btn-default no-print" data-toggle="modal" data-target="#udoitInfo">What does UDOIT look for?</a></p>
 				</div>
@@ -62,7 +62,7 @@ $this->layout('template', $settings);
 
 				<div class="row">
 					<div class="col-sm-4">
-						<div class="form-group">
+						<div class="form-group welcome-shown">
 							<span class="col-sm-4 control-label"><strong>Content:</strong></span>
 
 							<div class="col-sm-8">
@@ -114,7 +114,7 @@ $this->layout('template', $settings);
 					</div>
 
 					<div class="col-sm-4">
-						<div class="form-group">
+						<div class="form-group welcome-shown">
 							<span class="col-sm-4 control-label"><strong>Scan for:</strong></span>
 
 							<div class="col-sm-8">

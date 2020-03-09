@@ -4,20 +4,27 @@ var ResultsFilter = {
     context: '#scanner',
     container: '.results-wrapper',
     filters: {
-        issueType: [],
+        issueTypes: {},
     },
 
     init: function() {
         console.log('Filter script started.');
         
+        // Get run once on init()
+        this.addIssueMetaData();
         this.scanContent();
-        this.reorganizeContent();
-        this.renderFilters();
-        this.setUpFilterActions();
+        this.addHtmlStructure();
+        this.createSummaryTab();
+        this.renderSummaryFilters();
+        this.setUpSummaryActions();
+        
+        // These will get run each time a filter is changed
+        this.addContentTypeTabs();
+        this.setUpContentTypeActions();
 
         $('section#result', this.context).remove();
 
-        this.scrollToResults();
+        //this.scrollToResults();
     },
     scrollToResults: function() {
         $([document.documentElement, document.body]).animate({
@@ -29,30 +36,105 @@ var ResultsFilter = {
         this.contentTypes = {};
 
         $('h2.content-title', this.context).each(function(i, obj) {
-            let title = $(obj).clone().children().remove().end().text().replace(/ /g,'');
+            let contentType = _this.getTextFromElement(obj);
 
             while ($(obj).next('div.errorItem').length > 0) {
                 obj = $(obj).next('div.errorItem');
-                if (!Array.isArray(_this.contentTypes[title])) {
-                    _this.contentTypes[title] = [];
+                if (!Array.isArray(_this.contentTypes[contentType])) {
+                    _this.contentTypes[contentType] = [];
                 }
-
-                _this.contentTypes[title].push(obj);
-                console.log(obj);
+                _this.contentTypes[contentType].push($(obj).clone());
             }
         });
 
         _this.oldHtml = $('section#result', this.context);
     },
-    renderFilters: function() {
-        
+    addIssueMetaData: function() {
+        $('.errorSummary .panel .list-group li.list-group-item').each((i, issue) => {
+            let issueType = this.getTextFromElement($('h5.title-line', issue));
+            $(issue).attr('data-issue-type', issueType);
+            $(issue).attr('data-issue-count', $('ol li', issue).length);
+        });      
+
     },
-    reorganizeContent: function() {
-        this.addHtmlStructure();
+    renderSummaryFilters: function() {
+        let errorWrapper = $('.results-panes .errorSummary .panel-danger');
+        let suggestWrapper = $('.results-panes .errorSummary .panel-info');
+        let selectAllErrorHtml = this.createSwitchHtml('error-filter select-all-filter', 'View All Errors');
+        let selectAllSuggestHtml = this.createSwitchHtml('suggest-filter select-all-filter', 'View All Suggestions');
+
+        $('.panel-heading', errorWrapper).prepend(selectAllErrorHtml);
+        $('.panel-heading', suggestWrapper).prepend(selectAllSuggestHtml);
+
+        $('li.list-group-item', errorWrapper).each((i, obj) => {
+            let issueType = this.getTextFromElement(obj);
+            $(obj).prepend(this.createSwitchHtml('issue-filter error-filter', 'Toggle issue visibility'));
+            $(obj).attr('data-issue-type', issueType);
+        });
+        $('li.list-group-item', suggestWrapper).each((i, obj) => {
+            let issueType = this.getTextFromElement(obj);
+            $(obj).prepend(this.createSwitchHtml('issue-filter suggest-filter', 'Toggle issue visibility'));
+            $(obj).attr('data-issue-type', issueType);
+        });
+    },
+    setUpSummaryActions: function () {
+        let _this = this;
+
+        // toggle switches for select all switch
+        $('.results-panes .select-all-filter input').on('change', function(e) {
+            let container = $(this).closest('.panel');
+            
+            $('ul li.list-group-item .switch input', container).prop('checked', $(this).prop('checked'));
+            $('ul li.list-group-item .switch input', container).change();
+        });
+
+        // issue switch action
+        $('.results-panes .issue-filter input').on('change', function(e) {
+            const issueType = $(this).closest('li.list-group-item').attr('data-issue-type');
+            if ($(this).prop('checked')) {
+                _this.filters.issueTypes[issueType] = issueType;
+            }
+            else {
+                delete(_this.filters.issueTypes[issueType]);
+            }
+
+            // check to see if all switches are matching to toggle 'select all' switch
+            let container = $(this).closest('.panel');
+
+            if ($('ul li .switch input:checked', container).length === $('ul li .switch input', container).length) {
+                $('.switch.select-all-filter input', container).prop('checked', true);
+            }
+            else {
+                $('.switch.select-all-filter input', container).prop('checked', false);
+            }
+
+            _this.refreshIssueTabs();
+        });
+
+        $('.results-panes li.list-group-item').each(function(i, obj) {
+            const issueType = $(obj).attr('data-issue-type');
+            _this.filters.issueTypes[issueType] = issueType;
+        });
+    },
+    refreshIssueTabs: function() {
+        console.log(this.filters.issueTypes);
+        this.addContentTypeTabs();
+        this.setUpContentTypeActions();
+        this.filterContentTypes();
+        this.addContentTypeCounts();
+    },
+    createSwitchHtml: function(classes, label) {
+        return `
+        <label class="switch ${classes}">
+            <span class="sr-only">${label}</span>
+            <input type="checkbox" checked="checked" />
+            <span class="slider round"></span>
+        </label>`;
+    },
+    createSummaryTab: function() {
         this.moveReportSummary();
         this.moveReportTitle();
         this.moveReportPdfButton();
-        this.addContentTypeTabs();
     },
     addHtmlStructure: function() {
         $(this.container, this.context).remove();
@@ -91,26 +173,26 @@ var ResultsFilter = {
     },
     addContentTypeTabs: function() {
         let tabsUl = $('ul.results-tabs');
-        let contentPanes = $('.results-panes')
+        let contentPanes = $('.results-panes');
+
+        $('li.content-type-tab', tabsUl).remove();
+        $('.tab-pane.content-type-pane', contentPanes).remove();
 
         let contentLabels = {
-            'Files': 'HTML Files',
-            'Unscannable': 'Unscannable Files',
+            'files': 'HTML Files',
+            'unscannable': 'Unscannable Files',
         };
-        console.log(contentLabels);
 
         for (let title in this.contentTypes) {
             let key = this.createTabKey(title);
             let contentArray = this.contentTypes[title];
 
-            console.log('title', title);
             if (contentLabels.hasOwnProperty(title)) {
-                console.log('matched', title);
                 title = contentLabels[title];
             }
 
             let tabHtml = `
-                <li role="presentation">
+                <li role="presentation" class="content-type-tab">
                     <a href="#${key}" aria-controls="${key}" role="tab" data-toggle="tab">
                         ${title}<small class="issue-count"></small></a>
                 </li>
@@ -118,7 +200,7 @@ var ResultsFilter = {
             tabsUl.append(tabHtml);
 
             let paneHtml = `
-                <div role="tabpanel" class="tab-pane" id="${key}"></div>
+                <div role="tabpanel" class="tab-pane content-type-pane" id="${key}"></div>
             `;
             contentPanes.append(paneHtml);
             contentArray.forEach((item) => {
@@ -127,14 +209,62 @@ var ResultsFilter = {
             
         }
     },
+    filterContentTypes: function() {
+        let context = $('.content-type-pane:not(#udoit-unscannable)');
 
-    setUpFilterActions: function() {
+        // Start with a clean slate
+        $('*').removeClass('hiding');
+
+        // Hide all issues
+        //$('.content-type-pane:not(#udoit-unscannable) .errorItem .errorSummary .panel li.list-group-item').addClass('hiding');
+        $('.errorItem .errorSummary .panel li.list-group-item', context).addClass('hiding');
+
+        // Show any issues that are checked in the summary
+        for (let issueType of Object.values(this.filters.issueTypes)) {
+            //console.log('showing type', issueType);
+            $(`.errorItem .errorSummary .panel li.list-group-item[data-issue-type="${issueType}"]`, context).removeClass('hiding');    
+        }
+
+        // Remove any empty error/suggestion containers
+        $('.errorItem .errorSummary > .panel', context).each(function(i, issue) {
+            //console.log('errors', $('.panel li.list-group-item:not(.hiding)', issue));
+            if ($('li.list-group-item:not(.hiding)', issue).length === 0) {
+                //console.log('hiding issue', issue);
+                $(issue).addClass('hiding');
+            }
+        });
+
+        // Remove any empty containers for issues
+        $('.errorItem', context).each(function(i, item) {
+            //console.log('issues', $('.errorSummary:not(.hiding)', item));
+            if ($('.errorSummary > .panel:not(.hiding)', item).length === 0) {
+                //console.log('hiding item', item);
+                $(item).addClass('hiding');
+            }
+        });
+
+        // Remove a tab when it's empty
+        $(context).each(function(i, pane) {
+            if ($('.errorItem:not(.hiding)', pane).length === 0) {
+                let paneId = $(pane).attr('id');
+                console.log('paneid', paneId);
+                $(`.results-tabs li a[href="#${paneId}"]`).addClass('hiding');
+            }
+        });
+    },
+    addContentTypeCounts: function() {
+
+    },
+    setUpContentTypeActions: function() {
         $('.results-tabs a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
-        })
+        });
     },
     createTabKey: function(key) {
         return 'udoit-' + key.replace(/ /g, '').toLowerCase();
+    },
+    getTextFromElement: function(obj) {
+        return $(obj).clone().children().remove().end().text().trim().replace(/[.,#!$%;:=() "]/g, '').toLowerCase();
     }
 }
