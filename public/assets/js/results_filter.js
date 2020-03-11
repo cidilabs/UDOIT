@@ -6,10 +6,9 @@ var ResultsFilter = {
     filters: {
         issueTypes: {},
     },
+    oldHtml: null,
 
     init: function() {
-        console.log('Filter script started.');
-        
         // Get run once on init()
         this.addIssueMetaData();
         this.scanContent();
@@ -21,9 +20,12 @@ var ResultsFilter = {
         // These will get run each time a filter is changed
         this.addContentTypeTabs();
         this.setUpContentTypeActions();
+        this.addContentTypeCounts();
 
         $('section#result', this.context).remove();
-        $('.welcome-toggle-btn').click();
+        if ($('.welcome-toggle-btn .glyphicon-minus').length) {
+            $('.welcome-toggle-btn').click();
+        }
     },
     scanContent: function() {
         let _this = this;
@@ -111,7 +113,6 @@ var ResultsFilter = {
         });
     },
     refreshIssueTabs: function() {
-        console.log(this.filters.issueTypes);
         this.addContentTypeTabs();
         this.setUpContentTypeActions();
         this.filterContentTypes();
@@ -188,7 +189,8 @@ var ResultsFilter = {
             let tabHtml = `
                 <li role="presentation" class="content-type-tab">
                     <a href="#${key}" aria-controls="${key}" role="tab" data-toggle="tab">
-                        ${title}<small class="issue-count"></small></a>
+                        ${title}
+                    </a>
                 </li>
             `;
             tabsUl.append(tabHtml);
@@ -247,13 +249,74 @@ var ResultsFilter = {
         });
     },
     addContentTypeCounts: function() {
+        let _this = this;
 
+        // Remove existing content type count badges
+        $('.results-panes .content-type-pane .errorItem .pull-right .label').remove();
+        
+        // Set new values based on filtering
+        $('.results-panes .content-type-pane .errorItem:not(.hiding)').each(function(i, obj) {
+            const errorCount = _this.getIssueCount($(`.panel-danger:not(.hiding)`, obj));
+            const suggestCount = _this.getIssueCount($(`.panel-info:not(.hiding)`, obj));
+            
+            $(obj).attr('data-error-count', errorCount);
+            if (errorCount) {
+                const label = (errorCount > 1) ? 'Errors' : 'Error';
+                $('.panel-heading .pull-right', obj).append(`<span class="label label-danger">${errorCount} ${label}</span>`);
+            }
+
+            $(obj).attr('data-suggest-count', suggestCount);
+            if (suggestCount) {
+                const label = (suggestCount > 1) ? 'Suggestions' : 'Suggestion';
+                $('.panel-heading .pull-right', obj).append(`<span class="label label-primary">${suggestCount} ${label}</span>`);
+            }
+        });
+
+        $('ul.results-tabs li.content-type-tab').each(function(i, obj) {
+            const type = $('a', obj).attr('aria-controls');
+            let errorCount = 0;
+            let suggestCount = 0;
+
+            $(`#${type} .errorItem:not(.hiding)`).each(function(i, item) {
+                let error = parseInt($(item).attr('data-error-count'));
+                let suggest = parseInt($(item).attr('data-suggest-count'));
+
+                if (error) {
+                    errorCount += error;
+                }
+                if (suggest) {
+                    suggestCount += suggest;
+                }
+            });
+            
+            if (suggestCount) {
+                $('a', obj).append(`<span class="badge count-suggest">${suggestCount}</span>`);
+            }
+            if (errorCount) {
+                $('a', obj).append(`<span class="badge count-error">${errorCount}</span>`);
+            }
+        });
+    },
+    getIssueCount: function(context) {
+        //console.log(context);
+        let totalCount = 0;
+
+        $(`li.list-group-item:not(.hiding) .badge`, context).each(function(i, obj) {
+            let count = parseInt($(obj).text().replace('x', '').trim());
+            if (count != NaN) {
+                totalCount += count;
+            }
+        });
+
+        return totalCount;
     },
     setUpContentTypeActions: function() {
         $('.results-tabs a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
         });
+
+        $('.results-panes .tab-pane').find('.errorItem:first:not(.hiding) .panel-heading button.btn-toggle').click();
     },
     createTabKey: function(key) {
         return 'udoit-' + key.replace(/ /g, '').toLowerCase();

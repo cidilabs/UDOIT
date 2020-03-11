@@ -1,3 +1,6 @@
+body {
+    min-height: 1200px;
+}
 section#result {
     display: none !important;
 }
@@ -99,4 +102,29 @@ section#result {
 
 .results-wrapper .hiding {
     display: none;
+}
+
+.results-wrapper .errorSummary .panel-danger {
+    margin-bottom: 20px !important;
+}
+
+/* Hiding issue counts within a content type, since they'll change as we filter */
+.results-wrapper .errorSummary .panel h4.panel-title > .badge {
+    display: none;
+}
+.results-wrapper .errorItem > .panel-heading .label {
+    margin: 0 4px;
+}
+
+.results-wrapper .results-tabs li a .badge {
+    float: right;
+    margin-top: 3px;
+    color: #FFF;
+    border: 1px solid #FFF;
+}
+.results-wrapper .results-tabs li a .count-error {
+    background-color: #d4423c;
+}
+.results-wrapper .results-tabs li a .count-suggest {
+    background-color: #31708f;
 }
