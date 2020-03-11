@@ -30,7 +30,7 @@ $settings = [
 	]
 ];
 
-$settings['footer_scripts'][] = "https://yoga.local/cidi/udoit/public/assets/js/results_filter.js?t=" . time();
+$settings['footer_scripts'][] = "assets/js/results_filter.js?t=" . UDOIT_VERSION;
 
 $this->layout('template', $settings);
 
