@@ -27,10 +27,9 @@ $settings = [
 		"assets/js/resize.js?v=" . UDOIT_VERSION,
 		"assets/js/default.js?v=" . UDOIT_VERSION,
 		"assets/js/contrast.js",
+		"assets/js/results_filter.js?v=" . UDOIT_VERSION
 	]
 ];
-
-$settings['footer_scripts'][] = "assets/js/results_filter.js?t=" . UDOIT_VERSION;
 
 $this->layout('template', $settings);
 

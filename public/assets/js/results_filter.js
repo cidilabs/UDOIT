@@ -314,6 +314,7 @@ var ResultsFilter = {
         $('.results-tabs a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
+            resizeFrame();
         });
 
         $('.results-panes .tab-pane').find('.errorItem:first:not(.hiding) .panel-heading button.btn-toggle').click();
