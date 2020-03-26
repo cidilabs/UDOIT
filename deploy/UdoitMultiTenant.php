@@ -28,6 +28,8 @@ class UdoitMultiTenant
         global $db_institutes_table;
         global $db_user_table;
         global $db_reports_table;
+        global $udoit_welcome_message;
+        global $udoit_disclaimer_message;
 
         $utils = UdoitUtils::instance();
 
@@ -61,6 +63,17 @@ class UdoitMultiTenant
                 if (isset($result->slug)) {
                     $db_user_table = $result->slug.'_'.$db_user_table;
                     $db_reports_table = $result->slug.'_'.$db_reports_table;
+                }
+
+                if (!empty($result->data)) {
+                    $data = \json_decode($result->data, TRUE);
+
+                    if (isset($data['welcome_message'])) {
+                        $udoit_welcome_message = $data['welcome_message'];
+                    }
+                    if (isset($data['disclaimer_message'])) {
+                        $udoit_disclaimer_message = $data['disclaimer_message'];
+                    }
                 }
             }
         }
