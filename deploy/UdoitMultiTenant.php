@@ -66,7 +66,7 @@ class UdoitMultiTenant
                 }
 
                 if (!empty($result->data)) {
-                    $data = \json_decode($result->data, TRUE);
+                    $data = \json_decode($result->data, true);
 
                     if (isset($data['welcome_message'])) {
                         $udoit_welcome_message = $data['welcome_message'];
