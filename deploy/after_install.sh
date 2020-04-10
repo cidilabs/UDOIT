@@ -34,3 +34,7 @@ sudo find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 
 # change localConfig owner and perms
 sudo chown -R webchuck:apache /var/www/html/config/localConfig.php
 sudo chmod 440 /var/www/html/config/localConfig.php
+
+# copy UDOIT Cloud logo
+rm /var/www/html/public/assets/img/udoit_cloud_icon.png
+cp /var/www/html/deploy/udoit_cloud_icon.png /var/www/html/public/assets/img/udoit_cloud_icon.png
