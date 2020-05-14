@@ -41,3 +41,11 @@ sudo chmod 440 /var/www/html/config/localConfig.php
 # copy UDOIT Cloud logo
 rm /var/www/html/public/assets/img/udoit_cloud_icon.png
 cp /var/www/html/deploy/udoit_cloud_icon.png /var/www/html/public/assets/img/udoit_cloud_icon.png
+
+# add New Relic appname
+if [ "$DEPLOYMENT_GROUP_NAME" == "UdoitProd" ]
+then
+    echo -e "\nnewrelic.appname = \"UDOIT Production\"" >> /etc/php.d/newrelic.ini
+else
+    echo -e "\nnewrelic.appname = \"UDOIT Staging\"" >> /etc/php.d/newrelic.ini
+fi
