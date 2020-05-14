@@ -15,4 +15,4 @@ hooks:
   AfterInstall:
     - location: deploy/after_install.sh
       timeout: 300
-      runas: webchuck
+      runas: root
