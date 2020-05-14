@@ -35,7 +35,7 @@ echo -e 'UdoitMultiTenant::setupOauth();' >> /var/www/html/config/settings.php
 sudo find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 
 # change localConfig owner and perms
-sudo chown -R webchuck:apache /var/www/html/config/localConfig.php
+sudo chown -R ssm-user:apache /var/www/html/config/localConfig.php
 sudo chmod 440 /var/www/html/config/localConfig.php
 
 # copy UDOIT Cloud logo
