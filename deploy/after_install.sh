@@ -50,4 +50,4 @@ else
     echo -e "\nnewrelic.appname = \"UDOIT Staging\"" >> /etc/php.d/newrelic.ini
 fi
 
-apachectl restart
+sudo apachectl restart
