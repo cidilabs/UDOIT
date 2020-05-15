@@ -35,9 +35,19 @@ echo -e 'UdoitMultiTenant::setupOauth();' >> /var/www/html/config/settings.php
 sudo find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 
 # change localConfig owner and perms
-sudo chown -R webchuck:apache /var/www/html/config/localConfig.php
+sudo chown -R ssm-user:apache /var/www/html/config/localConfig.php
 sudo chmod 440 /var/www/html/config/localConfig.php
 
 # copy UDOIT Cloud logo
 rm /var/www/html/public/assets/img/udoit_cloud_icon.png
 cp /var/www/html/deploy/udoit_cloud_icon.png /var/www/html/public/assets/img/udoit_cloud_icon.png
+
+# add New Relic appname
+if [ "$DEPLOYMENT_GROUP_NAME" == "UdoitProd" ]
+then
+    echo -e "\nnewrelic.appname = \"UDOIT Production\"" >> /etc/php.d/newrelic.ini
+else
+    echo -e "\nnewrelic.appname = \"UDOIT Staging\"" >> /etc/php.d/newrelic.ini
+fi
+
+sudo apachectl restart
