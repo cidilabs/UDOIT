@@ -3,7 +3,7 @@ define('ENV_TEST', 'test');
 define('ENV_PROD', 'prod');
 define('ENV_DEV', 'dev');
 
-define('UDOIT_VERSION', '2.6.2');
+define('UDOIT_VERSION', '2.6.3');
 
 // SET UP AUTOLOADER (uses autoload rules from composer)
 require_once(__DIR__.'/../vendor/autoload.php');
@@ -39,7 +39,7 @@ if (PHP_VERSION_ID < 70300) {
     session_set_cookie_params($expire, "$path; samesite=None", $domain, $secure, $httponly);
 } else {
     session_set_cookie_params([
-        'expires' => $expire,
+        'expire' => $expire,
         'path' => $path,
         'domain' => $domain,
         'samesite' => 'None',
