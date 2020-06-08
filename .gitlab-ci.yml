@@ -16,7 +16,7 @@
 test:7.2:
   image: php:7.2
   <<: *phpsetup
-  include:
-    - template: Dependency-Scanning.gitlab-ci.yml
-    - template: SAST.gitlab-ci.yml
-    
+
+include:
+  - template: Dependency-Scanning.gitlab-ci.yml
+  - template: SAST.gitlab-ci.yml
