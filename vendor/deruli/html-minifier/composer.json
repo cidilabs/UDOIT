@@ -1,10 +1,11 @@
 {
-    "name": "zaininnari/html-minifier",
-    "description": "The Blink HTMLTokenizer ported to PHP.",
+	"name": "deruli/html-minifier",
+	"version" : "0.5.1",
+    "description": "The Blink HTMLTokenizer ported to PHP. Fork by derUli.",
     "type": "library",
     "keywords": ["PHP", "Blink", "HTML minify"],
-    "homepage": "https://github.com/zaininnari/html-minifier",
-    "license": "The BSD 3-Clause License",
+    "homepage": "https://github.com/derUli/html-minifier",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Google inc",
@@ -15,14 +16,25 @@
             "name": "zaininnari",
             "homepage": "https://github.com/zaininnari/",
             "role": "Developer"
+        },
+        {
+            "name": "raivisdejus",
+            "homepage": "https://github.com/raivisdejus/",
+            "role": "Developer"
+        },
+        {
+            "name": "derUli",
+            "homepage": "https://github.com/derUli/",
+            "role": "Developer"
         }
     ],
     "require": {
         "php": ">=5.3.0"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "v2.0.0"
     },
+
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": {

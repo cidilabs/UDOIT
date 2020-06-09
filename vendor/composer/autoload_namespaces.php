@@ -6,7 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'zz' => array($vendorDir . '/zaininnari/html-minifier/src'),
+    'zz' => array($vendorDir . '/deruli/html-minifier/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Httpful' => array($vendorDir . '/nategood/httpful/src'),
     'Composer\\CustomDirectoryInstaller' => array($vendorDir . '/mnsami/composer-custom-directory-installer/src'),

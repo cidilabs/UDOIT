@@ -8,8 +8,8 @@ class ComposerStaticInit9ea8996570ced9e04484d7270f080b89
 {
     public static $files = array (
         '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
-        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -109,7 +109,7 @@ class ComposerStaticInit9ea8996570ced9e04484d7270f080b89
         array (
             'zz' => 
             array (
-                0 => __DIR__ . '/..' . '/zaininnari/html-minifier/src',
+                0 => __DIR__ . '/..' . '/deruli/html-minifier/src',
             ),
         ),
         'M' => 

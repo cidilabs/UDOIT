@@ -18,7 +18,7 @@ Create composer.json.
 ```sh
 {
     "require": {
-        "zaininnari/html-minifier": "*"
+        "deruli/html-minifier": "*"
     }
 }
 ```

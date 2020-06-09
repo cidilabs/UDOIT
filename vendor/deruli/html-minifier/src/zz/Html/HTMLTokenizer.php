@@ -1120,7 +1120,7 @@ class HTMLTokenizer {
                             $this->_SegmentedString->read(strlen('--'));
                             $this->_Token->beginComment();
                             $this->_HTML_SWITCH_TO(static::CommentStartState);
-                            continue;
+                            continue 2;
                         } else if ($result === SegmentedString::NotEnoughCharacters) {
                             $this->addState();
                             return $this->_haveBufferedCharacterToken();
@@ -1131,7 +1131,7 @@ class HTMLTokenizer {
                             $this->addState();
                             $this->_SegmentedString->read(strlen($doctypeString));
                             $this->_HTML_SWITCH_TO(static::DOCTYPEState);
-                            continue;
+                            continue 2;
                         } else if ($result === SegmentedString::NotEnoughCharacters) {
                             $this->addState();
                             return $this->_haveBufferedCharacterToken();
@@ -1142,7 +1142,7 @@ class HTMLTokenizer {
                             $this->addState();
                             $this->_SegmentedString->read(strlen($cdataString));
                             $this->_HTML_SWITCH_TO(static::CDATASectionState);
-                            continue;
+                            continue 2;
                         } else if ($result === SegmentedString::NotEnoughCharacters) {
                             $this->addState();
                             return $this->_haveBufferedCharacterToken();
@@ -1324,7 +1324,7 @@ class HTMLTokenizer {
                                 $this->addState();
                                 $this->_HTML_SWITCH_TO(static::AfterDOCTYPEPublicKeywordState);
                                 $this->_SegmentedString->read(strlen($publicString));
-                                continue;
+                                continue 2;
                             }
                             // @todo
                             //  else if ($result === SegmentedString::NotEnoughCharacters) {
@@ -1337,7 +1337,7 @@ class HTMLTokenizer {
                                 $this->addState();
                                 $this->_HTML_SWITCH_TO(static::AfterDOCTYPESystemKeywordState);
                                 $this->_SegmentedString->read(strlen($systemString));
-                                continue;
+                                continue 2;
                             }
                             // @todo
                             // else if ($result === SegmentedString::NotEnoughCharacters) {
@@ -1510,7 +1510,7 @@ class HTMLTokenizer {
                 case static::BeforeDOCTYPESystemIdentifierState:
                     if ($this->_isTokenizerWhitespace($char)) {
                         $this->_HTML_ADVANCE_TO(static::BeforeDOCTYPESystemIdentifierState);
-                        continue;
+                        continue 2;
                     }
                     if ($char === '"') {
                         $this->_Token->setSystemIdentifierToEmptyString();
