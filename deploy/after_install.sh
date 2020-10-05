@@ -24,6 +24,9 @@ cp /var/www/html/deploy/udoit.xml.php /var/www/html/public/udoit.xml.php
 # enable scoped developer keys
 echo -e "\n\$oauth2_enforce_scopes = true; // For scoped developer keys" >> /var/www/html/config/localConfig.php
 
+# add unscannable files list
+echo -e "\n\$unscannable_file_types = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'swf']; // unscannable file types" >> /var/www/html/config/localConfig.php
+
 # add HTTPS server setting
 echo -e "\n\$_SERVER['HTTPS'] = 'on';" >> /var/www/html/config/settings.php
 
@@ -41,6 +44,11 @@ sudo chmod 440 /var/www/html/config/localConfig.php
 # copy UDOIT Cloud logo
 rm /var/www/html/public/assets/img/udoit_cloud_icon.png
 cp /var/www/html/deploy/udoit_cloud_icon.png /var/www/html/public/assets/img/udoit_cloud_icon.png
+
+# make folders writeable by webserver
+sudo chmod 775 /var/www/html/config
+sudo chmod 775 /var/www/html/public/reports
+sudo chmod -R 775 /var/www/html/vendor/mpdf
 
 # add New Relic appname
 if [ "$DEPLOYMENT_GROUP_NAME" == "UdoitProd" ]
