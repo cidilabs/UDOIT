@@ -654,6 +654,9 @@ $doc.ready(function() {
 
 						$parent.find('input[name="submittingagain"]').val('Yes');
 
+						// move focus away from ufixit form before hiding it
+						$parent.closest('.errorItem.panel').find('.panel-heading h3 a').focus();
+
 						$parent.find('button').removeClass('hidden');
 						$parent.find('.fix-success').removeClass('hidden');
 						$parent.find('.viewError').addClass('hidden');
