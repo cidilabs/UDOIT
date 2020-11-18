@@ -654,15 +654,12 @@ $doc.ready(function() {
 
 						$parent.find('input[name="submittingagain"]').val('Yes');
 
-						// move focus away from ufixit form before hiding it
-						$parent.closest('.errorItem.panel').find('.panel-heading h3 a').focus();
-
 						$parent.find('button').removeClass('hidden');
-						$parent.find('.fix-success').removeClass('hidden');
+						// move focus away from ufixit form before hiding it
+						$parent.find('.fix-success').removeClass('hidden').focus();
 						$parent.find('.viewError').addClass('hidden');
 						$parent.find('.more-info').addClass('hidden');
 						$parent.find('.ufixit-form').addClass('hidden');
-
 
 						errorsRemaining = $parent.parent().parent().find('.fix-success.hidden').length;
 						if ( errorsRemaining == 0 ) {
