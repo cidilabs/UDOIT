@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
         unzip \
         wget \
         supervisor \
-        apache2 \
+        nginx \
     && docker-php-ext-configure gd  \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo_mysql 
@@ -26,8 +26,7 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
 # install yarn
 RUN npm install --global yarn
 
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-RUN apachectl start
+COPY deploy/nginx-site.conf /etc/nginx/sites-enabled/defaults
 
 #Create user ssm-user
 RUN useradd -ms /bin/bash ssm-user
@@ -45,8 +44,9 @@ RUN wget https://get.symfony.com/cli/installer -O - | bash && \
 COPY --chown=ssm-user:www-data . /var/www/html/
 
 WORKDIR /var/www/html
+
 #run setup script
 RUN chmod +x deploy/udoit-ng.sh
 RUN deploy/udoit-ng.sh
 
-CMD php-fpm 
+ENTRYPOINT [ "sh" ,"deploy/entrypoint.sh"]
