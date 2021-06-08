@@ -13,7 +13,7 @@ fi
 composer install --no-dev --no-interaction --no-progress --optimize-autoloader
 
 # change all file and directory permissions to give apache sufficient access
-sudo find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
+find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 
 # only setup newrelic if not on local.
 if [ "$ENVIORNMENT_TYPE" != "local" ]
@@ -30,6 +30,3 @@ yarn run encore dev
 
 # start queue monitor
 /usr/bin/supervisord
-
-# restart apaches
-# apachectl restart
