@@ -19,6 +19,7 @@ RUN if [ "$ENVIORNMENT_TYPE" != "local" ] ;then  \
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
         && unzip awscliv2.zip \
         && ./aws/install\
+        && rm -rf aws* \
     ;fi
 #Install node v14
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
