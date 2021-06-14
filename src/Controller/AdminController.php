@@ -12,7 +12,6 @@ use App\Services\LmsApiService;
 use App\Services\LmsUserService;
 use App\Services\SessionService;
 use App\Services\UtilityService;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -400,14 +399,14 @@ class AdminController extends ApiController
             $endTime = strtotime($term["end_at"]);
 
             if(($startTime <= $currentTime) && ($currentTime <= $endTime)){
-                return $term['name'];
+                return $term['id'];
             }
 
         }
 
         //Return a default case just in case we dont find one.
         $defaultReturn = current($terms);
-        return $defaultReturn['name'];
+        return $defaultReturn['id'];
 
     }
 }
