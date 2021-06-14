@@ -26,7 +26,7 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
 # install yarn
 RUN npm install --global yarn
 
-COPY deploy/nginx/nginx-site.conf /etc/nginx/sites-enabled/defaults
+COPY deploy/nginx/nginx-site.conf /etc/nginx/sites-enabled/default
 COPY deploy/nginx/10-php.conf /etc/nginx/conf.d/10-php.conf
 
 #Create user ssm-user
