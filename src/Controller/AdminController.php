@@ -12,6 +12,7 @@ use App\Services\LmsApiService;
 use App\Services\LmsUserService;
 use App\Services\SessionService;
 use App\Services\UtilityService;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -323,6 +324,13 @@ class AdminController extends ApiController
         $accounts = $lms->getAccountData($user, $accountId);
         $terms = $lms->getAccountTerms($user);
         $terms = $this->filterTermsByAccount($terms, $accounts);
+        $defaultTerm = $this->getDefaultTerm($terms);
+
+        $simpleTerms = [];
+
+        foreach ($terms as $term) {
+            $simpleTerms[$term['id']] = $term['name'];
+        }
 
         return [
             'apiUrl' => !empty($_ENV['BASE_URL']) ? $_ENV['BASE_URL'] : false,
@@ -334,7 +342,8 @@ class AdminController extends ApiController
             'labels' => $this->util->getTranslation($lang),
             'excludedRuleIds' => $excludedRuleIds,
             'accounts' => $accounts,
-            'terms' => $terms,
+            'terms' => $simpleTerms,
+            'defaultTerm' => $defaultTerm,
         ];
     }
 
@@ -376,5 +385,29 @@ class AdminController extends ApiController
         }
 
         return $courseTerms;
+    }
+
+    protected function getDefaultTerm($terms)
+    {
+        $currentTime = time();
+
+
+        foreach ($terms as $term) {
+            if(empty($term["start_at"]) || empty($term["end_at"])) {
+                continue;
+            }
+            $startTime= strtotime($term["start_at"]);
+            $endTime = strtotime($term["end_at"]);
+
+            if(($startTime <= $currentTime) && ($currentTime <= $endTime)){
+                return $term['name'];
+            }
+
+        }
+
+        //Return a default case just in case we dont find one.
+        $defaultReturn = current($terms);
+        return $defaultReturn['name'];
+
     }
 }
