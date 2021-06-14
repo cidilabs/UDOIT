@@ -19,7 +19,6 @@ RUN if [ "$ENVIORNMENT_TYPE" != "local" ] ;then  \
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
         && unzip awscliv2.zip \
         && ./aws/install\
-        && rm -rf aws* \
     ;fi
 #Install node v14
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
@@ -47,8 +46,10 @@ COPY --chown=ssm-user:www-data . /var/www/html/
 
 WORKDIR /var/www/html
 
-#run setup script
-RUN chmod +x deploy/udoit-ng.sh
-RUN deploy/udoit-ng.sh
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader
+
+RUN find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
+
+RUN yarn install
 
 ENTRYPOINT [ "sh" ,"deploy/entrypoint.sh"]
