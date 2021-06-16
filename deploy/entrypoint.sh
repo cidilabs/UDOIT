@@ -21,11 +21,11 @@ yarn run encore dev
 # start queue monitor
 /usr/bin/supervisord
 
-#change owner of all files.
-chown -R ssm-user:www-data /var/www/html
-
 # Start Nginx
 service nginx start
 
 #Start PHP-FPM
 php-fpm
+
+#change owner of all files.
+chown -R ssm-user:www-data /var/www/html
