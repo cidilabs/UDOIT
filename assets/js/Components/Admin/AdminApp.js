@@ -126,7 +126,6 @@ class AdminApp extends React.Component {
           handleTrayToggle={this.handleTrayToggle}
           courses={this.state.courses}
           t={this.t}
-          defaultTerm={this.settings.defaultTerm}
         />}
       </View>
     )
