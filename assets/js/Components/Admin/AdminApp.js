@@ -20,9 +20,9 @@ class AdminApp extends React.Component {
 
     this.settings = props.settings
     this.messages = props.messages
-
     if(this.settings) {
       if(this.settings.accounts) {
+
         const accountIds = Object.keys(this.settings.accounts)
         this.settings.accountId = accountIds.shift()
       }
@@ -37,7 +37,7 @@ class AdminApp extends React.Component {
       courses: {},
       filters: {
         accountId: this.settings.accountId,
-        termId: this.settings.termId,
+        termId: this.settings.defaultTerm,
         includeSubaccounts: true,
       },
       accountData: [],
@@ -126,6 +126,7 @@ class AdminApp extends React.Component {
           handleTrayToggle={this.handleTrayToggle}
           courses={this.state.courses}
           t={this.t}
+          defaultTerm={this.settings.defaultTerm}
         />}
       </View>
     )
