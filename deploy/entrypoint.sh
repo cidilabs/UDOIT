@@ -18,6 +18,9 @@ fi
 # compile JS
 yarn run encore dev
 
+#run migrations
+php bin/console --no-interaction doctrine:migrations:migrate
+
 # start queue monitor
 /usr/bin/supervisord
 
