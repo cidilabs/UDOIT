@@ -26,11 +26,6 @@ class AdminApp extends React.Component {
         const accountIds = Object.keys(this.settings.accounts)
         this.settings.accountId = accountIds.shift()
       }
-      if(this.settings.terms) {
-        const termIds = Object.keys(this.settings.terms)
-        termIds.sort()
-        this.settings.termId = termIds.shift()
-      }
     }
     
     this.state = {
