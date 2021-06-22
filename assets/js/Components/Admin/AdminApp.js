@@ -20,16 +20,11 @@ class AdminApp extends React.Component {
 
     this.settings = props.settings
     this.messages = props.messages
-
     if(this.settings) {
       if(this.settings.accounts) {
+
         const accountIds = Object.keys(this.settings.accounts)
         this.settings.accountId = accountIds.shift()
-      }
-      if(this.settings.terms) {
-        const termIds = Object.keys(this.settings.terms)
-        termIds.sort()
-        this.settings.termId = termIds.shift()
       }
     }
     
@@ -37,7 +32,7 @@ class AdminApp extends React.Component {
       courses: {},
       filters: {
         accountId: this.settings.accountId,
-        termId: this.settings.termId,
+        termId: this.settings.defaultTerm,
         includeSubaccounts: true,
       },
       accountData: [],
