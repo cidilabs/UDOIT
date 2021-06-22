@@ -16,8 +16,8 @@ then
     /tmp/newrelic-php5-*/newrelic-install install && \
     rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* && \
     sed -i \
-      -e "s/$NEW_RELIC_LICENSE_KEY/YOUR_LICENSE_KEY/" \
-      -e "s/newrelic.appname = PHP Application/newrelic.appname = $NEW_RELIC_APP_NAME/" \
+      -e "s/"$NEW_RELIC_LICENSE_KEY"/'YOUR_LICENSE_KEY'/" \
+      -e "s/newrelic.appname = 'PHP Application'/newrelic.appname = "$NEW_RELIC_APP_NAME"/" \
       -e "s/;newrelic.daemon.app_connect_timeout =.*/newrelic.daemon.app_connect_timeout=15s/" \
       -e "s/;newrelic.daemon.start_timeout =.*/newrelic.daemon.start_timeout=5s/" \
       /usr/local/etc/php/conf.d/newrelic.ini
