@@ -20,6 +20,15 @@ RUN if [ "$ENVIORNMENT_TYPE" != "local" ] ;then  \
         && unzip awscliv2.zip \
         && ./aws/install\
     ;fi
+
+#Install New Relic
+RUN echo echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | sudo tee /etc/apt/sources.list.d/newrelic.list && \
+    wget -O- https://download.newrelic.com/548C16BF.gpg | sudo apt-key add -
+
+RUN apt-get update -y
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y newrelic-php5
+
 #Install node v14
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get update && apt-get install -y nodejs
