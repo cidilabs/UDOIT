@@ -6,7 +6,9 @@ cd /var/www/html
 # copy localConfig from S3 if you are not on local
 if [ "$ENVIORNMENT_TYPE" != "local" ]
 then
+    set -x
     aws s3 cp s3://cidilabs-devops/udoit3/.env.local.$ENVIORNMENT_TYPE /var/www/html/.env.local
+    set +x
 fi
 
 # run composer install
