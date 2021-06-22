@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
         wget \
         supervisor \
         nginx \
+        gnupg \
     && docker-php-ext-configure gd  \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo_mysql 
@@ -24,10 +25,10 @@ RUN if [ "$ENVIORNMENT_TYPE" != "local" ] ;then  \
 #Install New Relic
 RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list && \
     wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -
-
+    
 RUN apt-get update -y
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y newrelic-php5
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install newrelic-php5
 
 #Install node v14
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
