@@ -42,6 +42,20 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN wget https://get.symfony.com/cli/installer -O - | bash && \
     mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
+#Install New Relic
+RUN \
+  curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.17.1.301-linux.tar.gz | tar -C /tmp -zx && \
+    export NR_INSTALL_USE_CP_NOT_LN=1 && \
+    export NR_INSTALL_SILENT=1 && \
+    /tmp/newrelic-php5-*/newrelic-install install && \
+    rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* && \
+    sed -i \
+      -e 's/"REPLACE_WITH_REAL_KEY"/'"$NEW_RELIC_LICENSE_KEY"'/' \
+      -e 's/newrelic.appname = "PHP Application"/newrelic.appname = '"$NEW_RELIC_APP_NAME"'/' \
+      -e 's/;newrelic.daemon.app_connect_timeout =.*/newrelic.daemon.app_connect_timeout=15s/' \
+      -e 's/;newrelic.daemon.start_timeout =.*/newrelic.daemon.start_timeout=5s/' \
+      /usr/local/etc/php/conf.d/newrelic.ini
+
 #Copy over files
 COPY --chown=ssm-user:www-data . /var/www/html/
 
@@ -49,8 +63,10 @@ WORKDIR /var/www/html
 
 RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader
 
+RUN yarn install
+
 RUN find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 
-RUN yarn install
+RUN chown -R ssm-user:www-data /var/www/html
 
 ENTRYPOINT [ "sh" ,"deploy/entrypoint.sh"]
