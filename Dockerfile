@@ -1,5 +1,11 @@
 FROM php:7.4-fpm
-ARG ENVIORNMENT_TYPE
+ARG ENV_TYPE
+ARG NEW_RELIC_KEY
+ARG NEW_RELIC_NAME
+ENV ENVIORNMENT_TYPE=$ENVIORNMENT_TYPE
+ENV NEW_RELIC_APP_NAME=${NEW_RELIC_NAME}
+ENV NEW_RELIC_LICENSE_KEY=${NEW_RELIC_KEY}
+
 
 #Install dependencies and php extensions
 RUN apt-get update && apt-get install -y \
@@ -50,8 +56,8 @@ RUN \
     /tmp/newrelic-php5-*/newrelic-install install && \
     rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* && \
     sed -i \
-      -e 's/"REPLACE_WITH_REAL_KEY"/"$NEW_RELIC_LICENSE_KEY"/' \
-      -e 's/newrelic.appname = "PHP Application"/newrelic.appname = "$NEW_RELIC_APP_NAME"/' \
+      -e 's/"REPLACE_WITH_REAL_KEY"/'"$NEW_RELIC_LICENSE_KEY"'/' \
+      -e 's/newrelic.appname = "PHP Application"/newrelic.appname = '"$NEW_RELIC_APP_NAME"'/' \
       -e 's/;newrelic.daemon.app_connect_timeout =.*/newrelic.daemon.app_connect_timeout=15s/' \
       -e 's/;newrelic.daemon.start_timeout =.*/newrelic.daemon.start_timeout=5s/' \
       /usr/local/etc/php/conf.d/newrelic.ini
