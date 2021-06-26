@@ -1,5 +1,7 @@
 #!/bin/bash
 
+su ssm-user
+
 # copy localConfig from S3 if you are not on local
 if [ "$ENVIORNMENT_TYPE" != "local" ]
 then

@@ -75,4 +75,4 @@ RUN find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {
 
 RUN chown -R ssm-user:www-data /var/www/html
 
-ENTRYPOINT [ "sh" ,"su -c 'deploy/entrypoint.sh' ssm-user "]
+ENTRYPOINT [ "sh" ,"deploy/entrypoint.sh"]
