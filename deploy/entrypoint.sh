@@ -6,8 +6,6 @@ then
     aws s3 cp s3://cidilabs-devops/udoit3/.env.local.$ENVIORNMENT_TYPE /var/www/html/.env.local
 fi
 
-find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
-
 # compile JS
 yarn run encore dev
 
