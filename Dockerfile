@@ -71,8 +71,4 @@ RUN composer install --no-dev --no-interaction --no-progress --optimize-autoload
 
 RUN yarn install
 
-RUN find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
-
-RUN chown -R ssm-user:www-data /var/www/html
-
 ENTRYPOINT [ "sh" ,"deploy/entrypoint.sh"]

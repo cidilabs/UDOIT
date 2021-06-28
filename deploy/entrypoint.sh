@@ -1,6 +1,6 @@
 #!/bin/bash
 
-su ssm-user
+find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 
 # copy localConfig from S3 if you are not on local
 if [ "$ENVIORNMENT_TYPE" != "local" ]
@@ -22,6 +22,7 @@ service nginx start
 
 #Start PHP-FPM
 php-fpm
+
 
 #change owner of all files.
 chown -R ssm-user:www-data /var/www/html
