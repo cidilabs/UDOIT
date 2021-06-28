@@ -22,4 +22,4 @@ service nginx start
 php-fpm
 
 #change owner of all files.
-chown -R ssm-user:www-data /var/www/html
+#chown -R ssm-user:www-data /var/www/html
