@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /var/www/html
 
 # copy localConfig from S3 if you are not on local
 if [ "$ENVIORNMENT_TYPE" != "local" ]
