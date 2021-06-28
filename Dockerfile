@@ -73,7 +73,7 @@ RUN yarn install
 
 RUN find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 
-RUN chown -R ssm-user:www-data /var/www/html
+# RUN chown -R ssm-user:www-data /var/www/html
 
 COPY deploy/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
