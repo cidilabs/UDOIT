@@ -1,9 +1,11 @@
 #!/bin/bash
+cd /var/www/html
 
-# copy localConfig from S3 if you are not on local
+# copy localConfig from S3 if you are not on local and clear cache
 if [ "$ENVIORNMENT_TYPE" != "local" ]
 then
     aws s3 cp s3://cidilabs-devops/udoit3/.env.local.$ENVIORNMENT_TYPE /var/www/html/.env.local
+    php bin/console cache:clear --env=$ENVIORNMENT_TYPE
 fi
 
 # compile JS
@@ -20,6 +22,3 @@ service nginx start
 
 #Start PHP-FPM
 php-fpm
-
-#change owner of all files.
-chown -R ssm-user:www-data /var/www/html

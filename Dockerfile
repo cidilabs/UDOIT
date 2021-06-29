@@ -1,5 +1,11 @@
 FROM php:7.4-fpm
-ARG ENVIORNMENT_TYPE
+ARG ENV_TYPE
+ARG NEW_RELIC_KEY
+ARG NEW_RELIC_NAME
+ENV ENVIORNMENT_TYPE=$ENVIORNMENT_TYPE
+ENV NEW_RELIC_APP_NAME=${NEW_RELIC_NAME}
+ENV NEW_RELIC_LICENSE_KEY=${NEW_RELIC_KEY}
+
 
 #Install dependencies and php extensions
 RUN apt-get update && apt-get install -y \
@@ -65,8 +71,11 @@ RUN composer install --no-dev --no-interaction --no-progress --optimize-autoload
 
 RUN yarn install
 
-RUN find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
+# RUN find /var/www/html -type f -exec chmod 664 {} + -o -type d -exec chmod 775 {} +
 
-RUN chown -R ssm-user:www-data /var/www/html
+# RUN chown -R ssm-user:www-data /var/www/html
 
-ENTRYPOINT [ "sh" ,"deploy/entrypoint.sh"]
+COPY deploy/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT [ "sh" ,"/usr/local/bin/entrypoint.sh"]
