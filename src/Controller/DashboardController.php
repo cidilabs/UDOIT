@@ -58,11 +58,11 @@ class DashboardController extends AbstractController
         }
 
         $courseRepo = $this->getDoctrine()->getRepository(Course::class);
+        $institution = $user->getInstitution();
         /** @var Course $course */
-        $course = $courseRepo->findOneBy(['lmsCourseId' => $lmsCourseId]);
+        $course = $courseRepo->findOneBy(['lmsCourseId' => $lmsCourseId, 'institution' => $institution]);
 
         if (!$course) {
-            $institution = $user->getInstitution();
             $course = $this->createCourse($institution, $lmsCourseId);
         }
 
