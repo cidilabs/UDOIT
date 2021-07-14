@@ -330,6 +330,13 @@ class LtiController extends AbstractController
                     ->getDoctrine()
                     ->getRepository(Institution::class)
                     ->findOneBy(['lmsDomain' => $domain]);
+
+                if (!$institution) {
+                    $institution = $this
+                    ->getDoctrine()
+                    ->getRepository(Institution::class)
+                    ->findOneBy(['vanityUrl' => $domain]);
+                }
             }
         }
 
