@@ -340,6 +340,10 @@ class LtiController extends AbstractController
             }
         }
 
+        if (empty($institution)) {
+            $this->util->exitWithMessage("No institution found. Please verify your institution data in the database.");
+        }
+
         return $institution;
     }
 
