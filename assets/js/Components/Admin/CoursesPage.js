@@ -18,10 +18,21 @@ class CoursesPage extends React.Component {
       { id: "lastUpdated", text: this.props.t('label.admin.last_updated') },
       { id: "errors", text: this.props.t('label.plural.error') }, 
       { id: "suggestions", text: this.props.t('label.plural.suggestion') }, 
-      { id: "contentFixed", text: this.props.t('label.content_fixed') }, 
+      { id: "contentFixed", text: this.props.t('label.content_fixed') },
       { id: "contentResolved", text: this.props.t('label.content_resolved') }, 
       { id: "filesReviewed", text: this.props.t('label.files_reviewed') }, 
       { id: "action", text: "", alignText: "end" }
+    ];
+
+    this.headersCsv = [
+      { key: "courseName", label: this.props.t('label.admin.course_name') },
+      { key: "accountName", label: this.props.t('label.admin.account_name') },
+      { key: "lastUpdated", label: this.props.t('label.admin.last_updated') },
+      { key: "errors", label: this.props.t('label.plural.error') },
+      { key: "suggestions", label: this.props.t('label.plural.suggestion') },
+      { key: "contentFixed", label: this.props.t('label.content_fixed') },
+      { key: "contentResolved", label: this.props.t('label.content_resolved') },
+      { key: "filesReviewed", label: this.props.t('label.files_reviewed') }
     ];
 
     this.filteredIssues = [];
@@ -135,18 +146,6 @@ class CoursesPage extends React.Component {
     const filteredRows = this.getFilteredContent();
     const csvContent = this.getCsvContent();
 
-    // CSV Headers
-    const headers = [
-      { key: "courseName", label: this.props.t('label.admin.course_name') },
-      { key: "accountName", label: this.props.t('label.admin.account_name') },
-      { key: "lastUpdated", label: this.props.t('label.admin.last_updated') },
-      { key: "errors", label: this.props.t('label.plural.error') },
-      { key: "suggestions", label: this.props.t('label.plural.suggestion') },
-      { key: "contentFixed", label: this.props.t('label.content_fixed') },
-      { key: "contentResolved", label: this.props.t('label.content_resolved') },
-      { key: "filesReviewed", label: this.props.t('label.files_reviewed') }
-    ];
-
     return (
       <View as="div" key="coursesPageFormWrapper" padding="small 0">
         <ContentPageForm 
@@ -175,7 +174,7 @@ class CoursesPage extends React.Component {
         <View as="div" key="coursesCsv" padding="medium 0">
           <CSVLink
               data = {csvContent}
-              headers = {headers}
+              headers = {this.headersCsv}
               filename = {"courses.csv"}
           >
             <Button>
