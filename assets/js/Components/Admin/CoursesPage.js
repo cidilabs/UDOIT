@@ -6,6 +6,7 @@ import { View } from '@instructure/ui-view'
 import Api from '../../Services/Api'
 import { Link } from '@instructure/ui-link'
 import { Spinner } from '@instructure/ui-spinner';
+import { CSVLink, CSVDownload } from "react-csv";
 
 class CoursesPage extends React.Component {
   constructor(props) {
@@ -39,13 +40,37 @@ class CoursesPage extends React.Component {
     this.handleFilter = this.handleFilter.bind(this);
     this.handleCourseLink = this.handleCourseLink.bind(this)
   }
+  getCsvContent() {
+    const courses = Object.values(this.props.courses)
+    let coursesList = [];
+
+    for (const course of courses) {
+      if (!course.report) {
+        continue
+      }
+
+      let row = {
+        courseName: course.title,
+        accountName: course.accountName,
+        lastUpdated: course.lastUpdated,
+        errors: course.report.errors,
+        suggestions: course.report.suggestions,
+        contentFixed: course.report.contentFixed,
+        contentResolved: course.report.contentResolved,
+        filesReviewed: course.report.filesReviewed
+      }
+
+      coursesList.push({...row});
+    }
+
+    return coursesList;
+  }
 
   getFilteredContent() {
     const { searchTerm } = this.state
     const { sortBy, ascending } = this.state.tableSettings 
     const courses = Object.values(this.props.courses)
     const { filters } = this.props
-
     let filteredList = [];
 
     for (const course of courses) {
@@ -78,12 +103,13 @@ class CoursesPage extends React.Component {
         accountName: course.accountName,
         action: <Button key={`reviewButton${course.id}`}
           onClick={() => this.handleScanClick(course)}
-          textAlign="center" 
+          textAlign="center"
           interaction={(course.loading) ? 'disabled' : 'enabled'}
           renderIcon={(course.loading) ? <Spinner renderTitle="Scanning" size="x-small" /> : null}
           >{this.props.t('label.admin.scan')}</Button>
       }
-      filteredList.push({...row, ...course.report})    
+
+      filteredList.push({...row, ...course.report})
     }
 
     filteredList.sort((a, b) => {
@@ -107,6 +133,19 @@ class CoursesPage extends React.Component {
 
   render() {
     const filteredRows = this.getFilteredContent();
+    const csvContent = this.getCsvContent();
+
+    // CSV Headers
+    const headers = [
+      { key: "courseName", label: this.props.t('label.admin.course_name') },
+      { key: "accountName", label: this.props.t('label.admin.account_name') },
+      { key: "lastUpdated", label: this.props.t('label.admin.last_updated') },
+      { key: "errors", label: this.props.t('label.plural.error') },
+      { key: "suggestions", label: this.props.t('label.plural.suggestion') },
+      { key: "contentFixed", label: this.props.t('label.content_fixed') },
+      { key: "contentResolved", label: this.props.t('label.content_resolved') },
+      { key: "filesReviewed", label: this.props.t('label.files_reviewed') }
+    ];
 
     return (
       <View as="div" key="coursesPageFormWrapper" padding="small 0">
@@ -122,16 +161,28 @@ class CoursesPage extends React.Component {
           <View as="div">{this.props.t('label.admin.no_results')}</View>
           : 
           <SortableTable
-            caption={this.props.t('srlabel.courses.table')}
+            caption = {this.props.t('srlabel.courses.table')}
             headers = {this.headers}
             rows = {filteredRows}
             filters = {this.props.filters}
             tableSettings = {this.state.tableSettings}
             handleFilter = {this.handleFilter}
             handleTableSettings = {this.handleTableSettings}
-            t={this.props.t}
+            t = {this.props.t}
           />        
         }
+
+        <View as="div" key="coursesCsv" padding="medium 0">
+          <CSVLink
+              data = {csvContent}
+              headers = {headers}
+              filename = {"courses.csv"}
+          >
+            <Button>
+              Generate CSV
+            </Button>
+          </CSVLink>
+        </View>
       </View>
     )
   }
