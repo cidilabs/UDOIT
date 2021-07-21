@@ -319,11 +319,10 @@ class LtiController extends AbstractController
         $institution = null;
         
         if (!$this->getUser()) {
-            $rawDomain = $this->session->get('lms_api_domain');
-            if (empty($rawDomain)) {
-                $rawDomain = $this->session->get('iss');
+            $domain = $this->session->get('lms_api_domain');
+            if (empty($domain)) {
+                $domain = $this->session->get('iss');
             }
-            $domain = str_replace(['.beta.', '.test.'], '.', str_replace('https://', '', $rawDomain));
 
             if ($domain) {
                 $institution = $this
@@ -336,6 +335,24 @@ class LtiController extends AbstractController
                     ->getDoctrine()
                     ->getRepository(Institution::class)
                     ->findOneBy(['vanityUrl' => $domain]);
+                }
+            }
+
+            if (!$institution) {
+                $domain = str_replace(['.beta.', '.test.'], '.', str_replace('https://', '', $domain));
+
+                if ($domain) {
+                    $institution = $this
+                        ->getDoctrine()
+                        ->getRepository(Institution::class)
+                        ->findOneBy(['lmsDomain' => $domain]);
+
+                    if (!$institution) {
+                        $institution = $this
+                            ->getDoctrine()
+                            ->getRepository(Institution::class)
+                            ->findOneBy(['vanityUrl' => $domain]);
+                    }
                 }
             }
         }
