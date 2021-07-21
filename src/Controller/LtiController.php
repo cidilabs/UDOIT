@@ -323,6 +323,7 @@ class LtiController extends AbstractController
             if (empty($domain)) {
                 $domain = $this->session->get('iss');
             }
+            $domain = str_replace('https://', '', $domain);
 
             if ($domain) {
                 $institution = $this
