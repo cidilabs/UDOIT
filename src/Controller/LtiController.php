@@ -79,7 +79,8 @@ class LtiController extends AbstractController
             $token = JWT::decode($jwt, $publicKey, ['RS256']);
         }
         catch (\Exception $e) {
-            $this->util->exitWithMessage("Token failed to decode. {$jwt}");
+            $this->util->createMessage("SESSION: " . \json_encode($this->session->getData()));
+            $this->util->exitWithMessage("Token failed to decode.");
         }
 
         // Issuer should match previously defined issuer
