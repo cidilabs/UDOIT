@@ -42,7 +42,7 @@ class PhpAllyService {
         return $this->phpAlly->checkMany($html, $this->getRules(), $options);
     }
 
-    public function scanHtml($html, $rules = [])
+    public function scanHtml($html, $rules = [], $institution)
     {
         $html = HtmlService::clean($html);
 
