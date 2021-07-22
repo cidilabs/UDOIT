@@ -170,7 +170,7 @@ class IssuesController extends ApiController
     {
         $apiResponse = new ApiResponse();
 
-        $report = $phpAlly->scanHtml($issue->getHtml(), [$issue->getScanRuleId()]);
+        $report = $phpAlly->scanHtml($issue->getHtml(), [$issue->getScanRuleId()], $issue->getContentItem()->getCourse()->getInstitution());
         $reportIssues = $report->getIssues();
 
         if (empty($reportIssues)) {
