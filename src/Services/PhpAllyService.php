@@ -24,6 +24,7 @@ class PhpAllyService {
     public function scanContentItem(ContentItem $contentItem)
     {
         $html = HtmlService::clean($contentItem->getBody());
+        $institution = $contentItem->getCourse()->getInstitution();
         if (!$html) {
             return;
         }
@@ -32,13 +33,16 @@ class PhpAllyService {
             'backgroundColor' => !empty($_ENV['BACKGROUND_COLOR']) ? $_ENV['BACKGROUND_COLOR'] : '#ffffff',
             'textColor' => !empty($_ENV['TEXT_COLOR']) ? $_ENV['TEXT_COLOR'] : '#000000',
             'vimeoApiKey' => !empty($_ENV['VIMEO_API_KEY']) ? $_ENV['VIMEO_API_KEY'] : '',
-            'youtubeApiKey' => !empty($_ENV['YOUTUBE_API_KEY']) ? $_ENV['YOUTUBE_API_KEY'] : ''
+            'youtubeApiKey' => !empty($_ENV['YOUTUBE_API_KEY']) ? $_ENV['YOUTUBE_API_KEY'] : '',
+            'kalturaApiKey' => !empty($_ENV['KALTURA_API_KEY']) ? $_ENV['KALTURA_API_KEY'] : $this->getDbKalturaCredentials($institution, 'KALTURA_API_KEY'),
+            'kalturaUsername' => !empty($_ENV['KALTURA_USERNAME']) ? $_ENV['KALTURA_USERNAME'] : $this->getDbKalturaCredentials($institution, 'KALTURA_USERNAME')
+
         ];
         
         return $this->phpAlly->checkMany($html, $this->getRules(), $options);
     }
 
-    public function scanHtml($html, $rules = [])
+    public function scanHtml($html, $rules = [], $institution)
     {
         $html = HtmlService::clean($html);
 
@@ -50,7 +54,10 @@ class PhpAllyService {
             'backgroundColor' => !empty($_ENV['BACKGROUND_COLOR']) ? $_ENV['BACKGROUND_COLOR'] : '#ffffff',
             'textColor' => !empty($_ENV['TEXT_COLOR']) ? $_ENV['TEXT_COLOR'] : '#000000',
             'vimeoApiKey' => !empty($_ENV['VIMEO_API_KEY']) ? $_ENV['VIMEO_API_KEY'] : '',
-            'youtubeApiKey' => !empty($_ENV['YOUTUBE_API_KEY']) ? $_ENV['YOUTUBE_API_KEY'] : ''
+            'youtubeApiKey' => !empty($_ENV['YOUTUBE_API_KEY']) ? $_ENV['YOUTUBE_API_KEY'] : '',
+            'kalturaApiKey' => !empty($_ENV['KALTURA_API_KEY']) ? $_ENV['KALTURA_API_KEY'] : $this->getDbKalturaCredentials($institution, 'KALTURA_API_KEY'),
+            'kalturaUsername' => !empty($_ENV['KALTURA_USERNAME']) ? $_ENV['KALTURA_USERNAME'] : $this->getDbKalturaCredentials($institution, 'KALTURA_USERNAME')
+
         ];
         
         return $this->phpAlly->checkMany($html, $rules, $options);
@@ -76,4 +83,12 @@ class PhpAllyService {
         // TODO: To be implemented with the admin section
         return [];
     }
+
+    protected function getDbKalturaCredentials($institution, $value)
+    {
+        $metadata = $institution->getMetadata();
+
+        return isset($metadata[$value]) ? $metadata[$value] : '';
+    }
+
 }
