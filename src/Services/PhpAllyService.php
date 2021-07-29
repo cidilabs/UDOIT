@@ -59,11 +59,12 @@ class PhpAllyService {
     public function getRules()
     {
         $allRules = $this->phpAlly->getRuleIds();
+        $customRules = $this->getCustomRules();
 
         $envExclusions = $this->getEnvExcludedRules();
         $dbExclusions = $this->getDbExcludedRules();
 
-        return array_values(array_diff($allRules, $envExclusions, $dbExclusions));
+        return array_values(array_merge(array_diff($allRules, $envExclusions, $dbExclusions), $customRules));
     }
 
     protected function getEnvExcludedRules()
@@ -71,9 +72,22 @@ class PhpAllyService {
         return array_map('trim', explode(',', $_ENV['PHPALLY_EXCLUDED_RULES']));
     }
 
+    protected function getCustomRules()
+    {
+        if(isset($_ENV['CUSTOM_RULES']) && strlen($_ENV['CUSTOM_RULES']) > 0)
+        {
+            return array_map('trim', explode(',', $_ENV['CUSTOM_RULES']));
+        }
+        else
+        {
+            return [];
+        }
+    }
+
     protected function getDbExcludedRules()
     {
         // TODO: To be implemented with the admin section
         return [];
     }
+
 }

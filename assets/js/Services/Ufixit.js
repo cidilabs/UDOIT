@@ -6,6 +6,7 @@ import HeadingEmptyForm from '../Components/Forms/HeadingEmptyForm'
 import HeadingStyleForm from '../Components/Forms/HeadingStyleForm'
 import TableHeaders from '../Components/Forms/TableHeaders'
 import Video from '../Components/Forms/Video'
+import WordCount from '../Components/Forms/WordCount'
 
 const UfixitForms = {
   AnchorMustContainText: AnchorText,
@@ -19,6 +20,7 @@ const UfixitForms = {
   ImageHasAlt: AltText,
   ImageHasAltDecorative: AltText,
   ParagraphNotUsedAsHeader: HeadingStyleForm,
+  SearchKeyWord: WordCount,
   TableDataShouldHaveTableHeader: TableHeaders,
   TableHeaderShouldHaveScope: TableHeaders,
   ImageAltNotPlaceholder: AltText,
@@ -28,6 +30,7 @@ const UfixitForms = {
 }
 
 export default class Ufixit {
+
   returnIssueForm(activeIssue) {
     if (activeIssue) {
       if (UfixitForms.hasOwnProperty(activeIssue.scanRuleId)) {
