@@ -18,6 +18,7 @@ class FilesPageForm extends React.Component {
   }
 
   render() {
+    const options = ['10', '25', '50'];
     return (
       <Flex alignItems="center" justifyItems="space-between" key="filesPageForm">
         <Flex.Item>
