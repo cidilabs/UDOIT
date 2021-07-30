@@ -67,14 +67,21 @@ class LtiController extends AbstractController
 
         $jwt = $this->session->get('id_token');
         if (!$jwt) {
-            $this->util->exitWithMessage('ID token not received from Canvas.');
+            $sessionStr = \json_encode($this->session->getData());
+            $this->util->exitWithMessage("ID token not received from Canvas. <br/>{$sessionStr}");
         }
 
         // Create token from JWT and public JWKs
         $jwks = $this->getPublicJwks();
         $publicKey = JWK::parseKeySet($jwks);
         JWT::$leeway = 60;
-        $token = JWT::decode($jwt, $publicKey, ['RS256']);
+        try {
+            $token = JWT::decode($jwt, $publicKey, ['RS256']);
+        }
+        catch (\Exception $e) {
+            $this->util->createMessage("SESSION: " . \json_encode($this->session->getData()));
+            $this->util->exitWithMessage("Token failed to decode.");
+        }
 
         // Issuer should match previously defined issuer
         $this->claimMatchOrExit('iss', $this->session->get('iss'), $token->iss);
@@ -279,7 +286,7 @@ class LtiController extends AbstractController
     protected function getPublicJwks()
     {
         $httpClient = HttpClient::create();
-        /* URL will be different for other LMSes */
+        /* URL may be different for other LMSes */
         $url = $this->lmsApi->getLms()->getKeysetUrl();
         $response = $httpClient->request('GET', $url);
 
@@ -319,11 +326,11 @@ class LtiController extends AbstractController
         $institution = null;
         
         if (!$this->getUser()) {
-            $rawDomain = $this->session->get('lms_api_domain');
-            if (empty($rawDomain)) {
-                $rawDomain = $this->session->get('iss');
+            $domain = $this->session->get('lms_api_domain');
+            if (empty($domain)) {
+                $domain = $this->session->get('iss');
             }
-            $domain = str_replace(['.beta.', '.test.'], '.', str_replace('https://', '', $rawDomain));
+            $domain = str_replace('https://', '', $domain);
 
             if ($domain) {
                 $institution = $this
@@ -338,6 +345,24 @@ class LtiController extends AbstractController
                     ->findOneBy(['vanityUrl' => $domain]);
                 }
             }
+
+            if (!$institution) {
+                $domain = str_replace(['.beta.', '.test.'], '.', str_replace('https://', '', $domain));
+
+                if ($domain) {
+                    $institution = $this
+                        ->getDoctrine()
+                        ->getRepository(Institution::class)
+                        ->findOneBy(['lmsDomain' => $domain]);
+
+                    if (!$institution) {
+                        $institution = $this
+                            ->getDoctrine()
+                            ->getRepository(Institution::class)
+                            ->findOneBy(['vanityUrl' => $domain]);
+                    }
+                }
+            }
         }
 
         if (empty($institution)) {
@@ -349,7 +374,7 @@ class LtiController extends AbstractController
 
     protected function createUser()
     {
-        $domain = $this->session->get('iss');
+        $domain = $this->session->get('lms_api_domain');
         $userId = $this->session->get('lms_user_id');
         $institution = $this->getInstitutionFromSession();
         $date = new \DateTime();
@@ -383,7 +408,7 @@ class LtiController extends AbstractController
         if ($this->session->get('userId')) {
             return;
         } else {
-            $domain = $this->session->get('iss');
+            $domain = $this->session->get('lms_api_domain');
             $userId = $this->session->get('lms_user_id');
 
             if ($domain && $userId) {
