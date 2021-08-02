@@ -275,6 +275,11 @@ class LtiController extends AbstractController
                 $this->session->set($key, $val);
             }
 
+            if (!$this->session->get('lms_api_domain')) {
+                $domain = $this->session->get('iss');
+                $this->session->set('lms_api_domain', str_replace('https://', '', $domain));
+            }
+
             $this->getDoctrine()->getManager()->flush();
         } catch (\Exception $e) {
             print_r($e->getMessage());
@@ -326,11 +331,7 @@ class LtiController extends AbstractController
         $institution = null;
         
         if (!$this->getUser()) {
-            $domain = $this->session->get('lms_api_domain');
-            if (empty($domain)) {
-                $domain = $this->session->get('iss');
-            }
-            $domain = str_replace('https://', '', $domain);
+            $domain = $this->util->getCurrentDomain();
 
             if ($domain) {
                 $institution = $this
@@ -347,19 +348,19 @@ class LtiController extends AbstractController
             }
 
             if (!$institution) {
-                $domain = str_replace(['.beta.', '.test.'], '.', str_replace('https://', '', $domain));
+                $cleanedDomain = str_replace(['.beta.', '.test.'], '.', $domain);
 
-                if ($domain) {
+                if ($cleanedDomain) {
                     $institution = $this
                         ->getDoctrine()
                         ->getRepository(Institution::class)
-                        ->findOneBy(['lmsDomain' => $domain]);
+                        ->findOneBy(['lmsDomain' => $cleanedDomain]);
 
                     if (!$institution) {
                         $institution = $this
                             ->getDoctrine()
                             ->getRepository(Institution::class)
-                            ->findOneBy(['vanityUrl' => $domain]);
+                            ->findOneBy(['vanityUrl' => $cleanedDomain]);
                     }
                 }
             }
