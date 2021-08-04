@@ -152,7 +152,11 @@ class CoursesPage extends React.Component {
           handleSearchTerm={this.handleSearchTerm} 
           handleTrayToggle={this.props.handleTrayToggle} 
           searchTerm={this.state.searchTerm}
-          t={this.props.t} />
+          t={this.props.t}
+          handleTableSettings={this.handleTableSettings}
+          tableSettings={this.state.tableSettings}
+          />
+          
         <View as="div" key="filterTags">
           {this.props.renderFilterTags()}
         </View>
@@ -197,6 +201,7 @@ class CoursesPage extends React.Component {
         sortBy: 'courseName',
         ascending: true,
         pageNum: 0,
+        rowsPerPage: (localStorage.getItem('rowsPerPage')) ? localStorage.getItem('rowsPerPage') : '10'
       },
     })
   }
