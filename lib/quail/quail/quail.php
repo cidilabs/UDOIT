@@ -229,7 +229,7 @@ class quail {
 			$path = dirname($absolute_url['path']);
 		}
 
-		if ($relative{0} == '/') {
+		if ($relative[0] == '/') {
 		    $c_parts = array_filter(explode('/', $relative));
 		} else {
 			$a_parts = array_filter(explode('/', $path));
@@ -393,7 +393,7 @@ class quail {
 	*	and the guideline object.
 	*	@param string $course_locale The locale/language of the Canvas course
 	*/
-	function runCheck($options = null, $course_locale)
+	function runCheck($options = null, $course_locale = 'en')
 	{
 		$this->prepareDOM();
 
@@ -717,7 +717,7 @@ class quailGuideline {
 	*	@param string $course_locale The locale/language of the Canvas course
 	*/
 
-	function __construct(&$dom, &$css, &$path, $arg = null, $domain = 'en', $cms_mode = false, $report_type = 'all', $course_locale)
+	function __construct(&$dom, &$css, &$path, $arg = null, $domain = 'en', $cms_mode = false, $report_type = 'all', $course_locale = 'en')
 	{
 		$this->dom = &$dom;
 		$this->css = &$css;
