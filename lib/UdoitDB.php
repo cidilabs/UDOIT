@@ -133,9 +133,10 @@ class UdoitDB
             static::$last_test_time = time();
             static::$pdo = $db;
         } catch (\RuntimeException $e) {
-            $logger->addError("Database Connection Error: ".$e->getMessage());
+            $logger->addError("Database Connection Error");
+            $logger->addError($e->getMessage());
             echo('Database Connection error');
-            exit(1);
+            exit();
         }
     }
 }

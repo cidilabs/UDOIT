@@ -11,12 +11,6 @@
                 "url": "url_value"
             }
         ],
-        "error_summary": [],
-        "suggestion_summary": {
-            "Image elements should have an \"alt\" attribute": {
-                "Count": 1
-            }
-        },
         "files": {
             "title": "files",
             "items": [

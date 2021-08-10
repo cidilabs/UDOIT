@@ -21,24 +21,19 @@ return [
             ',
         ],
         [
-            'name'      => 'videosEmbeddedOrLinkedNeedCaptions',
-            'title'     => 'No <a href="http://webaim.org/techniques/captions/">closed captions</a> found in YouTube or Vimeo video.',
-            'desc'      => '<p>Closed captions should be included in the video to provide dialogue to users who are hearing impaired.  (Please note that videos that have been removed, deleted, or are Unlisted will also cause this error, and will need to be manually verified.)</p>',
+            'name'      => 'imgHasAlt',
+            'title'     => 'No Alternative Text found.',
+            'desc'      => '<p>Alternative Text (Alt Text) is an alternative (non-visual) way to describe the meaning of an image. Please provide a brief description of the image for a <a href="http://en.wikipedia.org/wiki/Screen_reader">screen reader</a> user. Note: It should not be the image file name.</p>',
             'resources' => [
-                '<a href="https://support.google.com/youtube/answer/2734796?hl=en">Adding Captions to Youtube</a>',
-                '<a href="https://vimeo.zendesk.com/hc/en-us/articles/224968828-Captions-and-subtitles">Captions and subtitles in Vimeo</a>',
-                'WCAG Standard: <a href="http://www.w3.org/TR/WCAG20/#media-equiv-captions">1.2.2</a>',
+                'UCF CDL: <a href="https://cdl.ucf.edu/teach/accessibility/text/">Text Formatting and Document Organization</a>',
+                'WCAG Standard: <a href="http://www.w3.org/TR/WCAG20/#text-equiv-all">1.1.1</a>',
             ],
-            'example'   => '',
-        ],
-        [
-            'name'      => 'videoProvidesCaptions',
-            'title'     => 'No <a href="http://webaim.org/techniques/captions/">closed captions</a> found in media comment.',
-            'desc'      => '<p>Closed captions should be included in the video to provide dialogue to users who are hearing impaired.</p>',
-            'resources' => [
-                'WCAG Standard: <a href="http://www.w3.org/TR/WCAG20/#media-equiv-captions">1.2.2</a>',
-            ],
-            'example'   => '',
+            'example'   => '
+                <p class="text-danger">Incorrect</p>
+                <pre>'.htmlspecialchars('<img src="dog.jpg">').'</pre>
+                <p class="text-success">Correct</p>
+                <pre>'.htmlspecialchars('<img src="dog.jpg" alt="A photograph of a dog">').'</pre>
+            ',
         ],
         [
             'name'      => 'imgHasAltDeco',
@@ -118,13 +113,6 @@ return [
             ',
         ],
         [
-            'name'      => 'tableHasFixedWidth',
-            'title'     => 'Table should not have fixed width',
-            'desc'      => '<p>Tables with fixed widths (or containing cells with fixed widths) might display incorrectly on tablets and phones, running off the side of the page and creating inaccessible content. Try viewing this page on a mobile device, and remove the portions with a fixed width if necessary.</p>',
-            'resources' => [],
-            'example'   => '',
-        ],
-        [
             'name'      => 'tableThShouldHaveScope',
             'title'     => 'No row or column scopes declarations found in headers of the table',
             'desc'      => '<p>Scope declarations in headers organize and define table data by row/column for sighted and <a href="http://en.wikipedia.org/wiki/Screen_reader">screen reader</a> users.</p>',
@@ -156,29 +144,6 @@ return [
             ',
         ],
         [
-            'name'      => 'headersHaveText',
-            'title'     => 'Headings should contain text',
-            'desc'      => '<p>Sighted and <a href="http://en.wikipedia.org/wiki/Screen_reader">screen reader</a> users depend on headings to organize the content on the page. Headings should not be empty and should represent an accurate outline of the content</p>',
-            'resources' => [
-                'Using H1-H6 to Identify Headings <a href="http://www.w3.org/TR/WCAG20-TECHS/H42.html">Article</a>',
-            ],
-            'example'   => '
-                <p class="text-danger">Incorrect</p>
-                <pre><code>'.htmlspecialchars('<h1></h1>').'</code></pre>
-                <p class="text-success">Correct</p>
-                <pre><code>'.htmlspecialchars('<h1>Title</h1>').'</code></pre>
-            ',
-        ],
-        [
-            'name'      => 'headingLevelSkipped',
-            'title'     => 'Heading levels should not be skipped',
-            'desc'      => '<p>Nest headings by their rank (or level). The most important heading has the rank 1 (h1), the least important heading rank 6 (h6). Headings with an equal or higher rank start a new section, headings with a lower rank start new subsections that are part of the higher ranked section. Skipping heading ranks can be confusing and should be avoided where possible</p>',
-            'resources' => [
-                'Heading ranks <a href="https://www.w3.org/WAI/tutorials/page-structure/headings/#:~:text=Skipping%20heading%20ranks%20can%20be,it%20closes%20the%20previous%20section.">Article</a>',
-            ],
-            'example'   => '',
-        ],
-        [
             'name'      => 'objectMustContainText',
             'title'     => 'Multimedia objects should have text equivalents (e.g., transcripts).',
             'desc'      => '<p>Multimedia objects should be accompanied by a link to a transcript of the content.</p>',
@@ -195,27 +160,23 @@ return [
     ],
     'suggestion' => [
         [
-            'name'      => 'imgHasAlt',
-            'title'     => 'Image elements should have an "alt" attribute',
-            'desc'      => '<p>Alternative Text (Alt Text) is an alternative (non-visual) way to describe the meaning of an image. Please provide a brief description of the image for a <a href="http://en.wikipedia.org/wiki/Screen_reader">screen reader</a> user. Note: It should not be the image file name.</p>',
-            'resources' => [
-                'UCF CDL: <a href="https://cdl.ucf.edu/teach/accessibility/text/">Text Formatting and Document Organization</a>',
-                'WCAG Standard: <a href="http://www.w3.org/TR/WCAG20/#text-equiv-all">1.1.1</a>',
-            ],
-            'example'   => '
-                <p class="text-danger">Incorrect</p>
-                <pre>'.htmlspecialchars('<img src="dog.jpg">').'</pre>
-                <p class="text-success">Correct</p>
-                <pre>'.htmlspecialchars('<img src="dog.jpg" alt="A photograph of a dog">').'</pre>
-            ',
-        ],
-        [
             'name'      => 'imgGifNoFlicker',
-            'title'     => 'Avoid using flickering animated GIFs',
+            'title'     => 'Avoid the use of animated GIF’s',
             'desc'      => '<p>Animated GIFs may cause seizures if they flash more than 3 times per second. A recommendation is to use an alternative format to deliver the content.</p>',
             'resources' => [
                 'WebAIM: <a href="http://webaim.org/techniques/images/#seizures">Accessible Images</a>',
                 'WCAG Standard: <a href="http://www.w3.org/TR/WCAG20/#seizure-does-not-violate">2.3.1</a>',
+            ],
+            'example'   => '',
+        ],
+        [
+            'name'      => 'videosEmbeddedOrLinkedNeedCaptions',
+            'title'     => 'No <a href="http://webaim.org/techniques/captions/">closed captions</a> found.',
+            'desc'      => '<p>Closed captions should be included in the video to provide dialogue to users who are hearing impaired.  (Please note that videos that have been removed, deleted, or are Unlisted will also cause this error, and will need to be manually verified.)</p>',
+            'resources' => [
+                '<a href="https://support.google.com/youtube/answer/2734796?hl=en">Adding Captions to Youtube</a>',
+                '<a href="http://guides.instructure.com/m/4152/l/98632-how-do-i-create-captions-for-new-or-uploaded-videos-in-canvas">Creating Captions for Video Uploaded to Canvas</a>',
+                'WCAG Standard: <a href="http://www.w3.org/TR/WCAG20/#media-equiv-captions">1.2.2</a>',
             ],
             'example'   => '',
         ],
@@ -261,24 +222,11 @@ return [
             ',
         ],
         [
-            'name'      => 'redirectedLink',
-            'title'     => 'Redirected link found',
-            'desc'      => '<p>When the address of a web page changes, the content owner may set up a redirect so that the link is not broken. However, that redirect could go away in the future, so it\'s best to update the link now. UFIXIT has been populated with the new URL automatically. If the UFIXIT field is empty, we were unable to fetch the new URL, and you will need to manually visit the link to discover the new URL.</p>',
-            'resources' => [],
-            'example'   => '',
-        ],
-        [
-            'name'      => 'brokenLink',
-            'title'     => 'Broken link detected',
-            'desc'      => '<p>The following link is no longer functioning. This could be temporary, so please verify and repair the link if necessary.</p>',
-            'resources' => [],
-            'example'   => '',
-        ],
-        [
             'name'      => 'objectTextUpdatesWhenObjectChanges',
             'title'     => 'The text equivalents (e.g., transcripts and/or captions) for embedded content should update when content changes.',
             'desc'      => '',
-            'resources' => ['WCAG Standard: <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/media-equiv.html">1.2</a>', ],
+            'resources' => ['WCAG Standard: <a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/media-equiv.html">1.2</a>'],
+            'example'   => '',
         ],
         [
             'name'      => 'objectTagDetected',
@@ -288,18 +236,18 @@ return [
             'example'   => '',
         ],
         [
-            'name'      => 'objectShouldHaveLongDescription',
-            'title'     => 'An object might require a long description.',
-            'desc'      => 'Objects might require a long description, especially if their content is complicated.',
-            'resources' => [],
-            'example'   => '',
-        ],
-        [
-            'name'      => 'objectInterfaceIsAccessible',
-            'title'     => 'Interfaces within objects should be accessible.',
-            'desc'      => 'Object content should be assessed for accessibility. Objects cannot be checked using automated tools, this should be reviewed manually.',
-            'resources' => [],
-            'example'   => '',
+            'name'      => 'headersHaveText',
+            'title'     => 'Headings should contain text',
+            'desc'      => '<p>Sighted and <a href="http://en.wikipedia.org/wiki/Screen_reader">screen reader</a> users depend on headings to organize the content on the page. Headings should not be empty and should represent an accurate outline of the content</p>',
+            'resources' => [
+                'Using H1-H6 to Identify Headings <a href="http://www.w3.org/TR/WCAG20-TECHS/H42.html">Article</a>',
+            ],
+            'example'   => '
+                <p class="text-danger">Incorrect</p>
+                <pre><code>'.htmlspecialchars('<h1></h1>').'</code></pre>
+                <p class="text-success">Correct</p>
+                <pre><code>'.htmlspecialchars('<h1>Title</h1>').'</code></pre>
+            ',
         ],
         [
             'name'      => 'noHeadings',

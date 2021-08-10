@@ -5,6 +5,12 @@ global $db_type;
 if ('sqlite' === $db_type || 'test' === $db_type) {
     // SQLITE (mostly for testing)
     $queries = [
+        [
+            'sql' => 'ALTER TABLE users CHANGE id id BIGINT(20)',
+        ],
+        [
+            'sql' => 'ALTER TABLE reports CHANGE user_id user_id BIGINT(20)',
+        ],
     ];
 }
 
@@ -32,7 +38,7 @@ if ('mysql' === $db_type) {
     ];
 }
 
-echo ("Updating `users` and `reports` tables to handle larger user IDs for Canvas trusted accounts.\r\n");
+echo("Updating `users` and `reports` tables to handle larger user IDs for Canvas trusted accounts.\r\n");
 
 //  run every query
 foreach ($queries as $query) {

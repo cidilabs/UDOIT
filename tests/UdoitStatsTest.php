@@ -21,19 +21,19 @@
 class UdoitStatsTest extends BaseTest
 {
 
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         require_once(__DIR__.'/PDOMock.php');
         require_once(__DIR__.'/PDOStatementMock.php');
     }
 
-    public function setUp(): void
+    public function setUp()
     {
         Mockery::close();
         self::setPrivateStaticPropertyValue('UdoitDB', 'dbClass', 'PDOMock');
     }
 
-    public function tearDown(): void
+    public function tearDown()
     {
         Mockery::close();
         self::clearMockDBConnection();

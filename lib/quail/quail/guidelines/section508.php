@@ -50,8 +50,6 @@ class Section508Guideline extends quailGuideline{
 		// 'scriptInBodyMustHaveNoscript',
 		'aLinksToMultiMediaRequireTranscript',
 		'aSuspiciousLinkText',
-		'redirectedLink',
-		'brokenLink',
 		// 'imgNotReferredToByColorAlone',
 		// 'appletsDoneUseColorAlone',
 		// 'inputDoesNotUseColorAlone',
@@ -60,7 +58,6 @@ class Section508Guideline extends quailGuideline{
 		// 'imgMapAreasHaveDuplicateLink',
 		// 'imgWithMapHasUseMap',
 		'tableDataShouldHaveTh',
-		'tableHasFixedWidth',
 		'tableThShouldHaveScope',
 		// 'framesHaveATitle',
 		// 'frameTitlesDescribeFunction',
@@ -96,7 +93,6 @@ class Section508Guideline extends quailGuideline{
 		// 'documentAutoRedirectNotUsed',
 		// 'documentMetaNotUsedWithTimeout',
 		// 'headersHaveText',
-		'headingLevelSkipped',
 	);
 }
 /*@}*/

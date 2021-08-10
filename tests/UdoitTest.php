@@ -20,12 +20,12 @@
 
 class UdoitTest extends BaseTest
 {
-    public function setUp(): void
+    public function setUp()
     {
         Mockery::close();
     }
 
-    public function tearDown(): void
+    public function tearDown()
     {
         UdoitDB::disconnect();
         Mockery::close();
@@ -256,7 +256,7 @@ class UdoitTest extends BaseTest
         self::assertArrayHasKey('time', $result);
         self::assertArrayHasKey('unscannable', $result);
 
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertEmpty($result['items']);
     }
@@ -284,7 +284,7 @@ class UdoitTest extends BaseTest
 
         $result = Udoit::getCourseContent('', '', '', 'announcements', 1);
 
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertCount(1, $result['items']);
 
@@ -322,7 +322,7 @@ class UdoitTest extends BaseTest
 
         $result = Udoit::getCourseContent('', '', '', 'assignments', 1);
 
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertCount(1, $result['items']);
 
@@ -360,7 +360,7 @@ class UdoitTest extends BaseTest
 
         $result = Udoit::getCourseContent('', '', '', 'discussions', 1);
 
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertCount(1, $result['items']);
 
@@ -401,12 +401,7 @@ class UdoitTest extends BaseTest
                     'id' => 'id_value',
                     'url' => 'url_value',
                     'html_url' => 'url_value',
-                    'folder_id' => '5',
                 ],
-            ], // Folder
-            (object) [
-                    'id' => '5',
-                    'full_name' => 'testfolder',
             ],
             [],
         ];
@@ -421,7 +416,7 @@ class UdoitTest extends BaseTest
 
         $result = Udoit::getCourseContent('', '', '', 'files', 1);
 
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertCount(1, $result['unscannable']);
         self::assertEmpty($result['items']);
 
@@ -462,7 +457,7 @@ class UdoitTest extends BaseTest
 
         $result = Udoit::getCourseContent('', '', '', 'files', 1);
 
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertCount(1, $result['items']);
 
@@ -512,7 +507,7 @@ class UdoitTest extends BaseTest
 
         $result = Udoit::getCourseContent('', '', '', 'pages', 1);
 
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertCount(1, $result['items']);
 
@@ -558,7 +553,7 @@ class UdoitTest extends BaseTest
 
         $result = Udoit::getCourseContent('', '', '', 'modules', 1);
 
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertEmpty($result['items']);
     }
@@ -655,7 +650,8 @@ class UdoitTest extends BaseTest
 
         $result = Udoit::getCourseContent('key', 'apiurl', 'course', 'syllabus', 1);
 
-        self::assertTrue(empty($result['module_urls']));
+
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertCount(1, $result['items']);
 
@@ -689,18 +685,8 @@ class UdoitTest extends BaseTest
     public function testScanContentReportsErrors()
     {
         $content_items = [
-            [
-                'id' => 'id_value',
-                'content' => '<img src="http://url.com/image.jpg"/>',
-                'title' => 'title_value',
-                'url' => 'url_value',
-            ],
-            [
-                'id' => 'id_value',
-                'content' => '<img src="http://url.com/image.jpg"/>',
-                'title' => 'title_value',
-                'url' => 'url_value',
-            ],
+            ['content' => '<img src="http://url.com/image.jpg"/>'],
+            ['content' => '<img src="http://url.com/image.jpg"/>'],
         ];
 
         $result = Udoit::scanContent($content_items, 'all', 'en');
@@ -834,7 +820,7 @@ class UdoitTest extends BaseTest
         self::assertArrayHasKey('unscannable', $result);
 
         self::assertEmpty($result['items']);
-        self::assertTrue(empty($result['module_urls']));
+        self::assertEmpty($result['module_urls']);
         self::assertEmpty($result['unscannable']);
         self::assertEquals(0, $result['amount']);
     }
@@ -859,8 +845,7 @@ class UdoitTest extends BaseTest
                 "filename": "filename.pdf",
                 "id": "id_value",
                 "url": "url_value",
-                "html_url": "url_value",
-                "folder_id": 5
+                "html_url": "url_value"
             }
         ]';
 
@@ -868,11 +853,6 @@ class UdoitTest extends BaseTest
             [], // We don't care about Modules here
             json_decode($api_body), // one HTML file and one unscannable file
             '<img src="http://url.com/image.jpg"/>', // Contents of the HTML file
-            // Folder
-            (object) [
-                'id' => '5',
-                'full_name' => 'testfolder',
-            ],
             [],
         ];
 
@@ -888,7 +868,7 @@ class UdoitTest extends BaseTest
         self::assertArrayHasKey('scan_results', $result);
 
         self::assertEquals(0, $result['total_results']['errors']);
-        self::assertTrue(empty($result['total_results']['warnings']));
+        self::assertEquals(0, $result['total_results']['warnings']);
         self::assertEquals(1, $result['total_results']['suggestions']); // This should be its own test
 
         $res = $result['scan_results'];
@@ -970,7 +950,7 @@ class UdoitTest extends BaseTest
         // make sure the totals we expect to see are calculated
         self::assertArrayHasKey('total_results', $result);
         self::assertEquals(0, $result['total_results']['errors']);
-        self::assertTrue(empty($result['total_results']['warnings']));
+        self::assertEquals(0, $result['total_results']['warnings']);
         self::assertEquals(2, $result['total_results']['suggestions']);
 
         $res = $result['scan_results'];

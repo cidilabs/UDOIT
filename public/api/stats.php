@@ -90,14 +90,12 @@ switch ($_GET['stat']) {
         foreach ($results as $result) {
             $report = json_decode($result['report_json'], true);
 
-            if (isset($report['error_summary'])) {
-                foreach ($report['error_summary'] as $error => $value) {
-                    if (!isset($errors_count[$error])) {
-                        $errors_count[$error] = $value['count'];
-                        continue;
-                    }
-                    $errors_count[$error] += $value['count'];
+            foreach ($report['error_summary'] as $error => $value) {
+                if (!isset($errors_count[$error])) {
+                    $errors_count[$error] = $value['count'];
+                    continue;
                 }
+                $errors_count[$error] += $value['count'];
             }
         }
 

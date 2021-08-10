@@ -74,10 +74,11 @@ class UdoitJob
     {
         global $background_job_expire_time;
         global $db_job_queue_table;
+        $time = 20;
         switch (UdoitDB::$type) {
             case 'pgsql':
             case 'mysql':
-                $sql = "UPDATE {$db_job_queue_table} SET status = 'expired' WHERE date_created < (now() - INTERVAL '{$background_job_expire_time}' MINUTE)";
+                $sql = "UPDATE {$db_job_queue_table} SET status = 'expired' WHERE date_created < (now() - INTERVAL {$background_job_expire_time} MINUTE)";
                 break;
 
             case 'test':
@@ -279,11 +280,10 @@ class UdoitJob
             return false; // return false if theres nothing
         }
 
-        if ($job = $query->fetchObject()) {
-            $sql = "UPDATE {$db_job_queue_table} SET status = 'running' WHERE id = '{$job->id}' AND status = 'new'";
-            UdoitDB::query($sql);
-            UdoitDB::commit();
-        }
+        $job = $query->fetchObject();
+        $sql = "UPDATE {$db_job_queue_table} SET status = 'running' WHERE id = '{$job->id}' AND status = 'new'";
+        UdoitDB::query($sql);
+        UdoitDB::commit();
 
         return $job;
     }

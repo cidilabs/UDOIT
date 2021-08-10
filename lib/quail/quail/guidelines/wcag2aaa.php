@@ -75,7 +75,6 @@ class Wcag2aaaGuideline extends quailGuideline
 		// 'fileLabelIsNearby',
 		// 'radioLabelIsNearby',
 		'tableDataShouldHaveTh',
-		'tableHasFixedWidth',
 		'tableThShouldHaveScope',
 		// 'tableLayoutDataShouldNotHaveTh',
 		// 'tableUsesCaption',
@@ -138,8 +137,6 @@ class Wcag2aaaGuideline extends quailGuideline
 		// 'documentTitleDescribesDocument',
 		'aMustContainText',
 		'aSuspiciousLinkText',
-		'redirectedLink',
-		'brokenLink',
 		// 'siteMap',
 		// 'headerH1',
 		// 'headerH2',
@@ -184,8 +181,7 @@ class Wcag2aaaGuideline extends quailGuideline
 		'videoProvidesCaptions',
 		'videosEmbeddedOrLinkedNeedCaptions',
 		'videoUnlistedOrNotFound',
-		'videoCaptionsAreCorrectLanguage',
-		'headingLevelSkipped',
+		'videoCaptionsAreCorrectLanguage'
 	];
 }
 /*@}*/

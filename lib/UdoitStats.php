@@ -52,8 +52,6 @@ class UdoitStats
             $date_format = "DATE_FORMAT(date_run, '%Y-%m-%d') AS \"Date Run\", ";
         } elseif ('pgsql' == $db_type) {
             $date_format = "TO_CHAR(date_run, 'Month dd, YYYY HH:MI:SS AM TZ') AS \"Date Run\", ";
-        } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-            $date_format = "DATE(date_run) AS \"Date Run\", ";
         }
         $query = "SELECT '' AS \"Term\", "
                 ."$db_reports_table.course_id AS \"Course (ID)\", "
@@ -111,9 +109,6 @@ class UdoitStats
         } elseif ('pgsql' == $db_type) {
             $date_order = "date_run";
             $limit_format = "OFFSET $offset ROWS FETCH NEXT $number_items ROWS ONLY\n";
-        } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-            $date_order = "DATE(date_run)";
-            $limit_format = "LIMIT $offset, $number_items\n";
         }
         switch ($order_by) {
             case 'mostrecent':
@@ -269,9 +264,6 @@ class UdoitStats
         } elseif ('pgsql' == $db_type) {
             $date_format = "TO_CHAR(date_created, 'Month dd, YYYY HH:MI:SS AM TZ') AS \"Date Created\", ";
             $limit_format = "OFFSET $offset ROWS FETCH NEXT $number_items ROWS ONLY\n";
-        } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-            $date_format = "DATE(date_created) AS \"Date Created\", ";
-            $limit_format = "LIMIT $offset, $number_items\n";
         }
         $query = "SELECT $db_user_table.id as \"User ID\", "
                 ."COUNT($db_reports_table.user_id) AS \"Number of Scans\", "
@@ -335,8 +327,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%Y-%m-%d\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'Month dd, YYYY\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'DATE(date_created)';
                 }
                 break;
 
@@ -345,8 +335,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%X-%V\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'Wth "W"eek of Month\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'STRFTIME(\'%Y-%W\', date_created)';
                 }
                 break;
 
@@ -355,8 +343,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%Y-%m\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'Month YYYY\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'STRFTIME(\'%Y-%m\', date_created)';
                 }
                 break;
 
@@ -365,8 +351,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%Y\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'YYYY\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'STRFTIME(\'%Y\', date_created)';
                 }
                 break;
 
@@ -375,8 +359,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%Y-%m-%d\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'Month dd, YYYY\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'DATE(date_created)';
                 }
         }
 
@@ -395,8 +377,6 @@ class UdoitStats
             $limit_format = "LIMIT $offset, $number_items";
         } else if ('pgsql' == $db_type) {
             $limit_format = "OFFSET $offset ROWS FETCH NEXT $number_items ROWS ONLY";
-        } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-            $limit_format = "LIMIT $offset, $number_items\n";
         }
 
         $query .= "GROUP BY {$date_format} ORDER BY {$date_format} {$limit_format}";
@@ -437,8 +417,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%Y-%m-%d\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'Month dd, YYYY\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'DATE(date_created)';
                 }
                 break;
 
@@ -447,8 +425,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%X-%V\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'Wth "W"eek of Month\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'STRFTIME(\'%Y-%W\', date_created)';
                 }
                 break;
 
@@ -457,8 +433,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%Y-%m\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'Month YYYY\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'STRFTIME(\'%Y-%m\', date_created)';
                 }
                 break;
 
@@ -467,8 +441,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%Y\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'YYYY\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'STRFTIME(\'%Y\', date_created)';
                 }
                 break;
 
@@ -477,8 +449,6 @@ class UdoitStats
                     $date_format = 'DATE_FORMAT(date_created, \'%Y-%m-%d\')';
                 } elseif ('pgsql' == $db_type) {
                     $date_format = 'TO_CHAR(date_created, \'Month dd, YYYY\')';
-                } elseif ('sqlite' === $db_type || 'test' === $db_type) {
-                    $date_format = 'DATE(date_created)';
                 }
         }
 

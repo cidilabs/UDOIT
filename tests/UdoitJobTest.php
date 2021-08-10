@@ -20,18 +20,18 @@
 
 class UdoitJobTest extends BaseTest
 {
-    public function setUp(): void
+    public function setUp()
     {
         Mockery::close();
         global $db_type, $dsn, $db_user, $db_password;
         UdoitDB::setup($db_type, $dsn, $db_user, $db_password);
-        UdoitDB::query("DROP TABLE IF EXISTS users");
-        UdoitDB::query("DROP TABLE IF EXISTS reports");
-        UdoitDB::query("DROP TABLE IF EXISTS job_queue");
+        UdoitDB::query("DROP table users");
+        UdoitDB::query("DROP table reports");
+        UdoitDB::query("DROP table job_queue");
         include(__DIR__.'/../bin/run_database_migrations.php');
     }
 
-    public function tearDown(): void
+    public function tearDown()
     {
         self::setPrivateStaticPropertyValue('UdoitUtils', 'instance', null);
         UdoitDB::disconnect();
@@ -66,7 +66,7 @@ class UdoitJobTest extends BaseTest
         switch (UdoitDB::$type) {
             case 'pgsql':
             case 'mysql':
-                $sql = "UPDATE job_queue SET date_created = (now() - INTERVAL '{$time}' MINUTE)  where id = '1'";
+                $sql = "UPDATE job_queue SET date_created = (now() - INTERVAL {$time} MINUTE)  where id = '1'";
                 break;
 
             case 'test':
@@ -271,7 +271,7 @@ class UdoitJobTest extends BaseTest
         UdoitDB::query("INSERT into users (api_key, refresh_token) VALUES ('sample_api_key', 'refresh_token')");
         UdoitJob::$background_worker_enabled = false;
 
-        // add 2 scans for fake test data
+        // add 2 scanns for fake test data
         // setting scan_item to test will bypass all the api fetching that normally happens
         UdoitJob::addJobToQueue('scan', 1, 'job_4', static::mockJobData());
         UdoitJob::addJobToQueue('scan', 1, 'job_4', static::mockJobData());
@@ -347,14 +347,11 @@ class UdoitJobTest extends BaseTest
     {
        // common data object
         return [
-            'course_title'  => 'course title',
-            'base_uri'      => 'http://baseurl.com',
-            'title'         => 'context title',
-            'course_id'     => '5555',
-            'scan_item'     => 'test',
-            'course_locale' => 'en',
-            'report_type'   => "all",
-            'flag'          => '1',
+            'course_title' => 'course title',
+            'base_uri'     => 'http://baseurl.com',
+            'title'        => 'context title',
+            'course_id'    => '5555',
+            'scan_item'    => 'test',
         ];
     }
 }
