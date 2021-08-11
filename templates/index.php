@@ -148,7 +148,7 @@ $this->layout('template', $settings);
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> 
 					<div class="col-sm-12 col-md-4 course_submit_container">
 						<button type="submit" id="course_submit" name="course_submit" class="btn btn-block btn-lg btn-success submit">Scan This Course</button>
 

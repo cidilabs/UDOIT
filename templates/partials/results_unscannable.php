@@ -30,7 +30,7 @@ global $unscannable_file_types;
 		<button class="btn btn-xs btn-default btn-toggle pull-left no-print margin-right-small">
 			<span class="glyphicon glyphicon-plus"></span>
 			<span class="sr-only"><span>Expand</span> unscannable files</span>
-		</button>
+		</button> 
 		<h3 class="plus pull-left">UDOIT is unable to scan these files</h3>
 	</div>
 
