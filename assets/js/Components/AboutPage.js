@@ -42,19 +42,19 @@ class AboutPage extends React.Component {
 
     return (
       <View as="div">
-        <View as="div" display="inline-block">
-          <View as="div" width="60vw">
+        <View as="div" display="inline-block" width="60vw">
+          <View as="div">
             <Text as="p" lineHeight="default">
               {ReactHtmlParser(this.props.t('about.description'), { preprocessNodes: (nodes) => Html.processStaticHtml(nodes, this.props.settings) })}
             </Text>
           </View>
-          <View as="div" margin="large 0" width="60vw">
+          <View as="div" margin="large 0">
             <Text as="strong">{this.props.t('about.disclaimer_title')}</Text>
             <Text as="p" weight="normal" lineHeight="default">
               {ReactHtmlParser(this.props.t('about.disclaimer'), { preprocessNodes: (nodes) => Html.processStaticHtml(nodes, this.props.settings) })}
             </Text>
           </View>
-          <View as="div" margin="medium 0" display="inline-block">
+          <View as="div" margin="medium 0" display="inline-block" width="100vw">
             <ToggleDetails
               summary={this.props.t('label.btn.udoit_details')}
               expanded={this.state.expandDetails}
