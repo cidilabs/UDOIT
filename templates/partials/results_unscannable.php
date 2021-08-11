@@ -26,8 +26,10 @@ global $unscannable_file_types;
 <h2 class="content-title">Unscannable <small><?= $out_of_items; ?> files</small></h2>
 <div class="errorItem panel panel-default">
 	<div class="panel-heading clearfix" id="unscannable-button">
-		<button class="btn btn-xs btn-default btn-toggle pull-left no-print margin-right-small"><span class="glyphicon glyphicon-plus"></span></button>
-
+		<button class="btn btn-xs btn-default btn-toggle pull-left no-print margin-right-small">
+			<span class="glyphicon glyphicon-plus"></span>
+			<span class="sr-only"><span>Expand</span> unscannable files</span>
+		</button> 
 		<h3 class="plus pull-left">UDOIT is unable to scan these files</h3>
 	</div>
 
