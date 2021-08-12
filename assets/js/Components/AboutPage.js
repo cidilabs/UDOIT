@@ -3,9 +3,8 @@ import { Heading } from '@instructure/ui-heading'
 import { View } from '@instructure/ui-view'
 import { Text } from '@instructure/ui-text'
 import { Flex } from '@instructure/ui-flex'
-import { Link } from '@instructure/ui-link'
 import { ToggleDetails } from '@instructure/ui-toggle-details'
-import { IconInfoBorderlessLine, IconNoLine, IconExternalLinkLine } from '@instructure/ui-icons'
+import { IconInfoBorderlessLine, IconNoLine } from '@instructure/ui-icons'
 import { issueRuleIds } from './Constants'
 import Html from '../Services/Html'
 import ReactHtmlParser from 'react-html-parser'
@@ -71,7 +70,6 @@ class AboutPage extends React.Component {
                 <Text as="strong">Other Resources:</Text>
               </View>
               <View as="div" position="relative" textAlign="start" insetBlockStart="1vh">
-                {/* <Link href={this.props.t('about.user_guide_link')} renderIcon={<IconExternalLinkLine />} iconPlacement="end" isWithinText={false}>{this.props.t('about.user_guide_link_title')}</Link> */}
                 {ReactHtmlParser(this.props.t('about.user_guide_link'), { preprocessNodes: (nodes) => Html.processStaticHtml(nodes, this.props.settings) })}
               </View>
             </View>
