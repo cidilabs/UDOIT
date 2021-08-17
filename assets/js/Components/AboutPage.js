@@ -110,6 +110,9 @@ class AboutPage extends React.Component {
             })}
           </ToggleDetails>
         </View>
+        <View as="div" textAlign="end">
+          <Text weight="light">{this.props.t('label.version_number')}</Text>
+        </View>
       </View>
     )
   }
