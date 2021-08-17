@@ -85,33 +85,30 @@ class SortableTable extends React.Component {
             <Flex.Item>
               <Flex>
                 <Flex.Item>
-                  <View as="div">
-                    <SimpleSelect
-                      renderLabel=""
-                      assistiveText="Use arrow keys to navigate options."
-                      value={this.props.tableSettings.rowsPerPage}
-                      onChange={(e, { id, value }) => {
-                        this.props.handleTableSettings({
-                          rowsPerPage: value
-                        })
-                        localStorage.setItem('rowsPerPage', value)
-                      }}
-                      width="13vw"
-                      size="small"
-                      margin="medium"
-                      >
-                      {options.map((opt, index) => (
-                        <SimpleSelect.Option
-                          key={index}
-                          id={`opt-${index}`}
-                          value={opt}
-                          >
-                          { opt }
-                        </SimpleSelect.Option>
-                      ))}
-                    </SimpleSelect>
-                    <ScreenReaderContent>{this.props.t('label.table_rows_select')}</ScreenReaderContent>
-                  </View>
+                  <SimpleSelect
+                    renderLabel={<ScreenReaderContent>{this.props.t('label.table_rows_select')}</ScreenReaderContent>}
+                    assistiveText="Use arrow keys to navigate options."
+                    value={this.props.tableSettings.rowsPerPage}
+                    onChange={(e, { id, value }) => {
+                      this.props.handleTableSettings({
+                        rowsPerPage: value
+                      })
+                      localStorage.setItem('rowsPerPage', value)
+                    }}
+                    width="13vw"
+                    size="small"
+                    margin="medium"
+                    >
+                    {options.map((opt, index) => (
+                      <SimpleSelect.Option
+                        key={index}
+                        id={`opt-${index}`}
+                        value={opt}
+                        >
+                        { opt }
+                      </SimpleSelect.Option>
+                    ))}
+                  </SimpleSelect>
                 </Flex.Item>
                 <Flex.Item margin="small">
                   <Text weight="bold">{this.props.t('label.table_rows_select')}</Text>
