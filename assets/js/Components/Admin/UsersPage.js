@@ -110,8 +110,6 @@ class UsersPage extends React.Component {
             handleSearchTerm={this.handleSearchTerm}
             searchTerm={this.state.searchTerm}
             t={this.props.t}
-            handleTableSettings={this.handleTableSettings}
-            tableSettings={this.state.tableSettings} 
             />
           <View as="div" textAlign="center" padding="medium">
             <Spinner variant="inverse" renderTitle={this.props.t('label.loading_users')} />
@@ -126,8 +124,7 @@ class UsersPage extends React.Component {
             handleSearchTerm={this.handleSearchTerm}
             searchTerm={this.state.searchTerm}
             t={this.props.t}
-            handleTableSettings={this.handleTableSettings}
-            tableSettings={this.state.tableSettings}  />
+          />
           <SortableTable
             caption={this.props.t('srlabel.users.table.caption')}
             headers={this.headers}

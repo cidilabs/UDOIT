@@ -18,7 +18,6 @@ class ContentPageForm extends React.Component {
   }
 
   render() {
-    const options = ['10', '25', '50'];
     return (
       <Flex alignItems="center" justifyItems="space-between" key="contentPageForm">
         <Flex.Item>
@@ -31,31 +30,6 @@ class ContentPageForm extends React.Component {
                 onChange={this.props.handleSearchTerm}
                 value={this.props.searchTerm}
               />
-            </Flex.Item>
-            <Flex.Item>
-              <SimpleSelect
-                  renderLabel={this.props.t('label.table_rows_select')}
-                  assistiveText="Use arrow keys to navigate options."
-                  value={this.props.tableSettings.rowsPerPage}
-                  onChange={(e, { id, value }) => {
-                    this.props.handleTableSettings({
-                      rowsPerPage: value
-                    })
-                    localStorage.setItem('rowsPerPage', value)
-                  }}
-                  width="13vw"
-                  size="small"
-                >
-                  {options.map((opt, index) => (
-                    <SimpleSelect.Option
-                    key={index}
-                    id={`opt-${index}`}
-                    value={opt}
-                    >
-                    { opt }
-                    </SimpleSelect.Option>
-                  ))}
-                </SimpleSelect>
             </Flex.Item>
           </Flex>
         </Flex.Item>

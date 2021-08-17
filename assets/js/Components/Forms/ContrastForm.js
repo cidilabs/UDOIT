@@ -27,6 +27,8 @@ export default class ContrastForm extends React.Component {
       textInputErrors: []
     }
 
+    console.log(this.getBackgroundColor())
+
     this.formErrors = []
 
     this.handleInputBackground = this.handleInputBackground.bind(this)
@@ -371,6 +373,7 @@ export default class ContrastForm extends React.Component {
     const element = Html.toElement(html)
 
     if (element.style.backgroundColor) {
+      console.log(element.style.backgroundColor)
       return Contrast.rgb2hex(element.style.backgroundColor)
     } 
     else {

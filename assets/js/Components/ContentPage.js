@@ -276,8 +276,6 @@ class ContentPage extends React.Component {
           searchTerm={this.state.searchTerm}
           t={this.props.t} 
           ref={(node) => this.contentPageForm = node}
-          handleTableSettings={this.handleTableSettings}
-          tableSettings={this.state.tableSettings}
         />
         <View as="div">
           {this.renderFilterTags()}
@@ -314,14 +312,6 @@ class ContentPage extends React.Component {
           handleIssueSave={this.props.handleIssueSave}
           t={this.props.t}
           />}
-
-        {filteredRows.length === 0 && 
-            <Billboard
-            size="medium"
-            heading={this.props.t('label.no_results_header')}
-            margin="small"
-            message={this.props.t('label.no_results_message')}
-        />}
       </View>
     )
   }
