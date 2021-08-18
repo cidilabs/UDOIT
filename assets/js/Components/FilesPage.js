@@ -42,6 +42,7 @@ class FilesPage extends React.Component {
       tableSettings: {
         sortBy: 'fileName',
         ascending: true,
+        pageNum: 0,
         rowsPerPage: (localStorage.getItem('rowsPerPage')) ? localStorage.getItem('rowsPerPage') : '10'
       }
     }
