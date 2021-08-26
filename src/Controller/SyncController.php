@@ -3,12 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Course;
+use App\Entity\Institution;
+use App\Entity\User;
 use App\Repository\CourseRepository;
 use App\Response\ApiResponse;
 use App\Services\LmsApiService;
 use App\Services\LmsFetchService;
+use App\Message\BackgroundQueueItem;
+use App\Message\PriorityQueueItem;
+use App\Repository\UserRepository;
 use App\Services\UtilityService;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SyncController extends ApiController
@@ -19,7 +26,7 @@ class SyncController extends ApiController
     protected $util;
 
     /**
-     * @Route("/api/sync/{course}", name="request_sync")
+     * @Route("/api/sync/{course}", name="request_sync", methods={"GET"})
      */
     public function requestSync(Course $course, LmsFetchService $lmsFetch)
     {
@@ -72,17 +79,113 @@ class SyncController extends ApiController
     }
 
     /**
-     * @Route("/cron/sync", name="cron_sync")
+     * {
+     *   user: {
+     *     lmsUserId: 123,
+     *     domainName: 'cidilabs.instructure.com',
+     *     refreshToken: '12345ABCDE',
+     *   },
+     *   courseIds: [12, 23, 34, 45]
+     * }
+     * 
+     * @Route("/api/sync/batch", name="batch_sync", methods={"POST"})
      */
-    public function cronSync(LmsApiService $lmsApi)
+    public function batchSync(
+        Request $request,
+        MessageBusInterface $messageBus, 
+        UserRepository $userRepo,
+        CourseRepository $courseRepo)
     {
-        /** @var CourseRepository $courseRepository */
-        $courseRepository = $this->getDoctrine()->getRepository(Course::class);
-        $courses = $courseRepository->findCoursesNeedingUpdate($this->maxAge);
-        $user = $this->getUser();
+        // get user data
+        $data = \json_decode($request->getContent(), true);
 
-        $count = $lmsApi->addCoursesToBeScanned($courses, $user);
+        // check if user exists
+        if (!empty($data['user'])) {
+            $userData = $data['user'];
+            $username = "{$userData['domainName']}||{$userData['lmsUserId']}";
+            $syncUser = $userRepo->findOneBy(['username' => $username]);
+        }
+        else {
+            return $this->json(false);
+        }
 
-        return new JsonResponse($count);
+        // create user if doesn't exist
+        if (empty($syncUser)) {
+            $syncUser = $this->createUser($userData);
+        }
+        if (!$syncUser) {
+            return $this->json(false);
+        }
+
+        // get list of lmsCourseIds
+        $lmsCourseIds = isset($data['lmsCourseIds']) ? $data['lmsCourseIds'] : null;
+        if (!$lmsCourseIds) {
+            return $this->json(false);
+        }
+
+        $institution = $syncUser->getInstitution();
+
+        foreach ($lmsCourseIds as $lmsCourseId) {
+            $course = $courseRepo->findOneBy(['institution' => $institution, 'lmsCourseId' => $lmsCourseId]);
+
+            if (!$course) {
+                $course = $this->createCourse($institution, $lmsCourseId);
+            }
+
+            $messageBus->dispatch(new BackgroundQueueItem($course, $syncUser, 'refreshContent'));
+        }
+
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(true);
+    }
+
+    protected function createUser($userData)
+    {
+        $institution = $this->getInstitutionByDomain($userData['domainName']);
+        if (!$institution) {
+            return false;
+        }
+
+        $user = new User();
+        $user->setInstitution($institution);
+        $user->setUsername("{$userData['domainName']}||{$userData['lmsUserId']}");
+        $user->setLmsUserId($userData['lmsUserId']);
+        $user->setName('Batch Sync User');
+        $user->setApiKey('temporary');
+        $user->setRefreshToken($userData['refreshToken']);
+        $user->setCreated(new \DateTime());
+        $user->setLastLogin(new \DateTime());
+
+        $this->getDoctrine()->getManager()->persist($user);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $user;
+    }
+
+    protected function createCourse(Institution $institution, $lmsCourseId)
+    {
+        $course = new Course();
+        $course->setInstitution($institution);
+        $course->setLmsCourseId($lmsCourseId);
+        $course->setTitle("New Course: ID#{$lmsCourseId}");
+        $course->setActive(true);
+        $course->setDirty(false);
+
+        $this->getDoctrine()->getManager()->persist($course);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $course;
+    }
+
+    protected function getInstitutionByDomain($domain)
+    {
+        $institutionRepo = $this->getDoctrine()->getRepository(Institution::class);
+        $institution = $institutionRepo->findOneBy(['lmsDomain' => $domain]);
+        if (empty($institution)) {
+            $institution = $institutionRepo->findOneBy(['vanityUrl' => $domain]);
+        }
+
+        return $institution;
     }
 }

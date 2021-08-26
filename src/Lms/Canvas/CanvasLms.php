@@ -119,6 +119,9 @@ class CanvasLms implements LmsInterface {
     public function getOauthTokenUri(Institution $institution)
     {
         $baseUrl = $this->util->getCurrentDomain();
+        if (!$baseUrl) {
+            $baseUrl = $institution->getLmsDomain();
+        }
 
         return "https://{$baseUrl}/login/oauth2/token";
     }
