@@ -12,7 +12,7 @@ fi
 yarn run encore dev
 
 #run migrations
-php bin/console --no-interaction doctrine:migrations:migrate
+php bin/console doctrine:migrations:migrate -n
 
 # start queue monitor
 /usr/bin/supervisord
