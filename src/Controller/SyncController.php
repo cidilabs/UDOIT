@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Course;
 use App\Entity\Institution;
 use App\Entity\User;
+use App\Entity\ContentItem;
 use App\Repository\CourseRepository;
 use App\Response\ApiResponse;
 use App\Services\LmsApiService;
 use App\Services\LmsFetchService;
+use App\Services\PhpAllyService;
 use App\Message\BackgroundQueueItem;
 use App\Message\PriorityQueueItem;
 use App\Repository\UserRepository;
@@ -76,6 +78,31 @@ class SyncController extends ApiController
         }
 
         return new JsonResponse($response);
+    }
+
+    /**
+     * 
+     * @Route("/api/sync/{content}", name="request_contentsync", methods={"GET"})
+     */
+    public function requestContentSync(ContentItem $contentItem, LmsFetchService $lmsFetch, PhpAllyService $phpAlly)
+    {
+        $course = $contentItem->getCourse();
+        $user = $this->getUser();
+
+        // Delete old issues
+        $lmsFetch->deleteContentItemIssues(array($contentItem));
+
+        // Rescan the contentItem
+        $phpAllyReport = $phpAlly->scanContentItem($contentItem);
+
+        // Add rescanned Issues to database
+        foreach ($phpAllyReport->getIssues() as $issue) {
+            // Create issue entity 
+            $lmsFetch->createIssue($issue, $contentItem);
+        }
+
+        // Update report
+        $lmsFetch->updateReport($course, $user);
     }
 
     /**
