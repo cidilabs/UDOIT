@@ -28,7 +28,7 @@ class Preview extends React.Component {
         let issueHtml = Html.getIssueHtml(activeIssue)
         let previewHtml = activeIssue.previewHtml
 
-        if(!previewHtml && !activeIssue.sourceHtml) {
+        if((!previewHtml || previewHtml === '') && (!activeIssue.sourceHtml || activeIssue.sourceHtml === '')) {
             return '<span>Preview Not Available</span>'
         }
 

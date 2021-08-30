@@ -8,6 +8,10 @@ class Html {
       return htmlString
     }
 
+    if (htmlString === '') {
+      htmlString = '<div></div>'
+    }
+
     let tmp = document.createElement('template')
     tmp.innerHTML = htmlString.trim()
 
