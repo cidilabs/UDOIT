@@ -5,7 +5,7 @@
         "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "cidilabs/phpally": "dev-master",
+        "cidilabs/phpally": "^1.0",
         "firebase/php-jwt": "^5.2",
         "htmlawed/htmlawed": "^1.1",
         "knplabs/knp-snappy-bundle": "^1.7",
