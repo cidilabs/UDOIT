@@ -6,6 +6,8 @@ if [ "$ENVIRONMENT_TYPE" != "local" ]
 then
     aws s3 cp s3://cidilabs-devops/udoit3/.env.local.$ENVIRONMENT_TYPE /var/www/html/.env.local
     php bin/console cache:clear --env=$ENVIRONMENT_TYPE
+else
+    cp /var/www/html/.env.local.docker /var/www/html/.env.local
 fi
 
 # compile JS
