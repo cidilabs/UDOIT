@@ -1,5 +1,8 @@
 version: 0.2
 
+env:
+  git-credential-helper: yes
+
 phases:
   pre_build:
     commands:
@@ -7,20 +10,32 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo Logging into Docker Hub
       - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+      - echo checkout current branch
+      - git checkout $REPO_BRANCH
+      - echo Setting up IMAGE_TAG
+      - IMAGE_BASE_TAG=$(git branch --show-current)
+      - echo $IMAGE_BASE_TAG
+      - IMAGE_TAG=$(git describe --abbrev=0 --tags)
+      - echo $IMAGE_TAG
+      - echo "{\"version\":\"$IMAGE_TAG\"}" > version.json
   build:
     commands:
       - echo Build started on `date`
+      - echo Pulling Base Image
+      - docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BASE_IMAGE
+      - docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BASE_IMAGE $BASE_IMAGE
       - echo Building the Docker image...          
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG --build-arg ENV_TYPE="$ENVIORNMENT_TYPE" --build-arg NEW_RELIC_KEY="$NEW_RELIC_LICENSE_KEY" --build-arg NEW_RELIC_NAME="$NEW_RELIC_APP_NAME" .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_BASE_TAG-$IMAGE_TAG --build-arg NEW_RELIC_KEY="$NEW_RELIC_LICENSE_KEY" --build-arg NEW_RELIC_NAME="$NEW_RELIC_APP_NAME" --build-arg BASE_IMAGE="$BASE_IMAGE"  .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_BASE_TAG-$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_BASE_TAG-$IMAGE_TAG      
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - echo "[{\"name\":\"$CONTAINER_NAME\",\"imageUri\":\"$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG\"}]" > imagedefinitions.json
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_BASE_TAG-$IMAGE_TAG
+      - echo "[{\"name\":\"$CONTAINER_NAME\",\"imageUri\":\"$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_BASE_TAG-$IMAGE_TAG\"}]" > imagedefinitions.json
       - cat imagedefinitions.json
 
 artifacts:
   files:
     - imagedefinitions.json
+    - version.json
