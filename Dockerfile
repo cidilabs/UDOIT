@@ -2,7 +2,7 @@ FROM php:7.4-fpm
 ARG ENV_TYPE
 ARG NEW_RELIC_KEY
 ARG NEW_RELIC_NAME
-ENV ENVIORNMENT_TYPE=$ENVIORNMENT_TYPE
+ENV ENVIRONMENT_TYPE=$ENVIRONMENT_TYPE
 ENV NEW_RELIC_APP_NAME=${NEW_RELIC_NAME}
 ENV NEW_RELIC_LICENSE_KEY=${NEW_RELIC_KEY}
 
@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql 
 
 #Install AWS CLI v2
-RUN if [ "$ENVIORNMENT_TYPE" != "local" ] ;then  \
+RUN if [ "$ENVIRONMENT_TYPE" != "local" ] ;then  \
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
         && unzip awscliv2.zip \
         && ./aws/install\
@@ -34,7 +34,6 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
 RUN npm install --global yarn
 
 COPY deploy/nginx/nginx-site.conf /etc/nginx/sites-enabled/default
-COPY deploy/nginx/10-php.conf /etc/nginx/conf.d/10-php.conf
 
 #Create user ssm-user
 RUN useradd -ms /bin/bash ssm-user
