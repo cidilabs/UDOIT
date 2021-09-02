@@ -86,6 +86,7 @@ class SyncController extends ApiController
      */
     public function requestContentSync(ContentItem $contentItem, LmsFetchService $lmsFetch, PhpAllyService $phpAlly)
     {
+        $response = new ApiResponse();
         $course = $contentItem->getCourse();
         $user = $this->getUser();
 
@@ -102,7 +103,10 @@ class SyncController extends ApiController
         }
 
         // Update report
-        $lmsFetch->updateReport($course, $user);
+        $report = $lmsFetch->updateReport($course, $user);
+        $response->setData($report);
+
+        return new JsonResponse($response);
     }
 
     /**
