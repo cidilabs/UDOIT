@@ -39,35 +39,24 @@ class AppFixtures extends Fixture
 
   private function loadInstitutions()
   {
-    $inst1 = new Institution();
-    $inst1->setTitle('Cidi Labs Test Account');
-    $inst1->setLmsDomain("cidilabs.instructure.com");
-    $inst1->setLmsId('canvas');
-    $inst1->setLmsAccountId('608');
-    $inst1->setCreated(new DateTime('now'));
-    $inst1->setStatus(1);
-    $inst1->setVanityUrl("canvas.cidilabs.com");
+    $institution = new Institution();
+    $institution->setTitle("Cidi Labs");
+    $institution->setActiveProducts([Institution::PRODUCT_DESIGNPLUS, Institution::PRODUCT_UDOIT3, Institution::PRODUCT_READYGO, Institution::PRODUCT_TIDYUP]);
+    $institution->setLms('canvas');
+    $institution->setLanguage('en');
+    $institution->setDomainNames(["cidilabs.instructure.com", "canvas.cidilabs.com"]);
+    $institution->setSlug("cidilabs");
+    $institution->setCreated(new DateTime('now'));
+    $institution->setStatus(TRUE);
+    $institution->setApiClientId('84530000000000178');
+    $institution->setApiClientSecret('3pe2I2eBtOlrcm7F0ODfy7Tgx44Kb9jNWexmdISy0VOove0KFTMpOxDsorHomUF3');
 
-    $this->manager->persist($inst1);
-    $this->institutions[] = $inst1;
-
-    for ($i = 0; $i < 10; $i++) {
-      $inst = new Institution();
-      $randNum = rand(1, 1000);
-
-      $inst->setTitle('Institution #' . $i);
-      $inst->setLmsDomain("cidilabs{$i}.instructure.com");
-      $inst->setLmsId('canvas');
-      $inst->setLmsAccountId($randNum);
-      $inst->setCreated(new DateTime('now'));
-      $inst->setStatus(1);
-      $inst->setVanityUrl("canvas{$i}.cidilabs.com");
-
-      $this->manager->persist($inst);
-      $this->institutions[] = $inst;
-    }
-    echo sprintf("\tLoaded %s institutions into database.\n", sizeof($this->institutions));
+    $this->manager->persist($institution);
     $this->manager->flush();
+
+    $this->institutions[] = $institution;
+    
+    return $this->institutions;
   }
 
   private function loadUsers()

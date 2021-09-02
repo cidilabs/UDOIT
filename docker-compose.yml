@@ -1,0 +1,20 @@
+version: '3'
+services:
+  udoit3.app:
+    build:
+      context: .
+      dockerfile: ./deploy/local.dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "80:80"
+      - "443:443"
+
+  udoit3.db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+
