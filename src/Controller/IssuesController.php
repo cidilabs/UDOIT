@@ -200,15 +200,4 @@ class IssuesController extends ApiController
 
         return new JsonResponse($apiResponse);
     }
-
-    /**
-     * Rescan a piece of content in PhpAlly and update report accordingly 
-     * 
-     * @Route("/api/issues/{issue}/contentscan", name="scan_content")
-     * @param Issue $issue
-     */
-    public function scanContent(Issue $issue, PhpAllyService $phpAlly, UtilityService $util)
-    {
-        $apiResponse = new ApiResponse();
-    }
 }
