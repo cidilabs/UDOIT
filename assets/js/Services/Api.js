@@ -11,12 +11,13 @@ export default class Api {
             postFile: '/api/files/{file}/post',
             reportPdf: '/download/courses/{course}/reports/pdf',
             adminCourses: '/api/admin/courses/account/{account}/term/{term}',
+            scanContent: '/api/sync/{contentItem}',
             scanCourse: '/api/sync/{course}',
             scanIssue: '/api/issues/{issue}/scan',
             adminReport: '/api/admin/courses/{course}/reports/latest',
             adminReportHistory: '/api/admin/reports/account/{account}/term/{term}', 
             adminUser: '/api/admin/users',          
-            updateUser: '/api/users/{user}' 
+            updateUser: '/api/users/{user}'
         }
         this.settings = settings;
 
@@ -222,6 +223,21 @@ export default class Api {
         const authToken = this.getAuthToken()
         let url = `${this.apiUrl}${this.endpoints.scanCourse}`
         url = url.replace('{course}', courseId)
+
+        return fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-AUTH-TOKEN': authToken,
+            },
+        })
+    }
+
+    scanContent(contentId)
+    {
+        const authToken = this.getAuthToken()
+        let url = `${this.apiUrl}${this.endpoints.scanContent}`
+        url = url.replace('{contentItem}', contentId)
 
         return fetch(url, {
             method: 'GET',
