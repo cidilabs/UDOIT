@@ -9,6 +9,8 @@ ENV NEW_RELIC_LICENSE_KEY=${NEW_RELIC_KEY}
 #Configure Nginx
 COPY deploy/nginx/nginx-site.conf /etc/nginx/sites-enabled/default
 
+# Copy PHP .ini
+COPY deploy/php-config/custom_php.ini /usr/local/etc/php/conf.d/custom_php.ini
 
 #Install New Relic
 RUN \
