@@ -12,6 +12,7 @@ COPY deploy/nginx/nginx-site.conf /etc/nginx/sites-enabled/default
 # Copy PHP .ini
 COPY deploy/php-config/custom_php.ini /usr/local/etc/php/conf.d/custom_php.ini
 
+COPY deploy/supervisor/messenger-worker.conf /etc/supervisor/conf.d/messenger-worker.conf
 #Install New Relic
 RUN \
   curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.18.1.303-linux.tar.gz | tar -C /tmp -zx && \
