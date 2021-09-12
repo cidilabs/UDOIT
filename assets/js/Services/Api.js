@@ -11,7 +11,7 @@ export default class Api {
             postFile: '/api/files/{file}/post',
             reportPdf: '/download/courses/{course}/reports/pdf',
             adminCourses: '/api/admin/courses/account/{account}/term/{term}',
-            scanContent: '/api/sync/{contentItem}',
+            scanContent: '/api/sync/content/{contentItem}',
             scanCourse: '/api/sync/{course}',
             scanIssue: '/api/issues/{issue}/scan',
             adminReport: '/api/admin/courses/{course}/reports/latest',
