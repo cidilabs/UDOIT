@@ -86,6 +86,8 @@ class UfixitModal extends React.Component {
     const ufixitService = new Ufixit()
     const { activeIssue, activeContentItem } = this.props
 
+    const pending = (this.props.activeIssue && (this.props.activeIssue.pending == '1'))
+
     let activeIndex = this.findActiveIndex();
     const UfixitForm = ufixitService.returnIssueForm(activeIssue)
 
@@ -238,10 +240,14 @@ class UfixitModal extends React.Component {
                 </Flex.Item>
                 <Flex.Item>
                   <Button margin="0 small" onClick={this.props.handleCloseButton}>{this.props.t('label.close')}</Button>
-                  <Button margin="0 0 0 x-small"
-                    onClick={() => this.handleIssueChange(activeIndex - 1)}>{this.props.t('label.previous_issue')}</Button>
-                  <Button color="primary" margin="0 0 0 x-small"
-                    onClick={() => this.handleIssueChange(activeIndex + 1)}>{this.props.t('label.next_issue')}</Button>
+                  <Button margin="0 0 0 x-small" interaction={(!pending) ? 'enabled' : 'disabled'} onClick={() => this.handleIssueChange(activeIndex - 1)}>
+                    {('1' == pending)}
+                    {this.props.t('label.previous_issue')}
+                  </Button>
+                  <Button margin="0 0 0 x-small" interaction={(!pending) ? 'enabled' : 'disabled'} onClick={() => this.handleIssueChange(activeIndex + 1)}>
+                    {('1' == pending)}
+                    {this.props.t('label.next_issue')}
+                  </Button>
                 </Flex.Item>
               </Flex>            
             </View>
