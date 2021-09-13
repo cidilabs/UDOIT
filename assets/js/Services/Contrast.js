@@ -228,6 +228,7 @@ class Contrast {
   standardizeColor(str){
     var ctx = document.createElement("canvas").getContext("2d");
     ctx.fillStyle = str;
+    // Returns hex color value
     return ctx.fillStyle;
   }
 
