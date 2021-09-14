@@ -225,11 +225,11 @@ class Contrast {
     return '#' + color
   }
 
-  standardizeColor(str){
-    var ctx = document.createElement("canvas").getContext("2d");
-    ctx.fillStyle = str;
+  standardizeColor(color){
+    var element = document.createElement("canvas").getContext("2d");
+    element.fillStyle = color;
     // Returns hex color value
-    return ctx.fillStyle;
+    return element.fillStyle;
   }
 
 }
