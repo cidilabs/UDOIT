@@ -371,10 +371,10 @@ export default class ContrastForm extends React.Component {
     const element = Html.toElement(html)
 
     if (element.style.backgroundColor) {
-      return Contrast.rgb2hex(element.style.backgroundColor)
+      return Contrast.standardizeColor(element.style.backgroundColor)
     } 
     else {
-      return (metadata.backgroundColor) ? Contrast.rgb2hex(metadata.backgroundColor) : this.props.settings.backgroundColor
+      return (metadata.backgroundColor) ? Contrast.standardizeColor(metadata.backgroundColor) : this.props.settings.backgroundColor
     }
   }
 
@@ -386,10 +386,10 @@ export default class ContrastForm extends React.Component {
     const element = Html.toElement(html)
 
     if (element.style.color) {
-      return Contrast.rgb2hex(element.style.color)
+      return Contrast.standardizeColor(element.style.color)
     }
     else {
-      return (metadata.color) ? Contrast.rgb2hex(metadata.color) : this.props.settings.textColor
+      return (metadata.color) ? Contrast.standardizeColor(metadata.color) : this.props.settings.textColor
     }
   }
 }
