@@ -239,13 +239,11 @@ class UfixitModal extends React.Component {
                   </InlineList>
                 </Flex.Item>
                 <Flex.Item>
-                  <Button margin="0 small" onClick={this.props.handleCloseButton}>{this.props.t('label.close')}</Button>
+                  <Button margin="0 small" interaction={(!pending) ? 'enabled' : 'disabled'} onClick={this.props.handleCloseButton}>{this.props.t('label.close')}</Button>
                   <Button margin="0 0 0 x-small" interaction={(!pending) ? 'enabled' : 'disabled'} onClick={() => this.handleIssueChange(activeIndex - 1)}>
-                    {('1' == pending)}
                     {this.props.t('label.previous_issue')}
                   </Button>
                   <Button margin="0 0 0 x-small" interaction={(!pending) ? 'enabled' : 'disabled'} onClick={() => this.handleIssueChange(activeIndex + 1)}>
-                    {('1' == pending)}
                     {this.props.t('label.next_issue')}
                   </Button>
                 </Flex.Item>
