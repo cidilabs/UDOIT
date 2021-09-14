@@ -225,10 +225,11 @@ class Contrast {
     return '#' + color
   }
 
+  // Accepts HSL, RGB, Hex, color name (eg. red, black) and returns the hex value
   standardizeColor(color){
     var element = document.createElement("canvas").getContext("2d");
     element.fillStyle = color;
-    // Returns hex color value
+    
     return element.fillStyle;
   }
 
