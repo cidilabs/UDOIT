@@ -364,9 +364,7 @@ class UfixitModal extends React.Component {
             api.scanContent(newIssue.contentItemId)
               .then((responseStr) => responseStr.json())
               .then((res) => {
-                console.log(res.data)
-
-                //update activeIssue
+                // update activeIssue
                 this.props.handleActiveIssue(newIssue)
                 
                 this.props.handleIssueSave(newIssue, res.data)
