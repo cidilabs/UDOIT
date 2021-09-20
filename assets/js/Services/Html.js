@@ -46,8 +46,6 @@ class Html {
     const children = element.childNodes
     let textNodeFound = false
 
-    console.log(children)
-
     children.forEach(function(node, index) {
       if(node.nodeType === Node.TEXT_NODE) {
         if(textNodeFound != true) {

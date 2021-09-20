@@ -82,7 +82,7 @@ class SyncController extends ApiController
 
     /**
      * 
-     * @Route("/api/sync/{contentItem}", name="request_contentsync", methods={"GET"})
+     * @Route("/api/sync/content/{contentItem}", name="content_sync", methods={"GET"})
      */
     public function requestContentSync(ContentItem $contentItem, LmsFetchService $lmsFetch, PhpAllyService $phpAlly)
     {
