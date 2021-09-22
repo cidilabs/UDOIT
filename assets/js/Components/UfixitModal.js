@@ -303,10 +303,19 @@ class UfixitModal extends React.Component {
           newIssue.recentlyResolved = !!activeIssue.status
           newIssue.sourceHtml = newIssue.newHtml
           newIssue.newHtml = ''
-          this.props.handleActiveIssue(newIssue)
+          // Get updated report
+          api.scanContent(newIssue.contentItemId)
+          .then((responseStr) => responseStr.json())
+          .then((res) => {
+            // update activeIssue
+            this.props.handleActiveIssue(newIssue)
+            
+            this.props.handleIssueSave(newIssue, res.data)
+          })
+          // this.props.handleActiveIssue(newIssue)
 
-          // update report.issues
-          this.props.handleIssueSave(newIssue, newReport)
+          // // update report.issues
+          // this.props.handleIssueSave(newIssue, newReport)
         }
         else {
           activeIssue.pending = false
