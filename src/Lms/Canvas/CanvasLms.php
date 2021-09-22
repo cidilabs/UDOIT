@@ -482,7 +482,7 @@ class CanvasLms implements LmsInterface {
             'discussion_topic',
             'file',
             'page',
-            'quiz',
+            // 'quiz',
             'syllabus'
         ];
     }
