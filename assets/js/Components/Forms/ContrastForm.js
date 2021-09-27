@@ -130,6 +130,7 @@ export default class ContrastForm extends React.Component {
   handleSubmit() {
     if(this.state.ratioIsValid) {
       let issue = this.props.activeIssue
+      issue.newHtml = Contrast.convertHtmlRgb2Hex(issue.newHtml)
       this.props.handleIssueSave(issue)
     } else {
       this.formErrors = []

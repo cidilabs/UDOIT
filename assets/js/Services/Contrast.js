@@ -233,6 +233,14 @@ class Contrast {
     return element.fillStyle;
   }
 
+  convertHtmlRgb2Hex(html) {
+    return html.replace(/rgb\((\d+,\s*\d+,\s*\d+)\)(?=[^\<]*\>)/ig, (_, rgb) => {
+      return '#' + rgb.split(',')
+        .map(str => parseInt(str, 10).toString(16).padStart(2, '0'))
+        .join('')
+    })
+  }
+
 }
 
 export default new Contrast()
