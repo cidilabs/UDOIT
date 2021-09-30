@@ -41,11 +41,9 @@ class AppFixtures extends Fixture
   {
     $institution = new Institution();
     $institution->setTitle("Cidi Labs");
-    $institution->setActiveProducts([Institution::PRODUCT_DESIGNPLUS, Institution::PRODUCT_UDOIT3, Institution::PRODUCT_READYGO, Institution::PRODUCT_TIDYUP]);
-    $institution->setLms('canvas');
-    $institution->setLanguage('en');
-    $institution->setDomainNames(["cidilabs.instructure.com", "canvas.cidilabs.com"]);
-    $institution->setSlug("cidilabs");
+    $institution->setLmsId('canvas');
+    $institution->setLmsDomain("cidilabs.instructure.com");
+    $institution->setVanityUrl("canvas.cidilabs.com");
     $institution->setCreated(new DateTime('now'));
     $institution->setStatus(TRUE);
     $institution->setApiClientId('84530000000000178');
@@ -61,21 +59,6 @@ class AppFixtures extends Fixture
 
   private function loadUsers()
   {
-    $inst = reset($this->institutions);
-    $user = new User();
-    $lmsUserId = 2027;
-    $domain = $inst->getLmsDomain();
-    $user->setLmsUserId($lmsUserId);
-    $user->setInstitution($inst);
-    $user->setUsername("{$domain}||{$lmsUserId}");
-    $user->setApiKey('8453~K11OechHKuWe99oEtN1Q22w1qCnrJJEEF5K0BETcshwVVTMA1Hv4iMRRszUcswPJ');
-    $user->setRefreshToken('8453~1lptr9pGbHwDOAum048TfOwim90CsnuaRZcHndINUXgbDoUmqxha6Lw4NKrdhOY7');
-    $user->setCreated(new \DateTime('now'));
-    $user->setLastLogin(new \DateTime('now'));
-
-    $this->manager->persist($user);
-    $this->users[] = $user;
-
     foreach ($this->institutions as $inst) {
       for ($i = 0; $i < 3; $i++) {
         $user = new User();
