@@ -24,7 +24,8 @@ export default class ContrastForm extends React.Component {
       useItalics: this.isItalicized(),
       contrastRatio: null,
       ratioIsValid: false,
-      textInputErrors: []
+      textInputErrors: [],
+      checkboxErrors: []
     }
 
     this.formErrors = []
@@ -55,7 +56,8 @@ export default class ContrastForm extends React.Component {
         textColor: this.getTextColor(),
         useBold: this.isBold(),
         useItalics: this.isItalicized(),
-        textInputErrors: []
+        textInputErrors: [],
+        checkBoxErrors: []
       },() => {
         this.formErrors = []
         this.updatePreview()
@@ -128,17 +130,32 @@ export default class ContrastForm extends React.Component {
   }
 
   handleSubmit() {
-    if(this.state.ratioIsValid) {
+    let issue = this.props.activeIssue
+    let cssEmphasisIsValid = this.cssEmphasisIsValid(issue)
+
+    if(this.state.ratioIsValid && cssEmphasisIsValid) {
       let issue = this.props.activeIssue
       issue.newHtml = Contrast.convertHtmlRgb2Hex(issue.newHtml)
       this.props.handleIssueSave(issue)
     } else {
-      this.formErrors = []
       //push errors
-      this.formErrors.push({ text: `${this.props.t('form.contrast.invalid')}: ${this.state.contrastRatio}` , type: 'error' })
-      this.setState({
-        textInputErrors: this.formErrors
-      })
+      if(!this.state.ratioIsValid) {
+        this.formErrors = []
+        this.formErrors.push({ text: `${this.props.t('form.contrast.invalid')}: ${this.state.contrastRatio}` , type: 'error' })
+
+        this.setState({
+          textInputErrors: this.formErrors
+        })
+      }
+
+      if(!cssEmphasisIsValid) {
+        this.formErrors = []
+        this.formErrors.push({ text: `${this.props.t('form.contrast.must_select')}` , type: 'error' })
+
+        this.setState({
+          checkboxErrors: this.formErrors
+        })
+      }
     }
   }
 
@@ -273,7 +290,8 @@ export default class ContrastForm extends React.Component {
             <View as="div" margin="small 0">
               <Checkbox label={this.props.t('form.contrast.italicize_text')}
                 checked={this.state.useItalics}
-                onChange={this.handleItalicsToggle}>
+                onChange={this.handleItalicsToggle}
+                messages={this.state.checkboxErrors}>
               </Checkbox>
             </View>
 
@@ -396,5 +414,14 @@ export default class ContrastForm extends React.Component {
     else {
       return (metadata.color) ? Contrast.standardizeColor(metadata.color) : this.props.settings.textColor
     }
+  }
+
+  cssEmphasisIsValid(issue) {
+    if(issue.scanRuleId === 'CssTextStyleEmphasize') {
+      if(!this.state.useBold && !this.state.useItalics) {
+        return false
+      }
+    }
+    return true
   }
 }

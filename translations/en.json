@@ -239,6 +239,7 @@
   "form.contrast_ratio": "Contrast Ratio",
   "form.contrast.invalid": "Invalid Ratio",
   "form.contrast.valid": "Valid Ratio",
+  "form.contrast.must_select": "You must select a checkbox",
   "form.heading.assistive_text": "Use arrow keys to navigate options.",
   "form.heading.heading_level": "Select heading level",
   "form.heading.heading_level_options": ["H2", "H3", "H4", "H5", "H6"],
