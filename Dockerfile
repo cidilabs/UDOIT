@@ -11,6 +11,7 @@ COPY deploy/nginx/nginx-site.conf /etc/nginx/sites-enabled/default
 
 # Copy PHP .ini
 COPY deploy/php-config/custom_php.ini /usr/local/etc/php/conf.d/custom_php.ini
+RUN sed -i 's/pm.max_children\s*=.*/pm.max_children = 25/g' /usr/local/etc/php-fpm.d/www.conf
 
 COPY deploy/supervisor/messenger-worker.conf /etc/supervisor/conf.d/messenger-worker.conf
 #Install New Relic
