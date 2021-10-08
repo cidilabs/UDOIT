@@ -17,4 +17,3 @@ js-test:
   image: node:15.8.0
   script:
     - yarn test
-    - yarn lint
