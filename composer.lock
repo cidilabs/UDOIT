@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "cidilabs/phpally",
-            "version": "1.0.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cidilabs/phpally.git",
-                "reference": "b69b688f21a0637fa9dbd77ec5fba938efaf3cba"
+                "reference": "41918916b2782ae73b4fc793e6aea7fcf60d1a81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cidilabs/phpally/zipball/b69b688f21a0637fa9dbd77ec5fba938efaf3cba",
-                "reference": "b69b688f21a0637fa9dbd77ec5fba938efaf3cba",
+                "url": "https://api.github.com/repos/cidilabs/phpally/zipball/41918916b2782ae73b4fc793e6aea7fcf60d1a81",
+                "reference": "41918916b2782ae73b4fc793e6aea7fcf60d1a81",
                 "shasum": ""
             },
             "require": {
@@ -55,10 +55,10 @@
             ],
             "description": "PHP Accessibility (a11y) Testing Library",
             "support": {
-                "source": "https://github.com/cidilabs/phpally/tree/1.0.1",
+                "source": "https://github.com/cidilabs/phpally/tree/1.0.3",
                 "issues": "https://github.com/cidilabs/phpally/issues"
             },
-            "time": "2021-09-01T04:56:24+00:00"
+            "time": "2021-10-04T16:03:08+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
