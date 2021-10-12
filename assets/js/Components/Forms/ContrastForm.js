@@ -6,7 +6,6 @@ import { Flex } from '@instructure/ui-flex'
 import { View } from '@instructure/ui-view'
 import { Text } from '@instructure/ui-text'
 import { TextInput } from '@instructure/ui-text-input'
-import { Checkbox } from '@instructure/ui-checkbox'
 import { IconButton } from '@instructure/ui-buttons'
 import { IconArrowOpenDownSolid, IconArrowOpenUpSolid, IconCheckMarkLine } from '@instructure/ui-icons'
 import ColorPicker from '../ColorPicker'
@@ -20,12 +19,9 @@ export default class ContrastForm extends React.Component {
     this.state = {
       backgroundColor: this.getBackgroundColor(),
       textColor: this.getTextColor(),
-      useBold: this.isBold(),
-      useItalics: this.isItalicized(),
       contrastRatio: null,
       ratioIsValid: false,
       textInputErrors: [],
-      checkboxErrors: []
     }
 
     this.formErrors = []
@@ -36,8 +32,6 @@ export default class ContrastForm extends React.Component {
     this.handleDarkenBackground = this.handleDarkenBackground.bind(this)
     this.handleLightenText = this.handleLightenText.bind(this)
     this.handleDarkenText = this.handleDarkenText.bind(this)
-    this.handleBoldToggle = this.handleBoldToggle.bind(this)
-    this.handleItalicsToggle = this.handleItalicsToggle.bind(this)
     this.updatePreview = this.updatePreview.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.updateText = this.updateText.bind(this)
@@ -54,10 +48,7 @@ export default class ContrastForm extends React.Component {
       this.setState({
         backgroundColor: this.getBackgroundColor(),
         textColor: this.getTextColor(),
-        useBold: this.isBold(),
-        useItalics: this.isItalicized(),
-        textInputErrors: [],
-        checkBoxErrors: []
+        textInputErrors: []
       },() => {
         this.formErrors = []
         this.updatePreview()
@@ -113,49 +104,21 @@ export default class ContrastForm extends React.Component {
     })
   }
 
-  handleBoldToggle() {
-    this.setState({
-      useBold: !this.state.useBold
-    }, () => {
-      this.updatePreview()
-    })
-  }
-
-  handleItalicsToggle() {
-    this.setState({
-      useItalics: !this.state.useItalics
-    }, () => {
-      this.updatePreview()
-    })
-  }
-
   handleSubmit() {
     let issue = this.props.activeIssue
-    let cssEmphasisIsValid = this.cssEmphasisIsValid(issue)
-
-    if(this.state.ratioIsValid && cssEmphasisIsValid) {
+    
+    if(this.state.ratioIsValid) {
       let issue = this.props.activeIssue
       issue.newHtml = Contrast.convertHtmlRgb2Hex(issue.newHtml)
       this.props.handleIssueSave(issue)
     } else {
       //push errors
-      if(!this.state.ratioIsValid) {
-        this.formErrors = []
-        this.formErrors.push({ text: `${this.props.t('form.contrast.invalid')}: ${this.state.contrastRatio}` , type: 'error' })
+      this.formErrors = []
+      this.formErrors.push({ text: `${this.props.t('form.contrast.invalid')}: ${this.state.contrastRatio}` , type: 'error' })
 
-        this.setState({
-          textInputErrors: this.formErrors
-        })
-      }
-
-      if(!cssEmphasisIsValid) {
-        this.formErrors = []
-        this.formErrors.push({ text: `${this.props.t('form.contrast.must_select')}` , type: 'error' })
-
-        this.setState({
-          checkboxErrors: this.formErrors
-        })
-      }
+      this.setState({
+        textInputErrors: this.formErrors
+      })
     }
   }
 
@@ -280,21 +243,6 @@ export default class ContrastForm extends React.Component {
         </View>
         <Flex>
           <Flex.Item shouldGrow shouldShrink>
-            <View as="div" margin="small 0">
-              <Checkbox label={this.props.t('form.contrast.bolden_text')}
-                checked={this.state.useBold}
-                onChange={this.handleBoldToggle}>
-              </Checkbox>
-            </View>
-
-            <View as="div" margin="small 0">
-              <Checkbox label={this.props.t('form.contrast.italicize_text')}
-                checked={this.state.useItalics}
-                onChange={this.handleItalicsToggle}
-                messages={this.state.checkboxErrors}>
-              </Checkbox>
-            </View>
-
             <View as="div" margin="medium 0">
               <Button color="primary" onClick={this.handleSubmit} interaction={(!pending && this.props.activeIssue.status !== 2) ? 'enabled' : 'disabled'}>
                 {('1' == pending) && <Spinner size="x-small" renderTitle={buttonLabel} />}
@@ -336,13 +284,6 @@ export default class ContrastForm extends React.Component {
     element.style.backgroundColor = Contrast.convertShortenedHex(this.state.backgroundColor)
     element.style.color = Contrast.convertShortenedHex(this.state.textColor)
 
-    // Clean up tags
-    Html.removeTag(element, 'strong')
-    Html.removeTag(element, 'em')
-
-    element.innerHTML = (this.state.useBold) ? `<strong>${element.innerHTML}</strong>` : element.innerHTML
-    element.innerHTML = (this.state.useItalics) ? `<em>${element.innerHTML}</em>` : element.innerHTML
-    
     return Html.toString(element)
   }
 
@@ -364,26 +305,6 @@ export default class ContrastForm extends React.Component {
 
     issue.newHtml = this.processHtml(html)
     this.props.handleActiveIssue(issue)
-  }
-
-  isBold()
-  {
-    const issue = this.props.activeIssue
-    const metadata = (issue.metadata) ? JSON.parse(issue.metadata) : {}
-    const html = Html.getIssueHtml(this.props.activeIssue)
-    const element = Html.toElement(html)
-
-    return ((Html.hasTag(element, 'strong')) || (metadata.fontWeight === 'bold'))
-  }
-
-  isItalicized()
-  {
-    const issue = this.props.activeIssue
-    const metadata = (issue.metadata) ? JSON.parse(issue.metadata) : {}
-    const html = Html.getIssueHtml(this.props.activeIssue)
-    const element = Html.toElement(html)
-
-    return ((Html.hasTag(element, 'em')) || (metadata.fontStyle == 'italic'))
   }
 
   getBackgroundColor()
@@ -414,14 +335,5 @@ export default class ContrastForm extends React.Component {
     else {
       return (metadata.color) ? Contrast.standardizeColor(metadata.color) : this.props.settings.textColor
     }
-  }
-
-  cssEmphasisIsValid(issue) {
-    if(issue.scanRuleId === 'CssTextStyleEmphasize') {
-      if(!this.state.useBold && !this.state.useItalics) {
-        return false
-      }
-    }
-    return true
   }
 }

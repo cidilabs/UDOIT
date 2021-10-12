@@ -73,7 +73,7 @@ class ContentItem implements \JsonSerializable
     private $body;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=512, nullable=true)
      */
     private $url;
 

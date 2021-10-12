@@ -102,6 +102,8 @@ class SyncController extends ApiController
             $lmsFetch->createIssue($issue, $contentItem);
         }
 
+        $this->getDoctrine()->getManager()->flush();
+
         // Update report
         $report = $lmsFetch->updateReport($course, $user);
         if (!$report) {
