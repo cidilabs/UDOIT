@@ -350,6 +350,36 @@ class D2lLms implements LmsInterface {
         ];
     }
 
+    public function getContentBodyFromLms(ContentItem $contentItem, $user = null)
+    {
+        if (!$user) {
+            $user = $this->security->getUser();
+        }
+
+        if (!$contentItem) {
+            return false;
+        }
+
+        $url = $this->getContentItemApiUrl($contentItem);
+        $response = $this->d2lApi->apiGet($user, $url);
+
+        if ($response->getErrors()) {
+            $log = '';
+            foreach ($response->getErrors() as $err) {
+                $log .= ' | Msg: ' . $err;
+            }
+
+            $this->util->createMessage('Error retrieving content. Please try again.', 'error', $contentItem->getCourse(), $user);
+            $this->util->createMessage($log, 'error', $contentItem->getCourse(), $user, true);
+
+            return false;
+        } else {
+            $apiContent = $response->getContent();
+
+            return $this->normalizeContentItem($contentItem, $apiContent);
+        }
+    }
+
     /*
      * **************
      * FILE ITEMS

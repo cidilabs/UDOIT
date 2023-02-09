@@ -42,7 +42,6 @@ class ContentPage extends React.Component {
       activeIssue: null,
       trayOpen: false,
       modalOpen: false,
-      activeIndex: -1,
       searchTerm: '',
       filters: {
         contentTypes: [],
@@ -118,16 +117,17 @@ class ContentPage extends React.Component {
         sortBy: 'scanRuleLabel',
         ascending: true,
         pageNum: 0,
-      },
-      activeIndex: -1,
+      }
     })
   }
 
-  handleActiveIssue(newIssue, newIndex) {
+  handleActiveIssue(newIssue) {
+    console.log('handling active issue 1', newIssue)
+    console.log('handling active issue 2', this.state.activeIssue)
     this.setState({
-      activeIssue: newIssue,
-      activeIndex: Number(newIndex)
+      activeIssue: newIssue
     })
+    console.log('handling active issue 3', this.state.activeIssue)
   }
 
   handleTableSettings = (setting) => {
@@ -321,7 +321,6 @@ class ContentPage extends React.Component {
         {this.state.modalOpen && <UfixitModal
           open={this.state.modalOpen}
           activeIssue={this.state.activeIssue}
-          activeIndex={this.state.activeIndex}
           filteredRows={filteredRows}
           activeContentItem={activeContentItem}
           settings={this.props.settings}

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Issue;
 use App\Response\ApiResponse;
+use App\Services\HtmlService;
+use App\Services\LmsFetchService;
 use App\Services\LmsPostService;
 use App\Services\PhpAllyService;
 use App\Services\UtilityService;
@@ -21,12 +23,29 @@ class IssuesController extends ApiController
         $this->doctrine = $doctrine;
     }
 
+    #[Route(path: '/api/issues/{issue}', name: 'get_issue')]
+    public function getIssue(Issue $issue)
+    {
+        $apiResponse = new ApiResponse();
+
+        $apiResponse->setData([
+            'id' => $issue->getId(),
+            'sourceHtml' => $issue->getHtml(),
+            'previewHtml' => $issue->getPreviewHtml(),
+            'metadata' => $issue->getMetadata(),
+            'status' => $issue->getStatus(),
+        ]);
+
+        return new JsonResponse($apiResponse);
+    }
+
     // Save change to issue HTML to LMS
     #[Route('/api/issues/{issue}/save', name: 'save_issue')]
     public function saveIssue(
         Request $request,
         LmsPostService $lmsPost,
         UtilityService $util,
+        LmsFetchService $lmsFetch,
         Issue $issue)
     {
         $apiResponse = new ApiResponse();
@@ -47,50 +66,50 @@ class IssuesController extends ApiController
                 throw new \Exception('form.error.same_html');
             }
 
-            // // Run fixed content through PhpAlly to validate it
-            // $report = $phpAlly->scanHtml($newHtml, [$issue->getScanRuleId()]);
-            // if ($issues = $report->getIssues()) {
-            //     $apiResponse->addData('issues', $issues);
-            //     $apiResponse->addData('failed', 1);
-            //     throw new \Exception('form.error.fails_tests');
-            // }
-            // if ($errors = $report->getErrors()) {
-            //     $apiResponse->addData('errors', $errors);
-            //     $apiResponse->addData('failed', 1);
-            //     throw new \Exception('form.error.fails_tests');
-            // }
+            $contentItem = $issue->getContentItem();
+            $contentBody = $lmsFetch->getContentBody($contentItem, $user);
 
+            if (!$contentBody) {
+                throw new \Exception("Content not found.");
+            }
+
+            if (!HtmlService::find($issue->getHtml(), $contentBody)) {
+                throw new \Exception('form.msg.content_changed');
+            }
 
             // Update issue HTML
             $issue->setNewHtml($newHtml);
             $this->doctrine->getManager()->flush();
 
             // Save content to LMS
-            $lmsPost->saveContentToLms($issue, $user);
+            $contentSaved = $lmsPost->saveContentToLms($issue, $user);
+            if ($contentSaved) {
+                $apiResponse->addMessage('form.msg.success_saved', 'success');
+            }
+
+            // Update issue status
+            $issue->setHtml($newHtml);
+            $issue->setStatus(Issue::$issueStatusFixed);
+            $issue->setFixedBy($user);
+            $issue->setFixedOn($util->getCurrentTime());
+            $this->doctrine->getManager()->flush();
+
+            // Delete old issues
+            $deletedIssueIds = $lmsFetch->deleteContentItemIssues([$contentItem], $issue);
+
+            // Rescan the contentItem
+            $newIssues = $lmsFetch->scanContentItems([$contentItem]);
+
+            $apiResponse->setData([
+                'issue' => ['status' => $issue->getStatus(), 'pending' => false],
+                'report' => $lmsFetch->updateReport($course, $user),
+                'deletedIssueIds' => $deletedIssueIds,
+                'newIssues' => $newIssues
+            ]);
 
             // Add messages to response
             $unreadMessages = $util->getUnreadMessages();
-            if (empty($unreadMessages)) {
-                $apiResponse->addMessage('form.msg.success_saved', 'success');
-
-                // Update issue status
-                $issue->setHtml($newHtml);
-                $issue->setStatus(Issue::$issueStatusFixed);
-                $issue->setFixedBy($user);
-                $issue->setFixedOn($util->getCurrentTime());
-                $this->doctrine->getManager()->flush();
-
-                // Update report stats
-                $report = $course->getUpdatedReport();
-
-                $apiResponse->setData([
-                    'issue' => ['status' => $issue->getStatus(), 'pending' => false],
-                    'report' => $report,
-                ]);
-            }
-            else {
-                $apiResponse->addLogMessages($unreadMessages);
-            }
+            $apiResponse->addLogMessages($unreadMessages);
         }
         catch(\Exception $e) {
             $apiResponse->addMessage($e->getMessage(), 'error');
@@ -101,7 +120,12 @@ class IssuesController extends ApiController
 
     // Mark issue as resolved/reviewed
     #[Route('/api/issues/{issue}/resolve', methods: ['POST','GET'], name: 'resolve_issue')]
-    public function markAsReviewed(Request $request, LmsPostService $lmsPost, UtilityService $util, Issue $issue): JsonResponse
+    public function markAsReviewed(
+        Request $request, 
+        LmsFetchService $lmsFetch,
+        LmsPostService $lmsPost, 
+        UtilityService $util, 
+        Issue $issue): JsonResponse
     {
         $apiResponse = new ApiResponse();
         $user = $this->getUser();
@@ -116,39 +140,62 @@ class IssuesController extends ApiController
             // Get updated issue
             $issueUpdate = \json_decode($request->getContent(), true);
 
+            $contentItem = $issue->getContentItem();
+            $contentBody = $lmsFetch->getContentBody($contentItem, $user);
+
+            if (!$contentBody) {
+                throw new \Exception("Content not found.");
+            }
+
+            if (!HtmlService::find($issue->getHtml(), $contentBody)) {
+                throw new \Exception('form.msg.content_changed');
+            }
+
             $issue->setNewHtml($issueUpdate['newHtml']);
             $this->doctrine->getManager()->flush();
 
             // Save content to LMS
-            $response = $lmsPost->saveContentToLms($issue, $user);
+            $contentSaved = $lmsPost->saveContentToLms($issue, $user);
 
-            // Add messages to response
-            $unreadMessages = $util->getUnreadMessages();
-            if (empty($unreadMessages)) {
-                // Update issue
-                $issue->setHtml($issueUpdate['newHtml']);
-                $issue->setStatus(($issueUpdate['status']) ? Issue::$issueStatusResolved : Issue::$issueStatusActive);
+            // Update issue
+            $issue->setHtml($issueUpdate['newHtml']);
+
+            if (($issueUpdate['status'])) {
+                $issue->setStatus(Issue::$issueStatusResolved);
                 $issue->setFixedBy($user);
                 $issue->setFixedOn($util->getCurrentTime());
+            } else {
+                $issue->setStatus(Issue::$issueStatusActive);
+                $issue->setFixedBy(null);
+                $issue->setFixedOn(null);
+            }
 
-                // Update report stats
-                $report = $course->getUpdatedReport();
+            $this->doctrine->getManager()->flush();
 
-                $this->doctrine->getManager()->flush();
-
+            if ($contentSaved) {
                 if ($issue->getStatus() == Issue::$issueStatusResolved) {
                     $apiResponse->addMessage('form.msg.success_resolved', 'success');
                 } else {
                     $apiResponse->addMessage('form.msg.success_unresolved', 'success');
                 }
-
-                $apiResponse->setData([
-                    'issue' => ['status' => $issue->getStatus(), 'pending' => false],
-                    'report' => $report
-                ]);
-            } else {
-                $apiResponse->addLogMessages($unreadMessages);
             }
+
+            // Delete old issues
+            $deletedIssueIds = $lmsFetch->deleteContentItemIssues([$contentItem], $issue);
+
+            // Rescan the contentItem
+            $newIssues = $lmsFetch->scanContentItems([$contentItem], $user);
+
+            $apiResponse->setData([
+                'issue' => ['status' => $issue->getStatus(), 'pending' => false],
+                'report' => $lmsFetch->updateReport($course, $user),
+                'deletedIssueIds' => $deletedIssueIds,
+                'newIssues' => $newIssues
+            ]);
+
+            // Add messages to response
+            $unreadMessages = $util->getUnreadMessages();
+            $apiResponse->addLogMessages($unreadMessages);
         } catch (\Exception $e) {
             $apiResponse->addError($e->getMessage());
         }

@@ -6,6 +6,7 @@ export default class Api {
             getReport: '/api/courses/{course}/reports/{report}',
             getReportHistory: '/api/courses/{course}/reports',
             saveIssue: '/api/issues/{issue}/save',
+            syncIssue: '/api/issues/{issue}',
             resolveIssue: '/api/issues/{issue}/resolve',
             reviewFile: '/api/files/{file}/review',
             postFile: '/api/files/{file}/post',
@@ -246,6 +247,21 @@ export default class Api {
                 'X-AUTH-TOKEN': authToken,
             },
         })
+    }
+
+    syncIssue(issue) {
+        const authToken = this.getAuthToken();
+
+        let url = `${this.apiUrl}${this.endpoints.syncIssue}`;
+        url = url.replace('{issue}', issue.id);
+
+        return fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-AUTH-TOKEN': authToken,
+            },
+        });
     }
 
     scanIssue(issueId)

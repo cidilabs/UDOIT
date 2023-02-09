@@ -38,9 +38,17 @@ class HtmlService {
 
             return $tidy->repairString($html, $options, 'utf8');
         }
-        catch (\Exception) {
+        catch (\Exception $e) {
             return $html;
         }
+    }
+    
+    public static function find($needle, $haystack)
+    {
+        $cleanNeedle = self::clean($needle);
+        $cleanHaystack = self::clean($haystack);
+
+        return (stripos($cleanHaystack, $cleanNeedle) !== false);
     }
 
     public static function dom($html) 
@@ -66,7 +74,7 @@ class HtmlService {
             }
 
             return str_replace(['<?xml encoding="utf-8" ?>', '<?xml version="1.0" encoding="utf-8"?>'], '', implode('', $out));
-        } catch (\Exception) {
+        } catch (\Exception $e) {
             return $html;
         }
     }

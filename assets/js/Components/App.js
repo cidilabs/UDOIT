@@ -216,13 +216,37 @@ class App extends React.Component {
     this.messages = [];
   }
 
-  handleIssueSave(newIssue, newReport) {
-    let { report } = this.state
-    report = {...report, ...newReport}
+  handleIssueSave(newIssue, data) {
+    const oldReport = this.state.report
 
-    if (report && Array.isArray(report.issues)) {
-      report.issues = report.issues.map(issue => (issue.id == newIssue.id) ? newIssue : issue)
+    let report = data.report
+    if (!report) {
+      return
     }
+
+    if (data.deletedIssueIds) {
+      report.issues = oldReport.issues.map(issue => {
+        if (issue.id === newIssue.id) {
+          return newIssue
+        }
+        if (data.deletedIssueIds.includes(issue.id)) {
+          return
+        }
+
+        return issue
+      })
+      report.issues = report.issues.filter(Boolean)
+    }
+
+    if (data.newIssues) {
+      report.issues = [...report.issues, ...data.newIssues]
+    }
+
+    console.log('new issue!', newIssue)
+    console.log('all issues', report.issues)
+
+    report.contentItems = oldReport.contentItems
+    report.files = oldReport.files
 
     this.setState({ report })
   }

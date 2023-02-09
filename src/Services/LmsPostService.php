@@ -72,7 +72,7 @@ class LmsPostService {
         try {
             $uploadedFile->move($path, "file.{$file->getId()}");
         }
-        catch (\Exception) {
+        catch (\Exception $e) {
             $this->util->createMessage(
                 'File failed to save locally. Please contact an administrator.',
                 'error',

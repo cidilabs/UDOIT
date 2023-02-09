@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ContentItem;
+use App\Entity\Course;
 use App\Entity\Issue;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,12 +21,65 @@ class IssueRepository extends ServiceEntityRepository
         parent::__construct($registry, Issue::class);
     }
 
-    public function deleteContentItemIssues(ContentItem $contentItem)
+    public function getDeletableContentItemIssues(ContentItem $contentItem, Issue $currentIssue = null)
     {
-        $this->getEntityManager()->createQueryBuilder()
-            ->delete(Issue::class, 'i')
-            ->where('i.contentItem = ?1 AND i.status = ?2')
-            ->setParameters([1 => $contentItem, 2 => Issue::$issueStatusActive])
+        $qb = $this->createQueryBuilder('i');
+
+        if ($currentIssue) {
+            $qb->where('i.contentItem = ?1 AND i.status = ?2 AND i.id != ?3')
+            ->setParameters([
+                1 => $contentItem,
+                2 => Issue::$issueStatusActive,
+                3 => $currentIssue->getId()
+            ]);
+        } else {
+            $qb->where('i.contentItem = ?1 AND i.status = ?2')
+            ->setParameters([
+                1 => $contentItem,
+                2 => Issue::$issueStatusActive
+            ]);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function deleteContentItemIssues(ContentItem $contentItem, Issue $currentIssue = null)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->delete(Issue::class, 'i');
+
+        if ($currentIssue) {
+            $qb->where('i.contentItem = ?1 AND i.status = ?2 AND i.id != ?3')
+            ->setParameters([
+                1 => $contentItem,
+                2 => Issue::$issueStatusActive,
+                3 => $currentIssue->getId()
+            ]);
+        } else {
+            $qb->where('i.contentItem = ?1 AND i.status = ?2')
+            ->setParameters([
+                1 => $contentItem,
+                2 => Issue::$issueStatusActive
+            ]);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getManualResolvedIssuesByCourse(Course $course)
+    {
+        $contentItems = $course->getContentItems();
+
+        $contentItemIds = [];
+        foreach ($contentItems as $contentItemId => $contentItem) {
+            $contentItemIds[] = $contentItemId;
+        }
+
+        return $this->createQueryBuilder('i')
+            ->where('i.status = :status')
+            ->andWhere('i.contentItem IN (:ids)')
+            ->setParameter('status', 2)
+            ->setParameter('ids', $contentItemIds)
             ->getQuery()
             ->getResult();
     }

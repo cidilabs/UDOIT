@@ -42,8 +42,7 @@ class CanvasLms implements LmsInterface {
         EntityManagerInterface $entityManager,
         UtilityService $util,
         Security $security,
-        SessionService $sessionService,
-    )
+        SessionService $sessionService)
     {
         $this->contentItemRepo = $contentItemRepo;
         $this->fileItemRepo = $fileItemRepo;
@@ -398,6 +397,48 @@ class CanvasLms implements LmsInterface {
         $domain = $this->getApiDomain($user);
 
         return "https://{$domain}/courses/{$course->getLmsCourseId()}";
+    }
+
+    public function getContentBodyFromLms(ContentItem $contentItem, $user = null)
+    {
+        if (!$user) {
+            $user = $this->security->getUser();
+        }
+
+        $apiDomain = $this->getApiDomain($user);
+        $apiToken = $this->getApiToken($user);
+        $canvasApi = new CanvasApi($apiDomain, $apiToken);
+
+        if (!$contentItem) {
+            return false;
+        }
+
+        $url = $this->getContentTypeUrl($contentItem);
+        $contentType = $contentItem->getContentType();
+
+        $response = $canvasApi->apiGet($url);
+
+        if ($response->getErrors()) {
+            $log = '';
+            foreach ($response->getErrors() as $err) {
+                $log .= "| {$err} | {$url} |";
+            }
+
+            $this->util->createMessage('Error retrieving content. Please try again.', 'error', $contentItem->getCourse(), $user);
+            $this->util->createMessage($log, 'error', $contentItem->getCourse(), $user, true);
+
+            return false;
+        } else {
+            $apiContent = $response->getContent();
+            $lmsContent = $this->normalizeLmsContent($contentItem->getCourse(), $contentType, $apiContent);
+
+            /* get HTML file content */
+            if ('file' === $contentType && 'html' === $apiContent['mime_class']) {
+                $lmsContent['body'] = file_get_contents($apiContent['url']);
+            }
+
+            return $lmsContent['body'];
+        }
     }
 
     /**

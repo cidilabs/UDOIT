@@ -178,8 +178,10 @@ class LmsFetchService {
 
     
     // Performs PHPAlly scan on each Content Item.
-    private function scanContentItems(array $contentItems)
+    public function scanContentItems(array $contentItems)
     {
+        $newIssues = [];
+
         // Scan each update content item for issues
         /** @var \App\Entity\ContentItem $contentItem */
         foreach ($contentItems as $contentItem) {
@@ -199,7 +201,7 @@ class LmsFetchService {
                     // Add Issues to report
                     foreach ($phpAllyReport->getIssues() as $issue) {
                         // Create issue entity
-                        $this->createIssue($issue, $contentItem);
+                        $newIssues[] = $this->createIssue($issue, $contentItem);
                     }
                 }
             }
@@ -208,6 +210,8 @@ class LmsFetchService {
             }
         }
         $this->doctrine->getManager()->flush();
+
+        return $newIssues;
     }
 
     public function createIssue(PhpAllyIssue $issue, ContentItem $contentItem)
@@ -242,13 +246,34 @@ class LmsFetchService {
         return $issueEntity;
     }
 
-    public function deleteContentItemIssues($contentItems)
+    public function deleteContentItemIssues($contentItems, Issue $activeIssue = null)
     {
+        $deletedIssueIds = [];
+
         /** @var \App\Repository\IssueRepository $issueRepo */
         $issueRepo = $this->doctrine->getManager()->getRepository(Issue::class);
 
         foreach ($contentItems as $contentItem) {
-            $issueRepo->deleteContentItemIssues($contentItem);
+            $deletableIds = [];
+            $deletable = $issueRepo->getDeletableContentItemIssues($contentItem, $activeIssue);
+            foreach ($deletable as $row) {
+                $deletableIds[] = $row->getId();
+            }
+
+            $result = $issueRepo->deleteContentItemIssues($contentItem, $activeIssue);
+
+            if ($result) {
+                $deletedIssueIds = array_merge($deletedIssueIds, $deletableIds);
+            }
         }
+
+        return $deletedIssueIds;
+    }
+
+    public function getContentBody(ContentItem $contentItem, User $user)
+    {
+        $lms = $this->lmsApi->getLms($user);
+
+        return HtmlService::clean($lms->getContentBodyFromLms($contentItem, $user));
     }
 }
